@@ -1,0 +1,1002 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminManagement" xml:space="preserve">
+    <value>Admin Management</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>Deposit</value>
+  </data>
+  <data name="FindRoom" xml:space="preserve">
+    <value>🔍 Find Room</value>
+  </data>
+  <data name="GlobalChat" xml:space="preserve">
+    <value>🌍 Global Chat</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="LatestRooms" xml:space="preserve">
+    <value>Latest Rooms</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="ManagePosts" xml:space="preserve">
+    <value>Manage Posts</value>
+  </data>
+  <data name="Messages" xml:space="preserve">
+    <value>💬 Messages</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>No Image</value>
+  </data>
+  <data name="NoReview" xml:space="preserve">
+    <value>No reviews yet</value>
+  </data>
+  <data name="NoRoomAvailable" xml:space="preserve">
+    <value>Currently, there are no rooms available.</value>
+  </data>
+  <data name="PostRoom" xml:space="preserve">
+    <value>Post Room</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile Setting</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Reviews</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="VipNews" xml:space="preserve">
+    <value>VIP</value>
+  </data>
+  <data name="VNDPerMonth" xml:space="preserve">
+    <value>VND/Month</value>
+  </data>
+  <data name="Wallet" xml:space="preserve">
+    <value>Wallet</value>
+  </data>
+  <data name="LichSuThue" xml:space="preserve">
+    <value>Rental History</value>
+  </data>
+  <data name="SearchArea" xml:space="preserve">
+    <value>SearchArea</value>
+  </data>
+  <data name="SmartSearchTitle" xml:space="preserve">
+    <value>Smart Search by School</value>
+  </data>
+  <data name="ProvinceCity" xml:space="preserve">
+    <value>Province/City</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="District" xml:space="preserve">
+    <value>District</value>
+  </data>
+  <data name="AllDistricts" xml:space="preserve">
+    <value>-- All Districts --</value>
+  </data>
+  <data name="EducationLevel" xml:space="preserve">
+    <value>Education Level</value>
+  </data>
+  <data name="AllLevels" xml:space="preserve">
+    <value>All levels</value>
+  </data>
+  <data name="University" xml:space="preserve">
+    <value>University</value>
+  </data>
+  <data name="College" xml:space="preserve">
+    <value>College</value>
+  </data>
+  <data name="YourSchool" xml:space="preserve">
+    <value>Your School</value>
+  </data>
+  <data name="SelectSchool" xml:space="preserve">
+    <value>-- Select school (Filter District first) --</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="SearchRadius" xml:space="preserve">
+    <value>Search Radius</value>
+  </data>
+  <data name="Distance" xml:space="preserve">
+    <value>-- Distance --</value>
+  </data>
+  <data name="WalkBike" xml:space="preserve">
+    <value>Walk/Bike</value>
+  </data>
+  <data name="Motorbike" xml:space="preserve">
+    <value>Motorbike</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>Price Range (VND)</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From...</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To...</value>
+  </data>
+  <data name="StartFilter" xml:space="preserve">
+    <value>Start Filter</value>
+  </data>
+  <data name="RefreshFilter" xml:space="preserve">
+    <value>Refresh Filter</value>
+  </data>
+  <data name="Found" xml:space="preserve">
+    <value>Found</value>
+  </data>
+  <data name="SuitableRooms" xml:space="preserve">
+    <value>suitable rooms</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="NoRoomsMatch" xml:space="preserve">
+    <value>No rooms match your criteria.</value>
+  </data>
+  <data name="TryExpanding" xml:space="preserve">
+    <value>Try expanding the radius or adjusting the price range!</value>
+  </data>
+  <data name="DistanceLabel" xml:space="preserve">
+    <value>Distance:</value>
+  </data>
+  <data name="NoRoomsInArea" xml:space="preserve">
+    <value>There are currently no rooms in this area.</value>
+  </data>
+  <data name="TPThuDuc" xml:space="preserve">
+    <value>Thu Duc City (Old D.2, D.9)</value>
+  </data>
+  <data name="ViewRoom" xml:space="preserve">
+    <value>View Room</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>month</value>
+  </data>
+  <data name="YourInbox" xml:space="preserve">
+    <value>Your Inbox</value>
+  </data>
+  <data name="ClickToViewChat" xml:space="preserve">
+    <value>Click to view conversation</value>
+  </data>
+  <data name="NoConversations" xml:space="preserve">
+    <value>You have no conversations yet.</value>
+  </data>
+  <data name="GlobalChatRoom" xml:space="preserve">
+    <value>Global Chat &amp; Forum</value>
+  </data>
+  <data name="TypeMessage" xml:space="preserve">
+    <value>Type a message...</value>
+  </data>
+  <data name="You" xml:space="preserve">
+    <value>You</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>Image upload failed:</value>
+  </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>An error occurred while uploading.</value>
+  </data>
+  <data name="RoomDetails" xml:space="preserve">
+    <value>Room Details</value>
+  </data>
+  <data name="PrivateWC" xml:space="preserve">
+    <value>Private WC</value>
+  </data>
+  <data name="Balcony" xml:space="preserve">
+    <value>Balcony</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="LandlordInfo" xml:space="preserve">
+    <value>LANDLORD INFO</value>
+  </data>
+  <data name="Updating" xml:space="preserve">
+    <value>Updating</value>
+  </data>
+  <data name="VerifiedTooltip" xml:space="preserve">
+    <value>This landlord's ID has been verified by Admin.</value>
+  </data>
+  <data name="VerifiedID" xml:space="preserve">
+    <value>Verified ID</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="DetailDescription" xml:space="preserve">
+    <value>Details Description</value>
+  </data>
+  <data name="RoomRentedOrDeposited" xml:space="preserve">
+    <value>❌ ROOM RENTED / DEPOSITED (PAYMENT LOCKED)</value>
+  </data>
+  <data name="RoomDepositedUntil" xml:space="preserve">
+    <value>⏳ ROOM DEPOSITED UNTIL</value>
+  </data>
+  <data name="YouDeposited" xml:space="preserve">
+    <value>🎉 YOU HAVE DEPOSITED 500,000 VND FOR THIS ROOM</value>
+  </data>
+  <data name="PayRemainingBefore" xml:space="preserve">
+    <value>Please pay the remaining amount before</value>
+  </data>
+  <data name="PayRemaining" xml:space="preserve">
+    <value>PAY REMAINING</value>
+  </data>
+  <data name="CancelDepositRefund" xml:space="preserve">
+    <value>🚫 CANCEL DEPOSIT &amp; REFUND</value>
+  </data>
+  <data name="RoomAvailable" xml:space="preserve">
+    <value>✅ ROOM AVAILABLE - READY TO RENT</value>
+  </data>
+  <data name="DepositToHold" xml:space="preserve">
+    <value>⏳ DEPOSIT TO HOLD (500,000 VND)</value>
+  </data>
+  <data name="PayAndRentNow" xml:space="preserve">
+    <value>💳 PAY &amp; RENT NOW</value>
+  </data>
+  <data name="LoginToRentDeposit" xml:space="preserve">
+    <value>Login with a Student account to rent / deposit</value>
+  </data>
+  <data name="QuickMessage" xml:space="preserve">
+    <value>Quick Message</value>
+  </data>
+  <data name="LoginToMessage" xml:space="preserve">
+    <value>Login to send a message</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Back to Home</value>
+  </data>
+  <data name="DeleteThisPost" xml:space="preserve">
+    <value>🗑️ Delete this post</value>
+  </data>
+  <data name="ReportFakeNews" xml:space="preserve">
+    <value>🚩 Report fake/scam post</value>
+  </data>
+  <data name="ReviewsFromTenants" xml:space="preserve">
+    <value>Reviews from tenants</value>
+  </data>
+  <data name="WriteYourReview" xml:space="preserve">
+    <value>Write your review</value>
+  </data>
+  <data name="ChooseSatisfaction" xml:space="preserve">
+    <value>Choose satisfaction level:</value>
+  </data>
+  <data name="5Star" xml:space="preserve">
+    <value>5 Star - Excellent</value>
+  </data>
+  <data name="4Star" xml:space="preserve">
+    <value>4 Star - Very Good</value>
+  </data>
+  <data name="3Star" xml:space="preserve">
+    <value>3 Star - Average</value>
+  </data>
+  <data name="2Star" xml:space="preserve">
+    <value>2 Star - Poor</value>
+  </data>
+  <data name="1Star" xml:space="preserve">
+    <value>1 Star - Terrible</value>
+  </data>
+  <data name="DetailedComment" xml:space="preserve">
+    <value>Detailed comment:</value>
+  </data>
+  <data name="ShareExperience" xml:space="preserve">
+    <value>Share your real experience...</value>
+  </data>
+  <data name="SubmitReview" xml:space="preserve">
+    <value>Submit Review 🚀</value>
+  </data>
+  <data name="NoReviewsFirstToReview" xml:space="preserve">
+    <value>No reviews yet. Be the first to review this room! 🎉</value>
+  </data>
+  <data name="ReportFraudTitle" xml:space="preserve">
+    <value>REPORT FRAUDULENT POST</value>
+  </data>
+  <data name="ReportDesc" xml:space="preserve">
+    <value>If you suspect this post is a scam or fake, please report it!</value>
+  </data>
+  <data name="ReportReason" xml:space="preserve">
+    <value>Reason:</value>
+  </data>
+  <data name="SelectReason" xml:space="preserve">
+    <value>-- Select reason --</value>
+  </data>
+  <data name="Reason1" xml:space="preserve">
+    <value>Deposit scam</value>
+  </data>
+  <data name="Reason2" xml:space="preserve">
+    <value>Room doesn't match photos</value>
+  </data>
+  <data name="Reason3" xml:space="preserve">
+    <value>Bad attitude/Threats</value>
+  </data>
+  <data name="Reason4" xml:space="preserve">
+    <value>Fake address</value>
+  </data>
+  <data name="Reason5" xml:space="preserve">
+    <value>Other...</value>
+  </data>
+  <data name="AdditionalDetails" xml:space="preserve">
+    <value>Additional details (Optional):</value>
+  </data>
+  <data name="ReportPlaceholder" xml:space="preserve">
+    <value>Describe the situation clearly...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SubmitReportBtn" xml:space="preserve">
+    <value>Submit Report 🚀</value>
+  </data>
+  <data name="ChatWith" xml:space="preserve">
+    <value>Chat with</value>
+  </data>
+  <data name="SendBtn" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="ConfirmPayRemaining" xml:space="preserve">
+    <value>Confirm payment for the remaining amount?</value>
+  </data>
+  <data name="ConfirmCancelDeposit" xml:space="preserve">
+    <value>Cancel deposit? You will be refunded 500,000 VND and lose this room.</value>
+  </data>
+  <data name="ConfirmDeposit" xml:space="preserve">
+    <value>Confirm DEPOSIT 500,000 VND to hold this room?</value>
+  </data>
+  <data name="ConfirmPayAndRent" xml:space="preserve">
+    <value>Confirm full payment to rent this room?</value>
+  </data>
+  <data name="ConfirmDeletePost" xml:space="preserve">
+    <value>⚠️ WARNING: Are you sure you want to delete this post?</value>
+  </data>
+  <data name="ConnectingChat" xml:space="preserve">
+    <value>⏳ Chat server is connecting, please wait a second and try again!</value>
+  </data>
+  <data name="CantSendMessage" xml:space="preserve">
+    <value>⚠️ Can't send message. Your account might be locked!</value>
+  </data>
+  <data name="PostNewRoom" xml:space="preserve">
+    <value>Post New Room</value>
+  </data>
+  <data name="FillRoomInfo" xml:space="preserve">
+    <value>Fill in Room Information</value>
+  </data>
+  <data name="RoomDescPlaceholder" xml:space="preserve">
+    <value>Ex: 25m2, loft, private WC, free hours...</value>
+  </data>
+  <data name="LengthPlaceholder" xml:space="preserve">
+    <value>Length (m). Ex: 5.5</value>
+  </data>
+  <data name="WidthPlaceholder" xml:space="preserve">
+    <value>Width (m). Ex: 4.0</value>
+  </data>
+  <data name="PostDuration" xml:space="preserve">
+    <value>Post duration (Days)</value>
+  </data>
+  <data name="HoldDuration" xml:space="preserve">
+    <value>Deposit hold duration (Days)</value>
+  </data>
+  <data name="HasPrivateWC" xml:space="preserve">
+    <value>Private WC</value>
+  </data>
+  <data name="HasBalcony" xml:space="preserve">
+    <value>Balcony</value>
+  </data>
+  <data name="RentPrice" xml:space="preserve">
+    <value>Rent price (VND/Month)</value>
+  </data>
+  <data name="PricePlaceholder" xml:space="preserve">
+    <value>Example: 2500000</value>
+  </data>
+  <data name="DetailedAddress" xml:space="preserve">
+    <value>Detailed address</value>
+  </data>
+  <data name="SelectProvince" xml:space="preserve">
+    <value>Select Province/City</value>
+  </data>
+  <data name="SelectDistrict" xml:space="preserve">
+    <value>Select District</value>
+  </data>
+  <data name="SelectWard" xml:space="preserve">
+    <value>Select Ward/Commune</value>
+  </data>
+  <data name="AddressPlaceholder" xml:space="preserve">
+    <value>Ex: 475A Dien Bien Phu (House number, Street)</value>
+  </data>
+  <data name="FindOnMap" xml:space="preserve">
+    <value>Find on map</value>
+  </data>
+  <data name="PinOnMap" xml:space="preserve">
+    <value>Pin location on map</value>
+  </data>
+  <data name="MapInstruction" xml:space="preserve">
+    <value>The map moves automatically. You can also click "My location" or drag the pin.</value>
+  </data>
+  <data name="MyLocation" xml:space="preserve">
+    <value>My location</value>
+  </data>
+  <data name="AddImages" xml:space="preserve">
+    <value>Add images (Multiple)</value>
+  </data>
+  <data name="PostVip" xml:space="preserve">
+    <value>Post VIP (Fee: 50,000 VND)</value>
+  </data>
+  <data name="VipInstruction" xml:space="preserve">
+    <value>VIP post will be pinned to the top of search results!</value>
+  </data>
+  <data name="PublishPost" xml:space="preserve">
+    <value>Publish Post</value>
+  </data>
+  <data name="MyRooms" xml:space="preserve">
+    <value>My Rooms</value>
+  </data>
+  <data name="MyPostedRooms" xml:space="preserve">
+    <value>List of rooms you have posted</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="RoomInfo" xml:space="preserve">
+    <value>Room Information</value>
+  </data>
+  <data name="RentPriceTable" xml:space="preserve">
+    <value>Rent Price</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="VIPStatus" xml:space="preserve">
+    <value>VIP</value>
+  </data>
+  <data name="NormalStatus" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="EmptyStatus" xml:space="preserve">
+    <value>Empty</value>
+  </data>
+  <data name="DepositedStatus" xml:space="preserve">
+    <value>Deposited</value>
+  </data>
+  <data name="RentedStatus" xml:space="preserve">
+    <value>Rented</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MarkAsRented" xml:space="preserve">
+    <value>Mark as rented</value>
+  </data>
+  <data name="ConfirmMarkRented" xml:space="preserve">
+    <value>Confirm this room has been rented? The post will be hidden.</value>
+  </data>
+  <data name="ReopenRoom" xml:space="preserve">
+    <value>Reopen room</value>
+  </data>
+  <data name="ConfirmReopen" xml:space="preserve">
+    <value>Cancel confirmation and reopen this room?</value>
+  </data>
+  <data name="NoPostedRooms" xml:space="preserve">
+    <value>You haven't posted any rooms yet. Get started now! 🚀</value>
+  </data>
+  <data name="ConfirmDeleteRoom" xml:space="preserve">
+    <value>Are you sure you want to delete this post?</value>
+  </data>
+  <data name="AdminUserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="SystemUserManagement" xml:space="preserve">
+    <value>SYSTEM USER MANAGEMENT</value>
+  </data>
+  <data name="ViewScamReports" xml:space="preserve">
+    <value>View Scam Reports</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="EmailAccount" xml:space="preserve">
+    <value>Email / Account</value>
+  </data>
+  <data name="LockStatus" xml:space="preserve">
+    <value>Lock Status</value>
+  </data>
+  <data name="eKYCStatus" xml:space="preserve">
+    <value>eKYC Status (ID)</value>
+  </data>
+  <data name="VerificationProfile" xml:space="preserve">
+    <value>Verification Profile</value>
+  </data>
+  <data name="AdminActions" xml:space="preserve">
+    <value>Admin Actions</value>
+  </data>
+  <data name="Locked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="PendingReview" xml:space="preserve">
+    <value>Pending Review</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="FrontSide" xml:space="preserve">
+    <value>Front side</value>
+  </data>
+  <data name="BackSide" xml:space="preserve">
+    <value>Back side</value>
+  </data>
+  <data name="ClickToEnlarge" xml:space="preserve">
+    <value>Click to enlarge</value>
+  </data>
+  <data name="AIScan" xml:space="preserve">
+    <value>AI Scan</value>
+  </data>
+  <data name="EmptyProfile" xml:space="preserve">
+    <value>Empty</value>
+  </data>
+  <data name="Unlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
+  <data name="LockAccount" xml:space="preserve">
+    <value>Lock Account</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="ConfirmValidCCCD" xml:space="preserve">
+    <value>Confirm valid ID card?</value>
+  </data>
+  <data name="ConfirmRejectProfile" xml:space="preserve">
+    <value>Reject this profile? User will have to upload photos again.</value>
+  </data>
+  <data name="PermanentDelete" xml:space="preserve">
+    <value>Permanent Delete</value>
+  </data>
+  <data name="ConfirmDeleteAccount1" xml:space="preserve">
+    <value>Are you SURE you want to permanently delete the account</value>
+  </data>
+  <data name="ConfirmDeleteAccount2" xml:space="preserve">
+    <value>? All their data will be lost!</value>
+  </data>
+  <data name="OnlyRenterCanReviewTitle" xml:space="preserve">
+    <value>Exclusive for verified tenants</value>
+  </data>
+  <data name="OnlyRenterCanReviewDesc" xml:space="preserve">
+    <value>Only students who have successfully paid and rented this room can leave a review.</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="WelcomeBack" xml:space="preserve">
+    <value>Welcome back</value>
+  </data>
+  <data name="LoginEmail" xml:space="preserve">
+    <value>Login Email</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="NewUserPrompt" xml:space="preserve">
+    <value>Are you a new user?</value>
+  </data>
+  <data name="CreateNewAccount" xml:space="preserve">
+    <value>Create new account</value>
+  </data>
+  <data name="ResendConfirmEmail" xml:space="preserve">
+    <value>Resend confirmation email</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hello!</value>
+  </data>
+  <data name="LoginDescription" xml:space="preserve">
+    <value>Log in to manage your posts or continue chatting.</value>
+  </data>
+  <data name="OrLoginWith" xml:space="preserve">
+    <value>Or log in with</value>
+  </data>
+  <data name="RegisterAccount" xml:space="preserve">
+    <value>Register Account</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="SelectAccountType" xml:space="preserve">
+    <value>-- Select account type --</value>
+  </data>
+  <data name="StudentRole" xml:space="preserve">
+    <value>🎓 Student (Find room)</value>
+  </data>
+  <data name="LandlordRole" xml:space="preserve">
+    <value>🔑 Landlord (Rent room)</value>
+  </data>
+  <data name="WhoAreYou" xml:space="preserve">
+    <value>Who are you?</value>
+  </data>
+  <data name="RegisterNow" xml:space="preserve">
+    <value>Register now</value>
+  </data>
+  <data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="StartNow" xml:space="preserve">
+    <value>Start now!</value>
+  </data>
+  <data name="RegisterDescription" xml:space="preserve">
+    <value>Join the platform to find your ideal room or rent securely.</value>
+  </data>
+  <data name="OrContinueWith" xml:space="preserve">
+    <value>Or continue with</value>
+  </data>
+  <data name="Chat_NeedHelp" xml:space="preserve">
+    <value>What would you like help with?</value>
+  </data>
+  <data name="Chat_Greet1" xml:space="preserve">
+    <value>👋 Hi! I am RoomFinder's automatic assistant. I can advise you on room area, amenities, the deposit-and-hold process, or how to use the map to find a room.</value>
+  </data>
+  <data name="Chat_Greet2" xml:space="preserve">
+    <value>✨ Nice to meet you! Want me to show you how to filter rooms with a balcony or a private bathroom, or clear up anything about the deposit?</value>
+  </data>
+  <data name="Chat_Greet3" xml:space="preserve">
+    <value>🤖 Hello! I am the automatic support chatbot. Do you have any question about rent price, how long a room is held for you, or the VIP listing policy?</value>
+  </data>
+  <data name="Chat_Slang1" xml:space="preserve">
+    <value>🤖 Hey, take it easy! I am only an automatic assistant. Just type a keyword such as 'rent', 'amenities' or 'deposit' and I will give you the exact information.</value>
+  </data>
+  <data name="Chat_Slang2" xml:space="preserve">
+    <value>💡 Confused? Ask a bit more clearly about a site feature or the room details (area, private bathroom...) so I can answer you properly.</value>
+  </data>
+  <data name="Chat_Map" xml:space="preserve">
+    <value>🗺️ The system embeds a smart Leaflet map! Open 'Find room', pick your School and a search radius (km). The map measures the straight-line distance from each room's coordinates (latitude/longitude) right to the school gate.</value>
+  </data>
+  <data name="Chat_Deposit" xml:space="preserve">
+    <value>💰 Renters can pay the deposit straight through VNPay to hold a room. The holding period (number of days) is set by the landlord. If the deposit deadline passes without a signed contract, the system automatically releases the room for someone else so it stays fair.</value>
+  </data>
+  <data name="Chat_Price1" xml:space="preserve">
+    <value>💵 Every listing on RoomFinder states the rent (VND/month) up front. On the room detail page you can see the exact size (length x width) and know in advance whether it has a balcony or a private bathroom.</value>
+  </data>
+  <data name="Chat_Price2" xml:space="preserve">
+    <value>📏 The system requires landlords to declare the price, length and width of the room. You can also see at a glance on the detail screen whether the room has a private bathroom or a balcony.</value>
+  </data>
+  <data name="Chat_Fraud" xml:space="preserve">
+    <value>🚩 To stop spam posts, every listing has an 'expiry date'. Rooms marked 'Already rented' are hidden from the list automatically. If a landlord fakes the area or scams your deposit, remember to press Report so an Admin can handle it.</value>
+  </data>
+  <data name="Chat_Vip" xml:space="preserve">
+    <value>⭐ Listings ticked as 'VIP' are pinned and shown first on both the list and the map. It is a handy way for landlords to find a renter faster.</value>
+  </data>
+  <data name="Chat_Author" xml:space="preserve">
+    <value>🏫 RoomFinder was researched and built with ASP.NET Core MVC to give students a safe way to find a place to live.</value>
+  </data>
+  <data name="Chat_OffTopic" xml:space="preserve">
+    <value>🤖 I am the automatic assistant of the RoomFinder system, so I am only programmed to answer questions about the room-rental system.</value>
+  </data>
+  <data name="Chat_Fallback1" xml:space="preserve">
+    <value>💡 I did not quite get that. Could you ask more clearly about the rent, the area (length, width), the amenities (balcony, bathroom) or how long a deposit holds the room?</value>
+  </data>
+  <data name="Chat_Fallback2" xml:space="preserve">
+    <value>📬 That question is outside my data! You can message the landlord directly on the room detail page to get more information.</value>
+  </data>
+  <data name="Chat_Fallback3" xml:space="preserve">
+    <value>🤖 If you are looking for a room, try filtering Province, District and School name on the search bar. The system computes the coordinates and reports the exact distance for you.</value>
+  </data>
+  <data name="Api_BadCredentials" xml:space="preserve">
+    <value>Wrong email or password.</value>
+  </data>
+  <data name="Api_BadRole" xml:space="preserve">
+    <value>Invalid role. The app only allows registering as a Student or a Landlord.</value>
+  </data>
+  <data name="Api_BadPhone" xml:space="preserve">
+    <value>Invalid phone number.</value>
+  </data>
+  <data name="Api_NoImageChosen" xml:space="preserve">
+    <value>No image was selected.</value>
+  </data>
+  <data name="Api_CccdImagesRequired" xml:space="preserve">
+    <value>Please choose the front and back photos of your ID card.</value>
+  </data>
+  <data name="Api_UserNotFound" xml:space="preserve">
+    <value>User not found</value>
+  </data>
+  <data name="Api_ReceiverNotFound" xml:space="preserve">
+    <value>Recipient not found</value>
+  </data>
+  <data name="Api_ReportNotFound" xml:space="preserve">
+    <value>Report not found</value>
+  </data>
+  <data name="Api_ReportedUserNotFound" xml:space="preserve">
+    <value>Reported user not found</value>
+  </data>
+  <data name="Api_RoomNotFound" xml:space="preserve">
+    <value>Room not found</value>
+  </data>
+  <data name="Api_RoomDetailNotFound" xml:space="preserve">
+    <value>Room not found</value>
+  </data>
+  <data name="Api_YourRoomNotFound" xml:space="preserve">
+    <value>Your room was not found</value>
+  </data>
+  <data name="Api_RoomGone" xml:space="preserve">
+    <value>The room already has a renter or no longer exists.</value>
+  </data>
+  <data name="Api_NoPermission" xml:space="preserve">
+    <value>You are not allowed to perform this action.</value>
+  </data>
+  <data name="Api_BadAction" xml:space="preserve">
+    <value>Invalid action (Duyet or TuChoi).</value>
+  </data>
+  <data name="Api_CannotDeleteSelf" xml:space="preserve">
+    <value>You cannot delete your own account.</value>
+  </data>
+  <data name="Api_AccountLocked" xml:space="preserve">
+    <value>This account is locked.</value>
+  </data>
+  <data name="Api_LockedSendMsg" xml:space="preserve">
+    <value>Your account is locked, you cannot send messages.</value>
+  </data>
+  <data name="Api_LockedSendText" xml:space="preserve">
+    <value>Your account is locked, you cannot send messages.</value>
+  </data>
+  <data name="Api_LockedSendImage" xml:space="preserve">
+    <value>Your account is locked, you cannot send images.</value>
+  </data>
+  <data name="Api_LockedViewRoom" xml:space="preserve">
+    <value>Your account is locked, so you cannot view room details.</value>
+  </data>
+  <data name="Api_LockedPostRoom" xml:space="preserve">
+    <value>Your account is locked and cannot post a new room.</value>
+  </data>
+  <data name="Api_DeletedAccount" xml:space="preserve">
+    <value>Deleted account</value>
+  </data>
+  <data name="Api_ImagePlaceholder" xml:space="preserve">
+    <value>[Image]</value>
+  </data>
+  <data name="Api_Sent" xml:space="preserve">
+    <value>Sent</value>
+  </data>
+  <data name="Api_NoFileUploaded" xml:space="preserve">
+    <value>No file was uploaded.</value>
+  </data>
+  <data name="Api_OnlyImageFiles" xml:space="preserve">
+    <value>Only image files are allowed (.jpg, .png, .gif).</value>
+  </data>
+  <data name="Api_UnsupportedImageFormat" xml:space="preserve">
+    <value>The {0} image format is not supported.</value>
+  </data>
+  <data name="Api_ReportUserSent" xml:space="preserve">
+    <value>The report about the offending user was sent to Admin.</value>
+  </data>
+  <data name="Api_NotEnoughForVip" xml:space="preserve">
+    <value>Your wallet does not have the {0}đ needed to post a VIP listing.</value>
+  </data>
+  <data name="Api_RoomDeleted" xml:space="preserve">
+    <value>Listing deleted.</value>
+  </data>
+  <data name="Api_MarkRentedDone" xml:space="preserve">
+    <value>Rental confirmed! The listing is now closed.</value>
+  </data>
+  <data name="Api_ReopenedRoom" xml:space="preserve">
+    <value>Room reopened! The listing shows up in search again.</value>
+  </data>
+  <data name="Api_ReviewAfterPaidOnly" xml:space="preserve">
+    <value>You can only review a room after renting and paying for it!</value>
+  </data>
+  <data name="Api_ThanksReview" xml:space="preserve">
+    <value>Thanks for leaving an honest review!</value>
+  </data>
+  <data name="Api_ReportRoomSent" xml:space="preserve">
+    <value>The fraud report was sent to Admin.</value>
+  </data>
+  <data name="Api_RentTakenOrHeld" xml:space="preserve">
+    <value>This room is already rented or is being held by someone else.</value>
+  </data>
+  <data name="Api_RentTakenOrDeposited" xml:space="preserve">
+    <value>This room is already rented or someone else has deposited on it.</value>
+  </data>
+  <data name="Api_RentTooCheapToDeposit" xml:space="preserve">
+    <value>The rent is too low to support a separate deposit.</value>
+  </data>
+  <data name="Api_NoDepositForRoom" xml:space="preserve">
+    <value>You have not deposited on this room.</value>
+  </data>
+  <data name="Api_NoCancelDepositRight" xml:space="preserve">
+    <value>You are not allowed to cancel the deposit on this room.</value>
+  </data>
+  <data name="Api_RentSuccess" xml:space="preserve">
+    <value>You have rented the room successfully.</value>
+  </data>
+  <data name="Api_RentPaidSuccess" xml:space="preserve">
+    <value>Room rented! The deposit and the rent have been released to the landlord.</value>
+  </data>
+  <data name="Api_DepositDone" xml:space="preserve">
+    <value>Deposit of {0}đ paid. The room is held for you for {1} days.</value>
+  </data>
+  <data name="Api_DepositRefunded" xml:space="preserve">
+    <value>Deposit cancelled! {0}đ was refunded to your wallet.</value>
+  </data>
+  <data name="Api_TopUpDone" xml:space="preserve">
+    <value>{0}đ has been added to your wallet.</value>
+  </data>
+  <data name="Api_TopUpFailed" xml:space="preserve">
+    <value>Top-up failed or the transaction was cancelled.</value>
+  </data>
+  <data name="Api_TopUpAccountUnknown" xml:space="preserve">
+    <value>The account that should receive the money could not be identified.</value>
+  </data>
+  <data name="Api_BadSignature" xml:space="preserve">
+    <value>The transaction signature is invalid.</value>
+  </data>
+  <data name="Api_TransactionFailed" xml:space="preserve">
+    <value>{0} failed or was cancelled.</value>
+  </data>
+  <data name="Api_TransactionNoRoom" xml:space="preserve">
+    <value>The room id could not be read from the transaction.</value>
+  </data>
+  <data name="Verb_ThanhToan" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="Verb_DatCoc" xml:space="preserve">
+    <value>The deposit</value>
+  </data>
+  <data name="Verb_ThanhToanConLai" xml:space="preserve">
+    <value>The remaining payment</value>
+  </data>
+  <data name="Api_AccountDeleted" xml:space="preserve">
+    <value>The account and all related data were deleted.</value>
+  </data>
+  <data name="Api_ReportResolved" xml:space="preserve">
+    <value>The report was marked as handled.</value>
+  </data>
+  <data name="Api_LockedAccountMsg" xml:space="preserve">
+    <value>Account {0} has been locked.</value>
+  </data>
+  <data name="Api_UnlockedAccountMsg" xml:space="preserve">
+    <value>Account {0} has been unlocked.</value>
+  </data>
+  <data name="Api_CccdApproved" xml:space="preserve">
+    <value>The ID card file was approved.</value>
+  </data>
+  <data name="Api_CccdRejected" xml:space="preserve">
+    <value>Rejected; the landlord is asked to upload the ID card again.</value>
+  </data>
+</root>

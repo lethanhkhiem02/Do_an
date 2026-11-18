@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Do_an_co_so.Models.AppUser>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Do_an_co_so.SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["YourInbox"];
+}
+
+<div class="container mt-4 mb-5">
+    <h2 class="text-primary fw-bold mb-4">💬 @Localizer["YourInbox"]</h2>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="list-group shadow-sm">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var user in Model)
+                    {
+                        <a asp-action="Conversation" asp-route-receiverId="@user.Id" class="list-group-item list-group-item-action d-flex align-items-center p-3">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3 fw-bold" style="width: 50px; height: 50px; font-size: 20px;">
+                                @(string.IsNullOrEmpty(user.HoTen) ? "U" : user.HoTen.Substring(0, 1).ToUpper())
+                            </div>
+                            <div>
+                                <h5 class="mb-1 fw-bold">@(user.HoTen ?? user.Email)</h5>
+                                <small class="text-primary">@Localizer["ClickToViewChat"]</small>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="text-center p-5 bg-light rounded border">
+                        <h5 class="text-muted">@Localizer["NoConversations"]</h5>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

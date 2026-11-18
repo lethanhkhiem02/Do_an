@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Do_an_co_so.Models.PhongTro>
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Do_an_co_so.SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Home"];
+}
+
+<style>
+    .vip-card {
+        border: 2px solid #ffc107 !important;
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.4) !important;
+        background-color: #fffdf5; /* Nền vàng cực nhạt */
+    }
+
+    .vip-badge {
+        position: absolute;
+        top: 10px;
+        right: -30px;
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 30px;
+        font-weight: bold;
+        transform: rotate(45deg);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 10;
+        animation: blink 1.5s infinite; /* Hiệu ứng nhấp nháy */
+    }
+
+    @@keyframes blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.8;
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <h2 class="text-primary fw-bold mb-4">🏠 @Localizer["LatestRooms"]</h2>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                // 🔥 THÊM MỚI ĐỢT 1: Chặn hiển thị phòng hết hạn
+                if (item.NgayHetHan != null && item.NgayHetHan < DateTime.Now)
+                {
+                    continue;
+                }
+
+                string vipClass = item.IsVip ? "vip-card" : "";
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm card-custom p-0 position-relative @vipClass" style="overflow: hidden;">
+
+                        @if (item.IsVip)
+                        {
+                            <div class="vip-badge">⭐ @Localizer["VipNews"]</div>
+                        }
+
+                        @{
+                            string firstImage = "";
+                            if (!string.IsNullOrEmpty(item.HinhAnh))
+                            {
+                                firstImage = item.HinhAnh.Split(',')[0];
+                            }
+                        }
+
+                        @if (!string.IsNullOrEmpty(firstImage))
+                        {
+                            <img src="~/images/@firstImage" class="card-img-top" alt="Hình phòng trọ" style="height: 250px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 250px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                                <span>@Localizer["NoImage"]</span>
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title text-danger fw-bold mb-1">
+                                @item.Gia.ToString("N0") @Localizer["VNDPerMonth"]
+                                @if (item.IsVip)
+                                {
+                                    <span class="text-warning fs-5">⭐</span>
+                                }
+                            </h5>
+
+                            @{
+                                var allReviews = ViewBag.AllDanhGias as IEnumerable<Do_an_co_so.Models.DanhGia>;
+                                var roomReviews = allReviews?.Where(d => d.PhongTroId == item.Id).ToList();
+                                int reviewCount = roomReviews?.Count ?? 0;
+                                double avgRating = reviewCount > 0 ? roomReviews.Average(d => d.Sao) : 0;
+                            }
+                            <div class="mb-2">
+                                @if (reviewCount > 0)
+                                {
+                                    <span class="text-warning fw-bold">⭐ @avgRating.ToString("0.0")</span>
+                                    <span class="text-muted" style="font-size: 0.85rem;">(@reviewCount @Localizer["Reviews"])</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted" style="font-size: 0.85rem;">@Localizer["NoReview"]</span>
+                                }
+                            </div>
+                            <p class="card-text text-truncate" style="max-width: 100%;">@item.MoTa</p>
+
+                            <p class="card-text"><small class="text-muted">📍 @item.DiaChi</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 pb-3">
+                            <a asp-controller="PhongTro" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100 fw-bold rounded-pill">@Localizer["ViewDetails"]</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center mt-5">
+                <h5 class="text-muted">@Localizer["NoRoomAvailable"]</h5>
+            </div>
+        }
+    </div>
+</div>

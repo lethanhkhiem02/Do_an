@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Do_an_co_so.Models
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<Do_an_co_so.SharedResource> Localizer
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<ul class="navbar-nav align-items-center gap-2">
+    <li class="nav-item ms-2 me-2">
+        <button id="theme-toggle" class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm" type="button" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+            <i id="theme-icon" class="bi bi-sun-fill text-warning"></i>
+        </button>
+    </li>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle bg-light rounded-pill px-3 shadow-sm border d-flex align-items-center text-dark" href="#" id="userMenu" data-bs-toggle="dropdown" style="font-weight: bold;">
+                <i class="bi bi-person-circle text-primary me-2 fs-5"></i> @(currentUser?.HoTen ?? currentUser?.UserName)
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                <li><a class="dropdown-item py-2 fw-semibold text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">@Localizer["Profile"]</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button id="logout" type="submit" class="dropdown-item text-danger py-2 fw-bold"><i class="bi bi-box-arrow-right me-2"></i> @Localizer["Logout"]</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link px-3 fw-bold" id="login" asp-area="Identity" asp-page="/Account/Login" style="color: #495057 !important;">@Localizer["Login"]</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" id="register" asp-area="Identity" asp-page="/Account/Register" style="color: #ffffff !important;">@Localizer["Register"]</a>
+        </li>
+    }
+</ul>

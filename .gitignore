@@ -1,0 +1,22 @@
+# ---- backend (ASP.NET Core) ----
+backend/bin/
+backend/obj/
+backend/.vs/
+backend/*.user
+backend/appsettings.*.local.json
+
+# ---- app (Flutter) ----
+app/build/
+app/.dart_tool/
+app/.idea/
+app/*.iml
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/android/.gradle/
+app/android/local.properties
+app/ios/Pods/
+
+# ---- dac biet ----
+*.bak
+*.bak_*
+backup_*/

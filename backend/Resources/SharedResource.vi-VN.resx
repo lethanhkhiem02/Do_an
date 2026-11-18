@@ -1,0 +1,1002 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminManagement" xml:space="preserve">
+    <value>Quản lý Admin</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>Nạp tiền</value>
+  </data>
+  <data name="FindRoom" xml:space="preserve">
+    <value>🔍 Tìm trọ</value>
+  </data>
+  <data name="GlobalChat" xml:space="preserve">
+    <value>🌍 Chat chung</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="LatestRooms" xml:space="preserve">
+    <value>Danh sách phòng trọ mới nhất</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="ManagePosts" xml:space="preserve">
+    <value>Quản lý tin</value>
+  </data>
+  <data name="Messages" xml:space="preserve">
+    <value>💬 Tin nhắn</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>Chưa có hình ảnh</value>
+  </data>
+  <data name="NoReview" xml:space="preserve">
+    <value>Chưa có đánh giá</value>
+  </data>
+  <data name="NoRoomAvailable" xml:space="preserve">
+    <value>Hiện tại chưa có phòng trọ nào được đăng.</value>
+  </data>
+  <data name="PostRoom" xml:space="preserve">
+    <value>Đăng phòng</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Cài đặt hồ sơ</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="VipNews" xml:space="preserve">
+    <value>TIN VIP</value>
+  </data>
+  <data name="VNDPerMonth" xml:space="preserve">
+    <value>VNĐ/Tháng</value>
+  </data>
+  <data name="Wallet" xml:space="preserve">
+    <value>Ví</value>
+  </data>
+  <data name="LichSuThue" xml:space="preserve">
+    <value>Lịch sử thuê</value>
+  </data>
+  <data name="SearchArea" xml:space="preserve">
+    <value>Khu vực tìm kiếm</value>
+  </data>
+  <data name="SmartSearchTitle" xml:space="preserve">
+    <value>Tìm trọ thông minh theo trường</value>
+  </data>
+  <data name="ProvinceCity" xml:space="preserve">
+    <value>Tỉnh/Thành</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="District" xml:space="preserve">
+    <value>Quận/Huyện</value>
+  </data>
+  <data name="AllDistricts" xml:space="preserve">
+    <value>-- Tất cả Quận --</value>
+  </data>
+  <data name="EducationLevel" xml:space="preserve">
+    <value>Hệ đào tạo</value>
+  </data>
+  <data name="AllLevels" xml:space="preserve">
+    <value>Tất cả hệ</value>
+  </data>
+  <data name="University" xml:space="preserve">
+    <value>Đại học</value>
+  </data>
+  <data name="College" xml:space="preserve">
+    <value>Cao đẳng</value>
+  </data>
+  <data name="YourSchool" xml:space="preserve">
+    <value>Trường của bạn</value>
+  </data>
+  <data name="SelectSchool" xml:space="preserve">
+    <value>-- Chọn trường (Chọn Quận trước nếu khó tìm) --</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Khu vực</value>
+  </data>
+  <data name="SearchRadius" xml:space="preserve">
+    <value>Bán kính tìm kiếm</value>
+  </data>
+  <data name="Distance" xml:space="preserve">
+    <value>-- Khoảng cách --</value>
+  </data>
+  <data name="WalkBike" xml:space="preserve">
+    <value>Đi bộ/Xe đạp</value>
+  </data>
+  <data name="Motorbike" xml:space="preserve">
+    <value>Xe máy</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>Khoảng giá (VNĐ)</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Từ...</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>Đến...</value>
+  </data>
+  <data name="StartFilter" xml:space="preserve">
+    <value>Bắt đầu lọc</value>
+  </data>
+  <data name="RefreshFilter" xml:space="preserve">
+    <value>Làm mới bộ lọc</value>
+  </data>
+  <data name="Found" xml:space="preserve">
+    <value>Tìm thấy</value>
+  </data>
+  <data name="SuitableRooms" xml:space="preserve">
+    <value>phòng trọ phù hợp</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Danh sách</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="NoRoomsMatch" xml:space="preserve">
+    <value>Không có phòng trọ nào khớp với tiêu chí của bạn.</value>
+  </data>
+  <data name="TryExpanding" xml:space="preserve">
+    <value>Thử mở rộng bán kính hoặc điều chỉnh lại khoảng giá nhé!</value>
+  </data>
+  <data name="DistanceLabel" xml:space="preserve">
+    <value>Cách:</value>
+  </data>
+  <data name="NoRoomsInArea" xml:space="preserve">
+    <value>Hiện chưa có phòng trọ nào trong khu vực này.</value>
+  </data>
+  <data name="TPThuDuc" xml:space="preserve">
+    <value>TP Thủ Đức (Q.2, 9 cũ)</value>
+  </data>
+  <data name="ViewRoom" xml:space="preserve">
+    <value>Xem phòng</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>tháng</value>
+  </data>
+  <data name="YourInbox" xml:space="preserve">
+    <value>Hộp thư của bạn</value>
+  </data>
+  <data name="ClickToViewChat" xml:space="preserve">
+    <value>Bấm vào để xem cuộc trò chuyện</value>
+  </data>
+  <data name="NoConversations" xml:space="preserve">
+    <value>Bạn chưa có cuộc trò chuyện nào.</value>
+  </data>
+  <data name="GlobalChatRoom" xml:space="preserve">
+    <value>Phòng Chat Tổng &amp; Diễn Đàn</value>
+  </data>
+  <data name="TypeMessage" xml:space="preserve">
+    <value>Nhập tin nhắn...</value>
+  </data>
+  <data name="You" xml:space="preserve">
+    <value>Bạn</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>Upload ảnh thất bại:</value>
+  </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>Có lỗi xảy ra khi upload ảnh.</value>
+  </data>
+  <data name="RoomDetails" xml:space="preserve">
+    <value>Chi tiết phòng trọ</value>
+  </data>
+  <data name="PrivateWC" xml:space="preserve">
+    <value>WC Riêng</value>
+  </data>
+  <data name="Balcony" xml:space="preserve">
+    <value>Ban công</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="LandlordInfo" xml:space="preserve">
+    <value>THÔNG TIN CHỦ TRỌ</value>
+  </data>
+  <data name="Updating" xml:space="preserve">
+    <value>Đang cập nhật</value>
+  </data>
+  <data name="VerifiedTooltip" xml:space="preserve">
+    <value>Chủ trọ này đã được Admin xác minh CCCD.</value>
+  </data>
+  <data name="VerifiedID" xml:space="preserve">
+    <value>Đã Xác Thực CCCD</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="DetailDescription" xml:space="preserve">
+    <value>Mô tả chi tiết</value>
+  </data>
+  <data name="RoomRentedOrDeposited" xml:space="preserve">
+    <value>❌ PHÒNG ĐÃ CÓ NGƯỜI THUÊ / CỌC (KHÓA THANH TOÁN)</value>
+  </data>
+  <data name="RoomDepositedUntil" xml:space="preserve">
+    <value>⏳ PHÒNG ĐÃ CÓ NGƯỜI ĐẶT CỌC GIỮ CHỖ (Đến</value>
+  </data>
+  <data name="YouDeposited" xml:space="preserve">
+    <value>🎉 BẠN ĐÃ ĐẶT CỌC 500.000 VNĐ CHO PHÒNG NÀY</value>
+  </data>
+  <data name="PayRemainingBefore" xml:space="preserve">
+    <value>Vui lòng thanh toán phần còn lại trước</value>
+  </data>
+  <data name="PayRemaining" xml:space="preserve">
+    <value>THANH TOÁN</value>
+  </data>
+  <data name="CancelDepositRefund" xml:space="preserve">
+    <value>🚫 HỦY CỌC &amp; HOÀN TIỀN</value>
+  </data>
+  <data name="RoomAvailable" xml:space="preserve">
+    <value>✅ PHÒNG ĐANG TRỐNG - CÓ THỂ THUÊ NGAY</value>
+  </data>
+  <data name="DepositToHold" xml:space="preserve">
+    <value>⏳ ĐẶT CỌC GIỮ CHỖ (500.000 VNĐ)</value>
+  </data>
+  <data name="PayAndRentNow" xml:space="preserve">
+    <value>💳 THANH TOÁN &amp; THUÊ NGAY</value>
+  </data>
+  <data name="LoginToRentDeposit" xml:space="preserve">
+    <value>Đăng nhập bằng tài khoản Sinh viên để thuê / đặt cọc</value>
+  </data>
+  <data name="QuickMessage" xml:space="preserve">
+    <value>Nhắn tin nhanh</value>
+  </data>
+  <data name="LoginToMessage" xml:space="preserve">
+    <value>Đăng nhập để nhắn tin</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Trở lại trang chủ</value>
+  </data>
+  <data name="DeleteThisPost" xml:space="preserve">
+    <value>🗑️ Xóa bài đăng này</value>
+  </data>
+  <data name="ReportFakeNews" xml:space="preserve">
+    <value>🚩 Báo cáo tin giả / lừa đảo</value>
+  </data>
+  <data name="ReviewsFromTenants" xml:space="preserve">
+    <value>Đánh giá từ người thuê</value>
+  </data>
+  <data name="WriteYourReview" xml:space="preserve">
+    <value>Viết đánh giá của bạn</value>
+  </data>
+  <data name="ChooseSatisfaction" xml:space="preserve">
+    <value>Chọn mức độ hài lòng:</value>
+  </data>
+  <data name="5Star" xml:space="preserve">
+    <value>5 Sao - Tuyệt vời</value>
+  </data>
+  <data name="4Star" xml:space="preserve">
+    <value>4 Sao - Rất tốt</value>
+  </data>
+  <data name="3Star" xml:space="preserve">
+    <value>3 Sao - Bình thường</value>
+  </data>
+  <data name="2Star" xml:space="preserve">
+    <value>2 Sao - Kém</value>
+  </data>
+  <data name="1Star" xml:space="preserve">
+    <value>1 Sao - Tệ</value>
+  </data>
+  <data name="DetailedComment" xml:space="preserve">
+    <value>Bình luận chi tiết:</value>
+  </data>
+  <data name="ShareExperience" xml:space="preserve">
+    <value>Chia sẻ trải nghiệm chân thực của bạn...</value>
+  </data>
+  <data name="SubmitReview" xml:space="preserve">
+    <value>Gửi Đánh Giá 🚀</value>
+  </data>
+  <data name="NoReviewsFirstToReview" xml:space="preserve">
+    <value>Chưa có đánh giá nào. Hãy là người đầu tiên bóc tem phòng trọ này! 🎉</value>
+  </data>
+  <data name="ReportFraudTitle" xml:space="preserve">
+    <value>BÁO CÁO TIN GIAN LẬN</value>
+  </data>
+  <data name="ReportDesc" xml:space="preserve">
+    <value>Nếu bạn phát hiện tin đăng lừa đảo, sai sự thật, hãy báo cáo ngay!</value>
+  </data>
+  <data name="ReportReason" xml:space="preserve">
+    <value>Lý do báo cáo:</value>
+  </data>
+  <data name="SelectReason" xml:space="preserve">
+    <value>-- Chọn lý do --</value>
+  </data>
+  <data name="Reason1" xml:space="preserve">
+    <value>Lừa đảo tiền cọc</value>
+  </data>
+  <data name="Reason2" xml:space="preserve">
+    <value>Phòng không giống ảnh</value>
+  </data>
+  <data name="Reason3" xml:space="preserve">
+    <value>Thái độ không tốt/Đe dọa</value>
+  </data>
+  <data name="Reason4" xml:space="preserve">
+    <value>Địa chỉ giả mạo</value>
+  </data>
+  <data name="Reason5" xml:space="preserve">
+    <value>Lý do khác...</value>
+  </data>
+  <data name="AdditionalDetails" xml:space="preserve">
+    <value>Chi tiết thêm (không bắt buộc):</value>
+  </data>
+  <data name="ReportPlaceholder" xml:space="preserve">
+    <value>Mô tả rõ hơn về tình huống bạn gặp phải...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Hủy bỏ</value>
+  </data>
+  <data name="SubmitReportBtn" xml:space="preserve">
+    <value>Gửi Báo Cáo 🚀</value>
+  </data>
+  <data name="ChatWith" xml:space="preserve">
+    <value>Chat với</value>
+  </data>
+  <data name="SendBtn" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="ConfirmPayRemaining" xml:space="preserve">
+    <value>Xác nhận thanh toán phần còn lại?</value>
+  </data>
+  <data name="ConfirmCancelDeposit" xml:space="preserve">
+    <value>Xác nhận HỦY CỌC? Bạn sẽ được hoàn 500.000 VNĐ và mất quyền giữ phòng.</value>
+  </data>
+  <data name="ConfirmDeposit" xml:space="preserve">
+    <value>Xác nhận ĐẶT CỌC 500,000 VNĐ để giữ phòng này?</value>
+  </data>
+  <data name="ConfirmPayAndRent" xml:space="preserve">
+    <value>Xác nhận thanh toán để thuê đứt phòng này?</value>
+  </data>
+  <data name="ConfirmDeletePost" xml:space="preserve">
+    <value>⚠️ CẢNH BÁO: Bạn có chắc muốn xóa bài đăng này không?</value>
+  </data>
+  <data name="ConnectingChat" xml:space="preserve">
+    <value>⏳ Máy chủ Chat đang kết nối, vui lòng chờ 1 giây rồi Gửi lại nhé!</value>
+  </data>
+  <data name="CantSendMessage" xml:space="preserve">
+    <value>⚠️ Không thể gửi tin nhắn. Có thể tài khoản đang bị khóa!</value>
+  </data>
+  <data name="PostNewRoom" xml:space="preserve">
+    <value>Đăng phòng mới</value>
+  </data>
+  <data name="FillRoomInfo" xml:space="preserve">
+    <value>Điền Thông Tin Phòng Trọ</value>
+  </data>
+  <data name="RoomDescPlaceholder" xml:space="preserve">
+    <value>Ví dụ: Phòng trọ 25m2, có gác lửng, WC riêng...</value>
+  </data>
+  <data name="LengthPlaceholder" xml:space="preserve">
+    <value>Ví dụ: 5.5</value>
+  </data>
+  <data name="WidthPlaceholder" xml:space="preserve">
+    <value>Ví dụ: 4.0</value>
+  </data>
+  <data name="PostDuration" xml:space="preserve">
+    <value>Số ngày bài đăng tồn tại</value>
+  </data>
+  <data name="HoldDuration" xml:space="preserve">
+    <value>Số ngày giữ phòng khi nhận cọc</value>
+  </data>
+  <data name="HasPrivateWC" xml:space="preserve">
+    <value>Có nhà vệ sinh riêng</value>
+  </data>
+  <data name="HasBalcony" xml:space="preserve">
+    <value>Có ban công</value>
+  </data>
+  <data name="RentPrice" xml:space="preserve">
+    <value>Giá thuê (VNĐ/Tháng)</value>
+  </data>
+  <data name="PricePlaceholder" xml:space="preserve">
+    <value>Ví dụ: 2500000</value>
+  </data>
+  <data name="DetailedAddress" xml:space="preserve">
+    <value>Địa chỉ chi tiết</value>
+  </data>
+  <data name="SelectProvince" xml:space="preserve">
+    <value>Chọn Tỉnh/Thành</value>
+  </data>
+  <data name="SelectDistrict" xml:space="preserve">
+    <value>Chọn Quận/Huyện</value>
+  </data>
+  <data name="SelectWard" xml:space="preserve">
+    <value>Chọn Phường/Xã</value>
+  </data>
+  <data name="AddressPlaceholder" xml:space="preserve">
+    <value>Ví dụ: 475A Điện Biên Phủ (Số nhà, Tên đường)</value>
+  </data>
+  <data name="FindOnMap" xml:space="preserve">
+    <value>Tìm trên bản đồ</value>
+  </data>
+  <data name="PinOnMap" xml:space="preserve">
+    <value>Ghim vị trí trên bản đồ</value>
+  </data>
+  <data name="MapInstruction" xml:space="preserve">
+    <value>Bản đồ tự động di chuyển hoặc bạn có thể kéo ghim.</value>
+  </data>
+  <data name="MyLocation" xml:space="preserve">
+    <value>Vị trí của tôi</value>
+  </data>
+  <data name="AddImages" xml:space="preserve">
+    <value>Thêm hình ảnh (Có thể chọn nhiều)</value>
+  </data>
+  <data name="PostVip" xml:space="preserve">
+    <value>Đăng tin VIP (Phí: 50.000 VNĐ)</value>
+  </data>
+  <data name="VipInstruction" xml:space="preserve">
+    <value>Tin VIP sẽ được ghim lên đầu bảng kết quả!</value>
+  </data>
+  <data name="PublishPost" xml:space="preserve">
+    <value>Đăng Lên Hệ Thống</value>
+  </data>
+  <data name="MyRooms" xml:space="preserve">
+    <value>Quản lý phòng của tôi</value>
+  </data>
+  <data name="MyPostedRooms" xml:space="preserve">
+    <value>Danh sách phòng bạn đã đăng</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Hình ảnh</value>
+  </data>
+  <data name="RoomInfo" xml:space="preserve">
+    <value>Thông tin phòng</value>
+  </data>
+  <data name="RentPriceTable" xml:space="preserve">
+    <value>Giá thuê</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Thao tác</value>
+  </data>
+  <data name="VIPStatus" xml:space="preserve">
+    <value>TIN VIP</value>
+  </data>
+  <data name="NormalStatus" xml:space="preserve">
+    <value>Tin thường</value>
+  </data>
+  <data name="EmptyStatus" xml:space="preserve">
+    <value>Đang trống</value>
+  </data>
+  <data name="DepositedStatus" xml:space="preserve">
+    <value>Đang được cọc</value>
+  </data>
+  <data name="RentedStatus" xml:space="preserve">
+    <value>Đã cho thuê</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Xem</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="MarkAsRented" xml:space="preserve">
+    <value>Báo đã cho thuê</value>
+  </data>
+  <data name="ConfirmMarkRented" xml:space="preserve">
+    <value>Bạn xác nhận phòng đã có người thuê? Tin sẽ ẩn.</value>
+  </data>
+  <data name="ReopenRoom" xml:space="preserve">
+    <value>Mở lại phòng</value>
+  </data>
+  <data name="ConfirmReopen" xml:space="preserve">
+    <value>Bạn có chắc muốn HỦY XÁC NHẬN và mở lại phòng?</value>
+  </data>
+  <data name="NoPostedRooms" xml:space="preserve">
+    <value>Bạn chưa đăng phòng trọ nào. Hãy bắt đầu ngay! 🚀</value>
+  </data>
+  <data name="ConfirmDeleteRoom" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa tin đăng này không?</value>
+  </data>
+  <data name="AdminUserManagement" xml:space="preserve">
+    <value>Quản lý người dùng</value>
+  </data>
+  <data name="SystemUserManagement" xml:space="preserve">
+    <value>QUẢN LÝ NGƯỜI DÙNG HỆ THỐNG</value>
+  </data>
+  <data name="ViewScamReports" xml:space="preserve">
+    <value>Xem Đơn Tố Cáo Lừa Đảo</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Họ và Tên</value>
+  </data>
+  <data name="EmailAccount" xml:space="preserve">
+    <value>Email / Tài khoản</value>
+  </data>
+  <data name="LockStatus" xml:space="preserve">
+    <value>Trạng thái Khóa</value>
+  </data>
+  <data name="eKYCStatus" xml:space="preserve">
+    <value>Trạng thái eKYC (CCCD)</value>
+  </data>
+  <data name="VerificationProfile" xml:space="preserve">
+    <value>Hồ Sơ Xác Thực</value>
+  </data>
+  <data name="AdminActions" xml:space="preserve">
+    <value>Hành động của Admin</value>
+  </data>
+  <data name="Locked" xml:space="preserve">
+    <value>Bị khóa</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Hoạt động</value>
+  </data>
+  <data name="Verified" xml:space="preserve">
+    <value>Đã xác thực</value>
+  </data>
+  <data name="PendingReview" xml:space="preserve">
+    <value>Chờ duyệt</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Chưa có</value>
+  </data>
+  <data name="FrontSide" xml:space="preserve">
+    <value>Mặt trước</value>
+  </data>
+  <data name="BackSide" xml:space="preserve">
+    <value>Mặt sau</value>
+  </data>
+  <data name="ClickToEnlarge" xml:space="preserve">
+    <value>Bấm để xem lớn</value>
+  </data>
+  <data name="AIScan" xml:space="preserve">
+    <value>AI Quét</value>
+  </data>
+  <data name="EmptyProfile" xml:space="preserve">
+    <value>Trống</value>
+  </data>
+  <data name="Unlock" xml:space="preserve">
+    <value>Mở Khóa</value>
+  </data>
+  <data name="LockAccount" xml:space="preserve">
+    <value>Khóa Tài Khoản</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Duyệt</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="ConfirmValidCCCD" xml:space="preserve">
+    <value>Xác nhận CCCD hợp lệ?</value>
+  </data>
+  <data name="ConfirmRejectProfile" xml:space="preserve">
+    <value>Từ chối hồ sơ này? Người dùng sẽ phải tải lại ảnh.</value>
+  </data>
+  <data name="PermanentDelete" xml:space="preserve">
+    <value>Xóa Vĩnh Viễn</value>
+  </data>
+  <data name="ConfirmDeleteAccount1" xml:space="preserve">
+    <value>Bạn có CHẮC CHẮN muốn xóa vĩnh viễn tài khoản</value>
+  </data>
+  <data name="ConfirmDeleteAccount2" xml:space="preserve">
+    <value>này không? Mọi dữ liệu của họ sẽ bị mất!</value>
+  </data>
+  <data name="OnlyRenterCanReviewTitle" xml:space="preserve">
+    <value>Chỉ dành cho khách thuê thật</value>
+  </data>
+  <data name="OnlyRenterCanReviewDesc" xml:space="preserve">
+    <value>Tính năng đánh giá chỉ được mở khóa sau khi bạn đã hoàn tất thanh toán và thuê phòng này.</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="WelcomeBack" xml:space="preserve">
+    <value>Chào mừng trở lại</value>
+  </data>
+  <data name="LoginEmail" xml:space="preserve">
+    <value>Email đăng nhập</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Quên mật khẩu?</value>
+  </data>
+  <data name="NewUserPrompt" xml:space="preserve">
+    <value>Bạn là người mới?</value>
+  </data>
+  <data name="CreateNewAccount" xml:space="preserve">
+    <value>Tạo tài khoản mới</value>
+  </data>
+  <data name="ResendConfirmEmail" xml:space="preserve">
+    <value>Gửi lại email xác nhận</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Xin chào!</value>
+  </data>
+  <data name="LoginDescription" xml:space="preserve">
+    <value>Đăng nhập để quản lý tin đăng trọ hoặc tiếp tục trò chuyện.</value>
+  </data>
+  <data name="OrLoginWith" xml:space="preserve">
+    <value>Hoặc đăng nhập bằng</value>
+  </data>
+  <data name="RegisterAccount" xml:space="preserve">
+    <value>Đăng ký tài khoản</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Xác nhận MK</value>
+  </data>
+  <data name="SelectAccountType" xml:space="preserve">
+    <value>-- Chọn loại tài khoản --</value>
+  </data>
+  <data name="StudentRole" xml:space="preserve">
+    <value>🎓 Sinh Viên (Tìm phòng)</value>
+  </data>
+  <data name="LandlordRole" xml:space="preserve">
+    <value>🔑 Chủ Trọ (Cho thuê phòng)</value>
+  </data>
+  <data name="WhoAreYou" xml:space="preserve">
+    <value>Bạn là ai?</value>
+  </data>
+  <data name="RegisterNow" xml:space="preserve">
+    <value>Đăng ký ngay</value>
+  </data>
+  <data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>Đã có tài khoản?</value>
+  </data>
+  <data name="StartNow" xml:space="preserve">
+    <value>Bắt đầu ngay!</value>
+  </data>
+  <data name="RegisterDescription" xml:space="preserve">
+    <value>Tham gia nền tảng để tìm phòng hoặc cho thuê an toàn.</value>
+  </data>
+  <data name="OrContinueWith" xml:space="preserve">
+    <value>Hoặc tiếp tục với</value>
+  </data>
+  <data name="Chat_NeedHelp" xml:space="preserve">
+    <value>Bạn cần mình trợ giúp gì nào?</value>
+  </data>
+  <data name="Chat_Greet1" xml:space="preserve">
+    <value>👋 Chào bạn! Mình là Trợ lý tự động của RoomFinder. Mình có thể tư vấn cho bạn thông tin về diện tích, tiện ích phòng, quy trình đặt cọc giữ chỗ, hoặc cách dùng bản đồ tìm trọ nha!</value>
+  </data>
+  <data name="Chat_Greet2" xml:space="preserve">
+    <value>✨ Rất vui được gặp bạn! Bạn cần mình hướng dẫn cách lọc phòng có ban công, nhà vệ sinh riêng hay giải đáp thắc mắc về tiền cọc nè?</value>
+  </data>
+  <data name="Chat_Greet3" xml:space="preserve">
+    <value>🤖 Xin chào! Mình là chatbot hỗ trợ tự động. Bạn có câu hỏi nào về giá thuê, thời gian giữ phòng hay chính sách tin VIP không?</value>
+  </data>
+  <data name="Chat_Slang1" xml:space="preserve">
+    <value>🤖 Kìa sếp, bình tĩnh nè! Mình chỉ là Trợ lý tự động thôi. Cứ gõ từ khóa như: 'giá phòng', 'tiện ích', 'đặt cọc' để mình báo thông tin chính xác cho nha!</value>
+  </data>
+  <data name="Chat_Slang2" xml:space="preserve">
+    <value>💡 Bối rối hả? Hỏi rõ ràng hơn chút về tính năng web hoặc các thông tin phòng (diện tích, vệ sinh riêng...) để mình giải đáp chu đáo nhé!</value>
+  </data>
+  <data name="Chat_Map" xml:space="preserve">
+    <value>🗺️ Hệ thống tích hợp bản đồ Leaflet thông minh! Qua mục 'Tìm trọ', chọn tên Trường của bạn và bán kính tìm kiếm (km). Bản đồ sẽ tự đo khoảng cách đường chim bay dựa trên tọa độ (Latitude/Longitude) của phòng đến tận cổng trường luôn!</value>
+  </data>
+  <data name="Chat_Deposit" xml:space="preserve">
+    <value>💰 Khách có thể thanh toán Tiền Cọc trực tiếp qua VNPay để giữ phòng. Thời gian giữ phòng (số ngày) sẽ do Chủ trọ tự cài đặt. Khi quá Hạn Đặt Cọc mà chưa ký hợp đồng, hệ thống sẽ tự động nhả phòng ra cho người khác thuê để đảm bảo công bằng.</value>
+  </data>
+  <data name="Chat_Price1" xml:space="preserve">
+    <value>💵 Mọi bài đăng trên RoomFinder đều niêm yết rõ Giá thuê (VNĐ/tháng). Trong chi tiết phòng, bạn có thể xem được kích thước cụ thể (Chiều dài x Chiều rộng) và biết trước phòng đó có Ban công hay Nhà vệ sinh riêng không nha!</value>
+  </data>
+  <data name="Chat_Price2" xml:space="preserve">
+    <value>📏 Hệ thống yêu cầu chủ trọ khai báo rõ ràng: Giá tiền, Chiều dài, Chiều rộng của phòng. Bạn cũng có thể dễ dàng thấy phòng có trang bị Nhà vệ sinh riêng hay Ban công không ngay trên giao diện chi tiết.</value>
+  </data>
+  <data name="Chat_Fraud" xml:space="preserve">
+    <value>🚩 Để chống tin rác, các bài đăng đều có 'Ngày hết hạn hiển thị'. Những phòng 'Đã cho thuê' sẽ tự động bị ẩn khỏi danh sách. Nếu phát hiện chủ trọ gian lận thông tin diện tích hay lừa tiền cọc, bạn nhớ bấm Báo cáo cho Admin xử lý nhé!</value>
+  </data>
+  <data name="Chat_Vip" xml:space="preserve">
+    <value>⭐ Bài đăng có tích chọn 'Tin VIP' sẽ được ghim nổi bật và ưu tiên hiển thị trên cùng ở cả danh sách lẫn bản đồ. Đây là tính năng rất tiện để chủ trọ tìm khách thuê nhanh chóng hơn!</value>
+  </data>
+  <data name="Chat_Author" xml:space="preserve">
+    <value>🏫 Hệ thống RoomFinder được nghiên cứu và phát triển bằng ASP.NET Core MVC nhằm mang lại giải pháp tìm chỗ ở an toàn cho các bạn sinh viên!</value>
+  </data>
+  <data name="Chat_OffTopic" xml:space="preserve">
+    <value>🤖 Mình là Trợ lý tự động của hệ thống RoomFinder, nên mình chỉ được lập trình để trả lời các vấn đề xoay quanh hệ thống phòng trọ thôi sếp ơi!</value>
+  </data>
+  <data name="Chat_Fallback1" xml:space="preserve">
+    <value>💡 Mình chưa hiểu ý bạn lắm! Bạn có thể hỏi mình rõ hơn về: giá thuê, diện tích (chiều dài, chiều rộng), tiện ích (ban công, vệ sinh), hoặc thời hạn giữ tiền cọc được không?</value>
+  </data>
+  <data name="Chat_Fallback2" xml:space="preserve">
+    <value>📬 Câu hỏi này ngoài vùng dữ liệu của mình mất rồi! Bạn có thể nhắn tin trực tiếp cho Chủ trọ ở trang chi tiết phòng để trao đổi thêm thông tin nhé.</value>
+  </data>
+  <data name="Chat_Fallback3" xml:space="preserve">
+    <value>🤖 Nếu bạn đang tìm phòng, hãy thử lọc Tỉnh thành, Quận huyện và tên Trường trên thanh tìm kiếm nhé. Hệ thống sẽ tính tọa độ và báo khoảng cách cụ thể cho bạn.</value>
+  </data>
+  <data name="Api_BadCredentials" xml:space="preserve">
+    <value>Email hoặc mật khẩu không đúng.</value>
+  </data>
+  <data name="Api_BadRole" xml:space="preserve">
+    <value>Vai trò không hợp lệ. App chỉ cho đăng ký Sinh Viên hoặc Chủ Trọ.</value>
+  </data>
+  <data name="Api_BadPhone" xml:space="preserve">
+    <value>Số điện thoại không hợp lệ.</value>
+  </data>
+  <data name="Api_NoImageChosen" xml:space="preserve">
+    <value>Chưa chọn ảnh nào.</value>
+  </data>
+  <data name="Api_CccdImagesRequired" xml:space="preserve">
+    <value>Vui lòng chọn ảnh CCCD mặt trước hoặc mặt sau.</value>
+  </data>
+  <data name="Api_UserNotFound" xml:space="preserve">
+    <value>Không tìm thấy người dùng</value>
+  </data>
+  <data name="Api_ReceiverNotFound" xml:space="preserve">
+    <value>Không tìm thấy người nhận</value>
+  </data>
+  <data name="Api_ReportNotFound" xml:space="preserve">
+    <value>Không tìm thấy báo cáo</value>
+  </data>
+  <data name="Api_ReportedUserNotFound" xml:space="preserve">
+    <value>Không tìm thấy người bị báo cáo</value>
+  </data>
+  <data name="Api_RoomNotFound" xml:space="preserve">
+    <value>Không tìm thấy phòng</value>
+  </data>
+  <data name="Api_RoomDetailNotFound" xml:space="preserve">
+    <value>Không tìm thấy phòng trọ</value>
+  </data>
+  <data name="Api_YourRoomNotFound" xml:space="preserve">
+    <value>Không tìm thấy phòng của bạn</value>
+  </data>
+  <data name="Api_RoomGone" xml:space="preserve">
+    <value>Phòng đã có người thuê hoặc không tồn tại.</value>
+  </data>
+  <data name="Api_NoPermission" xml:space="preserve">
+    <value>Bạn không có quyền thực hiện thao tác này.</value>
+  </data>
+  <data name="Api_BadAction" xml:space="preserve">
+    <value>Hành động không hợp lệ (Duyet hoặc TuChoi).</value>
+  </data>
+  <data name="Api_CannotDeleteSelf" xml:space="preserve">
+    <value>Không thể xóa chính tài khoản của bạn.</value>
+  </data>
+  <data name="Api_AccountLocked" xml:space="preserve">
+    <value>Tài khoản đang bị khóa.</value>
+  </data>
+  <data name="Api_LockedSendMsg" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa, không thể gửi tin nhắn.</value>
+  </data>
+  <data name="Api_LockedSendText" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa, không thể gửi tin.</value>
+  </data>
+  <data name="Api_LockedSendImage" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa, không thể gửi ảnh.</value>
+  </data>
+  <data name="Api_LockedViewRoom" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa nên không thể xem chi tiết phòng.</value>
+  </data>
+  <data name="Api_LockedPostRoom" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa và không thể đăng phòng mới.</value>
+  </data>
+  <data name="Api_DeletedAccount" xml:space="preserve">
+    <value>Tài khoản đã bị xóa</value>
+  </data>
+  <data name="Api_ImagePlaceholder" xml:space="preserve">
+    <value>[Hình ảnh]</value>
+  </data>
+  <data name="Api_Sent" xml:space="preserve">
+    <value>Đã gửi</value>
+  </data>
+  <data name="Api_NoFileUploaded" xml:space="preserve">
+    <value>Không có file nào được chọn.</value>
+  </data>
+  <data name="Api_OnlyImageFiles" xml:space="preserve">
+    <value>Chỉ cho phép upload file ảnh (.jpg, .png, .gif).</value>
+  </data>
+  <data name="Api_UnsupportedImageFormat" xml:space="preserve">
+    <value>Định dạng ảnh {0} không được hỗ trợ.</value>
+  </data>
+  <data name="Api_ReportUserSent" xml:space="preserve">
+    <value>Báo cáo người dùng vi phạm đã được gửi tới Admin xử lý.</value>
+  </data>
+  <data name="Api_NotEnoughForVip" xml:space="preserve">
+    <value>Ví không đủ {0}đ để đăng tin VIP.</value>
+  </data>
+  <data name="Api_RoomDeleted" xml:space="preserve">
+    <value>Đã xóa tin đăng.</value>
+  </data>
+  <data name="Api_MarkRentedDone" xml:space="preserve">
+    <value>Xác nhận cho thuê thành công! Tin đăng đã đóng.</value>
+  </data>
+  <data name="Api_ReopenedRoom" xml:space="preserve">
+    <value>Đã mở lại phòng! Tin đăng sẽ xuất hiện lại trên hệ thống tìm kiếm.</value>
+  </data>
+  <data name="Api_ReviewAfterPaidOnly" xml:space="preserve">
+    <value>Bạn chỉ có thể đánh giá sau khi đã thuê và thanh toán phòng này!</value>
+  </data>
+  <data name="Api_ThanksReview" xml:space="preserve">
+    <value>Cảm ơn bạn đã để lại đánh giá chân thực!</value>
+  </data>
+  <data name="Api_ReportRoomSent" xml:space="preserve">
+    <value>Báo cáo lừa đảo đã được gửi tới Admin.</value>
+  </data>
+  <data name="Api_RentTakenOrHeld" xml:space="preserve">
+    <value>Phòng này đã được cho thuê hoặc đang được người khác giữ chỗ.</value>
+  </data>
+  <data name="Api_RentTakenOrDeposited" xml:space="preserve">
+    <value>Phòng này đã được cho thuê hoặc đang được người khác đặt cọc.</value>
+  </data>
+  <data name="Api_RentTooCheapToDeposit" xml:space="preserve">
+    <value>Giá phòng quá thấp để hỗ trợ tính năng đặt cọc riêng.</value>
+  </data>
+  <data name="Api_NoDepositForRoom" xml:space="preserve">
+    <value>Bạn chưa đặt cọc phòng này.</value>
+  </data>
+  <data name="Api_NoCancelDepositRight" xml:space="preserve">
+    <value>Bạn không có quyền hủy cọc phòng này.</value>
+  </data>
+  <data name="Api_RentSuccess" xml:space="preserve">
+    <value>Bạn đã thuê phòng thành công.</value>
+  </data>
+  <data name="Api_RentPaidSuccess" xml:space="preserve">
+    <value>Thuê phòng thành công! Tiền cọc và tiền thuê đã được giải ngân cho chủ trọ.</value>
+  </data>
+  <data name="Api_DepositDone" xml:space="preserve">
+    <value>Đã cọc {0}đ. Hệ thống giữ phòng cho bạn trong {1} ngày.</value>
+  </data>
+  <data name="Api_DepositRefunded" xml:space="preserve">
+    <value>Hủy cọc thành công! Đã hoàn lại {0}đ vào ví của bạn.</value>
+  </data>
+  <data name="Api_TopUpDone" xml:space="preserve">
+    <value>Đã nạp {0}đ vào ví.</value>
+  </data>
+  <data name="Api_TopUpFailed" xml:space="preserve">
+    <value>Nạp tiền thất bại hoặc giao dịch bị hủy.</value>
+  </data>
+  <data name="Api_TopUpAccountUnknown" xml:space="preserve">
+    <value>Không xác định được tài khoản nhận tiền.</value>
+  </data>
+  <data name="Api_BadSignature" xml:space="preserve">
+    <value>Chữ ký giao dịch không hợp lệ.</value>
+  </data>
+  <data name="Api_TransactionFailed" xml:space="preserve">
+    <value>{0} thất bại hoặc bị hủy.</value>
+  </data>
+  <data name="Api_TransactionNoRoom" xml:space="preserve">
+    <value>Không đọc được mã phòng từ giao dịch.</value>
+  </data>
+  <data name="Verb_ThanhToan" xml:space="preserve">
+    <value>Thanh toán</value>
+  </data>
+  <data name="Verb_DatCoc" xml:space="preserve">
+    <value>Đặt cọc</value>
+  </data>
+  <data name="Verb_ThanhToanConLai" xml:space="preserve">
+    <value>Thanh toán phần còn lại</value>
+  </data>
+  <data name="Api_AccountDeleted" xml:space="preserve">
+    <value>Đã xóa tài khoản và toàn bộ dữ liệu liên quan.</value>
+  </data>
+  <data name="Api_ReportResolved" xml:space="preserve">
+    <value>Đã đánh dấu báo cáo là đã xử lý.</value>
+  </data>
+  <data name="Api_LockedAccountMsg" xml:space="preserve">
+    <value>Đã khóa tài khoản {0}.</value>
+  </data>
+  <data name="Api_UnlockedAccountMsg" xml:space="preserve">
+    <value>Đã mở khóa tài khoản {0}.</value>
+  </data>
+  <data name="Api_CccdApproved" xml:space="preserve">
+    <value>Đã duyệt hồ sơ CCCD.</value>
+  </data>
+  <data name="Api_CccdRejected" xml:space="preserve">
+    <value>Đã từ chối, yêu cầu chủ trọ tải CCCD lên lại.</value>
+  </data>
+</root>
