@@ -23,16 +23,19 @@ namespace Do_an_co_so.Api
         private readonly RoomQueryService _search;
         private readonly IWebHostEnvironment _env;
         private readonly NoiDungDichService _dich;
+        private readonly TienIchQuetService _quetTienIch;
 
         public RoomsApiController(ApplicationDbContext db, UserManager<AppUser> userManager,
             RoomQueryService search, IWebHostEnvironment env,
-            IStringLocalizer<SharedResource> localizer, NoiDungDichService dich) : base(localizer)
+            IStringLocalizer<SharedResource> localizer, NoiDungDichService dich,
+            TienIchQuetService quetTienIch) : base(localizer)
         {
             _db = db;
             _userManager = userManager;
             _search = search;
             _env = env;
             _dich = dich;
+            _quetTienIch = quetTienIch;
         }
 
         // ------------------------------- ĐỌC (khách chưa cần đăng nhập vẫn xem được như trên web) -------------------------------
@@ -52,9 +55,11 @@ namespace Do_an_co_so.Api
         [AllowAnonymous]
         [HttpGet("tim-kiem")]
         public async Task<ActionResult<SearchRoomsResponse>> TimKiem(
-            string? truongId, double? radius, decimal? minPrice, decimal? maxPrice, string? sortBy)
+            string? truongId, double? radius, decimal? minPrice, decimal? maxPrice, string? sortBy,
+            string? loaiHinh)
         {
-            var ketQua = await _search.SearchAsync(truongId, radius, minPrice, maxPrice, sortBy);
+            var ketQua = await _search.SearchAsync(truongId, radius, minPrice, maxPrice, sortBy,
+                loaiHinh: loaiHinh);
             var truong = TruongData.GetAll().FirstOrDefault(t => t.Id == truongId);
             var dich = await _dich.TaoHamDichAsync(LayNoiDungPhong(ketQua));
 
@@ -129,6 +134,7 @@ namespace Do_an_co_so.Api
                 ChieuRong = room.ChieuRong,
                 NgayHetHan = room.NgayHetHan,
                 SoNgayGiuPhong = room.SoNgayGiuPhong,
+                LoaiHinh = room.LoaiHinh.ToString(),
                 TrungBinhSao = Math.Round(sao, 1),
                 SoDanhGia = danhGia.Count,
                 ChuTroId = room.ChuTroId,
@@ -194,6 +200,7 @@ namespace Do_an_co_so.Api
                     ChieuRong = p.ChieuRong,
                     NgayHetHan = p.NgayHetHan,
                     SoNgayGiuPhong = p.SoNgayGiuPhong,
+                    LoaiHinh = p.LoaiHinh.ToString(),
                     TrangThai = TrangThaiCua(p)
                 }).ToList()
             });
@@ -228,7 +235,8 @@ namespace Do_an_co_so.Api
                 CoBanCong = request.CoBanCong,
                 ChuTroId = user.Id,
                 NgayHetHan = DateTime.Now.AddDays(request.SoNgayDangBai ?? 30),
-                SoNgayGiuPhong = request.SoNgayGiuPhong ?? 7
+                SoNgayGiuPhong = request.SoNgayGiuPhong ?? 7,
+                LoaiHinh = ParseLoaiHinh(request.LoaiHinh)
             };
 
             if (room.IsVip)
@@ -350,6 +358,80 @@ namespace Do_an_co_so.Api
             _db.PhongTro.Remove(room);
             await _db.SaveChangesAsync();
             return Ok(new MessageResponse(Localizer["Api_RoomDeleted"]));
+        }
+
+        // ------------------------------- TIỆN ÍCH XUNG QUANH -------------------------------
+
+        [AllowAnonymous]
+        [HttpGet("{id:int}/tien-ich")]
+        public async Task<ActionResult<AmenityListResponse>> TienIch(int id)
+        {
+            var danhSach = await _db.TienIchXungQuanh
+                .Where(t => t.PhongTroId == id)
+                .OrderBy(t => t.Loai)
+                .ThenBy(t => t.KhoangCachMet)
+                .ToListAsync();
+
+            return Ok(new AmenityListResponse
+            {
+                DaQuet = danhSach.Count > 0,
+                QuetNgay = danhSach.Count > 0 ? danhSach.Max(t => t.QuetNgay) : null,
+                // Bảng chỉ lưu tiện ích chứ không lưu bán kính đã quét; app không
+                // tự chọn bán kính nên vòng tròn luôn là mức mặc định của server.
+                BanKinhMet = TienIchQuetService.BanKinhMacDinhMet,
+                TienIch = danhSach.Select(ToAmenity).ToList()
+            });
+        }
+
+        // Chủ trọ bấm "Quét tiện ích xung quanh" lúc đăng phòng (hoặc quét lại).
+        // Chạy phía server chứ không cho app gọi thẳng Overpass: app Android gửi
+        // request ngoài luồng sẽ bị nhà mạng chặn/chậm, và server mới là nơi giữ
+        // kết quả vào database.
+        [Authorize(Roles = "ChuTro,Admin")]
+        [HttpPost("{id:int}/tien-ich/quet")]
+        public async Task<ActionResult<AmenityListResponse>> QuetTienIch(int id, int? banKinhMet)
+        {
+            var user = await CurrentUserAsync();
+            if (user == null) return Unauthorized();
+
+            var room = await _db.PhongTro.FirstOrDefaultAsync(p => p.Id == id);
+            if (room == null) return NotFound(new ApiError(Localizer["Api_RoomNotFound"]));
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (room.ChuTroId != user.Id && !roles.Contains("Admin")) return Forbid();
+
+            if (room.Latitude == null || room.Longitude == null)
+            {
+                return BadRequest(new ApiError(Localizer["Api_RoomHasNoLocation"]));
+            }
+
+            var banKinh = banKinhMet ?? TienIchQuetService.BanKinhMacDinhMet;
+            var ketQua = await _quetTienIch.QuetAsync(
+                room.Latitude.Value, room.Longitude.Value, banKinh);
+
+            // Overpass đang bảo trì hoặc khu vực thật sự không có gì: giữ nguyên
+            // snapshot cũ thay vì xóa sạch, để lần quét lỗi không làm mất dữ liệu.
+            if (ketQua.Count == 0)
+            {
+                return StatusCode(503, new ApiError(Localizer["Api_AmenityScanFailed"]));
+            }
+
+            var cu = await _db.TienIchXungQuanh.Where(t => t.PhongTroId == id).ToListAsync();
+            _db.TienIchXungQuanh.RemoveRange(cu);
+            foreach (var tienIch in ketQua)
+            {
+                tienIch.PhongTroId = id;
+                _db.TienIchXungQuanh.Add(tienIch);
+            }
+            await _db.SaveChangesAsync();
+
+            return Ok(new AmenityListResponse
+            {
+                DaQuet = true,
+                QuetNgay = DateTime.Now,
+                BanKinhMet = banKinh,
+                TienIch = ketQua.Select(ToAmenity).ToList()
+            });
         }
 
         // ------------------------------- ĐÁNH GIÁ & BÁO CÁO -------------------------------
@@ -477,6 +559,22 @@ namespace Do_an_co_so.Api
                      .Select(t => "images/" + t)
                      .ToList();
 
+        // App gửi "KyTucXa"/"PhongRieng" (hoặc không gửi). Giá trị lạ hiểu là phòng
+        // riêng chứ không từ chối cả bài đăng.
+        private static LoaiHinhPhong ParseLoaiHinh(string? giaTri) =>
+            Enum.TryParse<LoaiHinhPhong>(giaTri, ignoreCase: true, out var loaiHinh)
+                ? loaiHinh
+                : LoaiHinhPhong.PhongRieng;
+
+        private static AmenityDto ToAmenity(TienIchXungQuanh t) => new()
+        {
+            Loai = t.Loai,
+            Ten = t.Ten,
+            ViDo = t.ViDo,
+            KinhDo = t.KinhDo,
+            KhoangCachMet = t.KhoangCachMet
+        };
+
         private RoomListItemDto ToListItem(RoomMatch match, Func<string?, string>? dich = null)
         {
             var p = match.PhongTro;
@@ -498,6 +596,7 @@ namespace Do_an_co_so.Api
                 ChieuRong = p.ChieuRong,
                 NgayHetHan = p.NgayHetHan,
                 SoNgayGiuPhong = p.SoNgayGiuPhong,
+                LoaiHinh = p.LoaiHinh.ToString(),
                 KhoangCach = Math.Round(match.KhoangCach, 2),
                 TrungBinhSao = Math.Round(match.TrungBinhSao, 1),
                 SoDanhGia = match.SoDanhGia,

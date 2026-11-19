@@ -31,7 +31,7 @@ class _PhongDaThueScreenState extends State<PhongDaThueScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t('Phòng tôi đã thuê')),
-        actions: [IconButton(onPressed: () => setState(() => _hoaDon = _tai()), icon: const Icon(Icons.refresh))],
+        actions: [IconButton(onPressed: () => setState(() { _hoaDon = _tai(); }), icon: const Icon(Icons.refresh))],
       ),
       body: FutureBuilder<List<Invoice>>(
         future: _hoaDon,
@@ -41,7 +41,7 @@ class _PhongDaThueScreenState extends State<PhongDaThueScreen> {
               thongBao: snapshot.error is ApiException
                   ? (snapshot.error as ApiException).message
                   : context.t('Không tải được danh sách phòng đã thuê.'),
-              tai: () => setState(() => _hoaDon = _tai()),
+              tai: () => setState(() { _hoaDon = _tai(); }),
             );
           }
           if (!snapshot.hasData) return const NangLuongView();

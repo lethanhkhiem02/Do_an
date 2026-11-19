@@ -16,7 +16,8 @@ namespace Do_an_co_so.Services
 
         public async Task<List<RoomMatch>> SearchAsync(
             string? truongId, double? radiusKm, decimal? minPrice, decimal? maxPrice,
-            string? sortBy, bool chiHienPhongConTrong = true, bool boQuaBanKinh = false)
+            string? sortBy, bool chiHienPhongConTrong = true, bool boQuaBanKinh = false,
+            string? loaiHinh = null)
         {
             var query = _db.PhongTro.Include(p => p.ChuTro).AsQueryable();
 
@@ -28,6 +29,11 @@ namespace Do_an_co_so.Services
 
             if (minPrice.HasValue) query = query.Where(p => p.Gia >= minPrice.Value);
             if (maxPrice.HasValue) query = query.Where(p => p.Gia <= maxPrice.Value);
+
+            // Giá trị lạ (do app cũ hoặc gọi tay sai chính tả) coi như không lọc,
+            // tránh báo lỗi 500 chỉ vì một tham số phụ.
+            if (Enum.TryParse<LoaiHinhPhong>(loaiHinh, ignoreCase: true, out var loaiHinhPhong))
+                query = query.Where(p => p.LoaiHinh == loaiHinhPhong);
 
             var rooms = await query.ToListAsync();
 

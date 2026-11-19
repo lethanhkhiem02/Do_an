@@ -32,11 +32,17 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
   bool _nhaVeSinh = false;
   bool _banCong = false;
   bool _vip = false;
+
+  /// 'PhongRieng' / 'KyTucXa', đúng tên enum LoaiHinhPhong backend nhận qua field `loaiHinh`.
+  String _loaiHinh = 'PhongRieng';
   int _ngayDang = 30;
   int _ngayGiu = 7;
   LatLng? _viTri;
   List<_AnhChon> _anh = [];
   bool _dangGui = false;
+
+  /// Bài đăng vừa tạo xong đang chờ server quét tiện ích (mất gần một phút).
+  bool _dangQuetTienIch = false;
 
   @override
   void dispose() {
@@ -69,12 +75,13 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
 
     final session = context.read<Session>();
     try {
-      await session.api.upload(
+      final tao = await session.api.upload(
         'api/phong-tro',
         fields: {
           'moTa': _moTa.text.trim(),
           'gia': _soHoa(_gia.text)!.toString(),
           'diaChi': _diaChi.text.trim(),
+          'loaiHinh': _loaiHinh,
           'isVip': _vip.toString(),
           'coNhaVeSinh': _nhaVeSinh.toString(),
           'coBanCong': _banCong.toString(),
@@ -88,10 +95,36 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
         files: [for (final item in _anh) item.file],
       );
       if (!mounted) return;
+
+      final phongId = tao is Map ? (tao['id'] as num?)?.toInt() : null;
+
+      // Quét tiện ích ngay lúc đăng (thay vì để sinh viên chờ khi mở phòng).
+      // Lỗi quét không được làm hỏng bài đăng đã tạo, nên chỉ nuốt exception.
+      int? soTienIch;
+      if (phongId != null && _viTri != null) {
+        setState(() => _dangQuetTienIch = true);
+        try {
+          final ketQua = await session.api.post(
+            'api/phong-tro/$phongId/tien-ich/quet',
+            timeout: const Duration(seconds: 100),
+          );
+          if (ketQua is Map) soTienIch = (ketQua['tienIch'] as List?)?.length;
+        } on ApiException {
+          // Overpass đang bảo trì: chủ trọ vẫn quét lại được trong tab tiện ích.
+        } finally {
+          if (mounted) setState(() => _dangQuetTienIch = false);
+        }
+      }
+
+      if (!mounted) return;
       bao(
         context: context,
         message: _vip
             ? context.t('Đã đăng tin VIP, hệ thống trừ 50.000đ trong ví của bạn.')
+            : soTienIch != null
+            // Nối từng cụm đã dịch sẵn thay vì đưa cả câu có số vào từ điển,
+            // vì từ điển tra theo đúng chuỗi tiếng Việt gốc.
+            ? '${context.t('Đã đăng phòng, tìm được')} ${dem(soTienIch, 'tiện ích')} ${context.t('xung quanh phòng')}.'
             : context.t('Đã đăng phòng thành công, phòng xuất hiện ở trang chủ.'),
       );
       Navigator.pop(context);
@@ -99,7 +132,12 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
     } on ApiException catch (e) {
       if (mounted) bao(context: context, message: e.message, loi: true);
     } finally {
-      if (mounted) setState(() => _dangGui = false);
+      if (mounted) {
+        setState(() {
+          _dangGui = false;
+          _dangQuetTienIch = false;
+        });
+      }
     }
   }
 
@@ -210,6 +248,26 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
               ],
             ),
             const SizedBox(height: 12),
+            Text(context.t('Loại hình phòng'), style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            SegmentedButton<String>(
+              segments: [
+                ButtonSegment(
+                  value: 'PhongRieng',
+                  icon: const Icon(Icons.home_outlined),
+                  label: Text(context.t('Phòng riêng')),
+                ),
+                ButtonSegment(
+                  value: 'KyTucXa',
+                  icon: const Icon(Icons.apartment_outlined),
+                  label: Text(context.t('Ký túc xá')),
+                ),
+              ],
+              selected: {_loaiHinh},
+              showSelectedIcon: false,
+              onSelectionChanged: (value) => setState(() => _loaiHinh = value.first),
+            ),
+            const SizedBox(height: 12),
             SwitchListTile(
               value: _nhaVeSinh,
               onChanged: (value) => setState(() => _nhaVeSinh = value),
@@ -266,11 +324,26 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
                     : '${context.t('Vị trí')}: ${_viTri!.latitude.toStringAsFixed(5)}, ${_viTri!.longitude.toStringAsFixed(5)}',
               ),
             ),
+            if (_viTri == null) ...[
+              const SizedBox(height: 6),
+              Text(
+                context.t(
+                  'Chọn vị trí để hệ thống tự tìm trạm xe buýt, siêu thị, quán cà phê, cây xăng và cửa hàng tiện lợi xung quanh phòng.',
+                ),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
             const SizedBox(height: 24),
             FilledButton(
               onPressed: _dangGui ? null : _gui,
               style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: Text(_dangGui ? context.t('Đang đăng tin...') : context.t('Đăng phòng')),
+              child: Text(
+                _dangQuetTienIch
+                    ? context.t('Đang quét tiện ích xung quanh...')
+                    : _dangGui
+                    ? context.t('Đang đăng tin...')
+                    : context.t('Đăng phòng'),
+              ),
             ),
           ],
         ),

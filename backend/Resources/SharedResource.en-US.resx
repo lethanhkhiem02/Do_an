@@ -855,6 +855,12 @@
   <data name="Api_YourRoomNotFound" xml:space="preserve">
     <value>Your room was not found</value>
   </data>
+  <data name="Api_RoomHasNoLocation" xml:space="preserve">
+    <value>This room has no address on the map, so nearby amenities cannot be scanned yet. Open the posting, drop a pin on the map and save it first.</value>
+  </data>
+  <data name="Api_AmenityScanFailed" xml:space="preserve">
+    <value>The map service did not respond, so nearby amenities were not updated. Please try again later.</value>
+  </data>
   <data name="Api_RoomGone" xml:space="preserve">
     <value>The room already has a renter or no longer exists.</value>
   </data>

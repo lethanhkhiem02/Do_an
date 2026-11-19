@@ -28,6 +28,7 @@ class _BoLoc {
     required this.min,
     required this.max,
     required this.sapXep,
+    this.loaiHinh,
   });
 
   final String? truongId;
@@ -36,16 +37,35 @@ class _BoLoc {
   final String max;
   final String sapXep;
 
+  /// null là "Tất cả"; ngược lại là 'PhongRieng' / 'KyTucXa' đúng như enum
+  /// LoaiHinhPhong của backend nhận qua query `loaiHinh`.
+  final String? loaiHinh;
+
   bool get coBoLoc =>
-      truongId != null || min.trim().isNotEmpty || max.trim().isNotEmpty;
+      truongId != null ||
+      min.trim().isNotEmpty ||
+      max.trim().isNotEmpty ||
+      loaiHinh != null;
 
   static double? _soHoa(String text) => double.tryParse(text.replaceAll('.', '').replaceAll(',', ''));
+
+  /// Chỉ có loại hình đổi được ngay trên danh sách (bằng chip), nên copyWith
+  /// bắt buộc nêu rõ giá trị mới, kể cả null để bỏ lọc.
+  _BoLoc copyWith({required String? loaiHinh}) => _BoLoc(
+    truongId: truongId,
+    banKinh: banKinh,
+    min: min,
+    max: max,
+    sapXep: sapXep,
+    loaiHinh: loaiHinh,
+  );
 
   Map<String, dynamic> toJson() => {
     if (truongId != null) 'truongId': truongId,
     if (truongId != null) 'radius': banKinh,
     if (_soHoa(min) != null) 'minPrice': _soHoa(min),
     if (_soHoa(max) != null) 'maxPrice': _soHoa(max),
+    if (loaiHinh != null) 'loaiHinh': loaiHinh,
     'sortBy': sapXep,
   };
 }
@@ -125,7 +145,9 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
       ),
     );
     if (ketQua == null || !mounted) return;
-    setState(() => _loc = ketQua);
+    // Bảng bottom sheet không có mục loại hình (chip đã nằm ngay ngoài danh
+    // sách) nên giữ lại lựa chọn hiện tại khi áp dụng các bộ lọc khác.
+    setState(() => _loc = ketQua.copyWith(loaiHinh: _loc.loaiHinh));
     await _tai();
   }
 
@@ -162,11 +184,21 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
       body: Column(
         children: [
           _ThanhBoLoc(
-            soLuong: [_loc.truongId != null, _loc.min.trim().isNotEmpty, _loc.max.trim().isNotEmpty]
-                .where((e) => e)
-                .length,
+            soLuong: [
+              _loc.truongId != null,
+              _loc.min.trim().isNotEmpty,
+              _loc.max.trim().isNotEmpty,
+              _loc.loaiHinh != null,
+            ].where((e) => e).length,
             moTa: _moTaKetQua,
             moBoLoc: _moBoLoc,
+          ),
+          _HangLoaiHinh(
+            dangChon: _loc.loaiHinh,
+            onChon: (loaiHinh) {
+              setState(() => _loc = _loc.copyWith(loaiHinh: loaiHinh));
+              _tai();
+            },
           ),
           Expanded(
             child: _dangTai
@@ -196,6 +228,50 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
                     ),
                   ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Ba chip loại hình phòng nằm ngay dưới thanh bộ lọc, đổi là tải lại luôn vì
+/// đây là lọc nhanh kiểu "tìm ký túc xá gần trường" sinh viên dùng nhiều nhất.
+class _HangLoaiHinh extends StatelessWidget {
+  const _HangLoaiHinh({required this.dangChon, required this.onChon});
+
+  final String? dangChon;
+  final ValueChanged<String?> onChon;
+
+  @override
+  Widget build(BuildContext context) {
+    const cacLoai = <(String?, String)>[
+      (null, 'Tất cả'),
+      ('PhongRieng', 'Phòng riêng'),
+      ('KyTucXa', 'Ký túc xá'),
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: Row(
+        children: [
+          for (final (giaTri, ten) in cacLoai)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text(context.t(ten)),
+                avatar: Icon(
+                  switch (giaTri) {
+                    'KyTucXa' => Icons.apartment_outlined,
+                    'PhongRieng' => Icons.home_outlined,
+                    _ => Icons.filter_alt_outlined,
+                  },
+                  size: 18,
+                ),
+                selected: dangChon == giaTri,
+                onSelected: (_) => onChon(giaTri),
+              ),
+            ),
         ],
       ),
     );

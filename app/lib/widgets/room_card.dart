@@ -89,6 +89,10 @@ class PhongCard extends StatelessWidget {
                     spacing: 6,
                     runSpacing: 6,
                     children: [
+                      _Teu(
+                        phong.laKyTucXa ? Icons.apartment_outlined : Icons.home_outlined,
+                        phong.tenLoaiHinh,
+                      ),
                       if (phong.dienTich != null) _Teu(Icons.straighten, '${Fmt.soThapPhan(phong.dienTich)} m²'),
                       if (phong.coNhaVeSinh) _Teu(Icons.bathtub_outlined, context.t('Vệ sinh riêng')),
                       if (phong.coBanCong) _Teu(Icons.security_outlined, context.t('Có ban công')),

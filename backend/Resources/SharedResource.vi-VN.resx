@@ -855,6 +855,12 @@
   <data name="Api_YourRoomNotFound" xml:space="preserve">
     <value>Không tìm thấy phòng của bạn</value>
   </data>
+  <data name="Api_RoomHasNoLocation" xml:space="preserve">
+    <value>Phòng này chưa có vị trí trên bản đồ nên chưa quét được tiện ích xung quanh. Bạn hãy mở bài đăng, đặt chốt trên bản đồ rồi lưu lại.</value>
+  </data>
+  <data name="Api_AmenityScanFailed" xml:space="preserve">
+    <value>Dịch vụ bản đồ không phản hồi nên chưa cập nhật được tiện ích xung quanh. Bạn thử lại sau nhé.</value>
+  </data>
   <data name="Api_RoomGone" xml:space="preserve">
     <value>Phòng đã có người thuê hoặc không tồn tại.</value>
   </data>

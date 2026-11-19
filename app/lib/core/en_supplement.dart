@@ -296,4 +296,40 @@ const Map<String, String> tuDienBoSung = {
       'Accounts with an approved ID show a blue check in chat and listings, just like the profile page on the web app.',
   '👋 Xin chào! Mình là Trợ lý tự động RoomFinder. Bạn cứ hỏi về giá thuê, diện tích, tiện ích, đặt cọc, tin VIP hay cách tìm trọ gần trường nhé.':
       '👋 Hi! I am the automatic RoomFinder assistant. Ask me about rent, area, amenities, deposits, VIP listings or how to find rooms near your school.',
+
+  // ---- Khoanh vùng tiện ích xung quanh + lọc loại hình phòng ----
+  'tiện ích': 'amenity',
+  'Bài đăng này chưa quét tiện ích. Bấm Quét lại để tìm trạm xe buýt, siêu thị, quán cà phê, cây xăng và cửa hàng tiện lợi gần phòng.':
+      'This listing has not been scanned yet. Tap "Rescan" to find bus stops, supermarkets, cafés, gas stations and convenience stores nearby.',
+  'Chọn vị trí để hệ thống tự tìm trạm xe buýt, siêu thị, quán cà phê, cây xăng và cửa hàng tiện lợi xung quanh phòng.':
+      'Drop a pin on the map so the system can find bus stops, supermarkets, cafés, gas stations and convenience stores around the room.',
+  'Chủ trọ chưa quét tiện ích xung quanh phòng này.':
+      'The landlord has not scanned this room for nearby amenities yet.',
+  'Cây xăng': 'Gas station',
+  'Cửa hàng tiện lợi': 'Convenience store',
+  'Khoanh vùng tiện ích gần phòng': 'Amenities near this room',
+  'Không có tên': 'Unnamed',
+  'Không tìm thấy tiện ích nào trong bán kính quanh phòng này.':
+      'No amenity was found within the radius around this room.',
+  'Ký túc xá': 'Dormitory',
+  'Loại hình phòng': 'Room type',
+  'Phòng này chưa có vị trí trên bản đồ nên chưa quét được tiện ích xung quanh.':
+      'This room has no location on the map yet, so nearby amenities cannot be scanned.',
+  'Phòng riêng': 'Private room',
+  'Quán cà phê': 'Café',
+  'Quét lúc': 'Scanned at',
+  'Quét lại': 'Rescan',
+  'Siêu thị': 'Supermarket',
+  'Thông tin': 'Details',
+  'Tiện ích': 'Amenity',
+  'Tiện ích xung quanh': 'Nearby amenities',
+  'Trạm xe buýt': 'Bus stop',
+  'bán kính': 'radius',
+  'xung quanh phòng': 'around the room',
+  'Đang hỏi bản đồ OpenStreetMap, việc này mất khoảng một phút...':
+      'Asking OpenStreetMap, this takes about a minute...',
+  'Đang quét tiện ích xung quanh...': 'Scanning nearby amenities...',
+  'Đang quét...': 'Scanning...',
+  'Đã quét lại': 'Rescanned',
+  'Đã đăng phòng, tìm được': 'Room posted, found',
 };

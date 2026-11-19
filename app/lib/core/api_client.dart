@@ -47,8 +47,8 @@ class ApiClient {
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) =>
       _send('GET', path, query: query);
 
-  Future<dynamic> post(String path, {Object? body, Map<String, dynamic>? query}) =>
-      _send('POST', path, body: body == null ? null : jsonEncode(body), query: query);
+  Future<dynamic> post(String path, {Object? body, Map<String, dynamic>? query, Duration? timeout}) =>
+      _send('POST', path, body: body == null ? null : jsonEncode(body), query: query, timeout: timeout);
 
   Future<dynamic> put(String path, {Object? body}) =>
       _send('PUT', path, body: body == null ? null : jsonEncode(body));
@@ -68,7 +68,11 @@ class ApiClient {
     return _handle(response);
   }
 
-  Future<dynamic> _send(String method, String path, {String? body, Map<String, dynamic>? query}) async {
+  Future<dynamic> _send(String method, String path, {
+    String? body,
+    Map<String, dynamic>? query,
+    Duration? timeout,
+  }) async {
     final uri = AppConfig.url(path, query);
     final headers = <String, String>{
       'Accept': 'application/json',
@@ -79,16 +83,20 @@ class ApiClient {
       if (body != null) 'Content-Type': 'application/json',
     };
 
+    // Vài request (quét tiện ích qua Overpass) thật sự mất gần một phút nên tự
+    // khai báo thời gian chờ riêng thay vì dùng mức chung cho mọi call.
+    final choPhep = timeout ?? _timeout;
+
     http.Response response;
     switch (method) {
       case 'POST':
-        response = await http.post(uri, headers: headers, body: body).timeout(_timeout);
+        response = await http.post(uri, headers: headers, body: body).timeout(choPhep);
       case 'PUT':
-        response = await http.put(uri, headers: headers, body: body).timeout(_timeout);
+        response = await http.put(uri, headers: headers, body: body).timeout(choPhep);
       case 'DELETE':
-        response = await http.delete(uri, headers: headers).timeout(_timeout);
+        response = await http.delete(uri, headers: headers).timeout(choPhep);
       default:
-        response = await http.get(uri, headers: headers).timeout(_timeout);
+        response = await http.get(uri, headers: headers).timeout(choPhep);
     }
     return _handle(response);
   }

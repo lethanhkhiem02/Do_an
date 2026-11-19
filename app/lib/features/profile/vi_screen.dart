@@ -27,7 +27,8 @@ class _ViScreenState extends State<ViScreen> {
 
   void _tai() {
     final session = context.read<Session>();
-    setState(() => _vi = session.api.get('api/thanhtoan/vi').then(Wallet.fromJson));
+    final viMoi = session.api.get('api/thanhtoan/vi').then(Wallet.fromJson);
+    setState(() { _vi = viMoi; });
   }
 
   Future<void> _napTien(Session session) async {

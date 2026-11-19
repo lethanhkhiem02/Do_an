@@ -23,6 +23,9 @@ namespace Do_an_co_so.Api.Dtos
         public DateTime? NgayHetHan { get; init; }
         public int? SoNgayGiuPhong { get; init; }
 
+        // "PhongRieng" hoặc "KyTucXa" - app dùng để hiện badge và cho bộ lọc.
+        public string LoaiHinh { get; init; } = "PhongRieng";
+
         // Khoảng cách tới trường đã chọn (0 khi chưa chọn trường / phòng không có tọa độ)
         public double KhoangCach { get; init; }
         public double TrungBinhSao { get; init; }
@@ -92,6 +95,32 @@ namespace Do_an_co_so.Api.Dtos
         public bool CoBanCong { get; init; }
         public int? SoNgayDangBai { get; init; }
         public int? SoNgayGiuPhong { get; init; }
+        public string? LoaiHinh { get; init; }
+    }
+
+    // ---------------------- TIỆN ÍCH XUNG QUANH ----------------------
+
+    public class AmenityDto
+    {
+        public string Loai { get; init; } = "";
+        public string? Ten { get; init; }
+        public double ViDo { get; init; }
+        public double KinhDo { get; init; }
+        public int KhoangCachMet { get; init; }
+    }
+
+    public class AmenityListResponse
+    {
+        // Phân biệt "chưa từng quét" (app hiện nút quét) với "quét rồi nhưng
+        // khu này không có tiện ích nào" (app hiện thông báo trống).
+        public bool DaQuet { get; init; }
+        public DateTime? QuetNgay { get; init; }
+
+        // Bán kính thực sự đã quét (mét) để app vẽ vòng khoanh vùng đúng bằng
+        // vùng server đã tìm, thay vì hard-code một con số ở cả hai bên.
+        public int BanKinhMet { get; init; }
+
+        public List<AmenityDto> TienIch { get; init; } = new();
     }
 
     public class CreateReviewRequest

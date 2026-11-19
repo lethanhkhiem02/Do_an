@@ -50,7 +50,7 @@ class _AdminNguoiDungScreenState extends State<AdminNguoiDungScreen> {
           ? '${json['message']}'
           : (thang ?? context.t('Đã thực hiện.'));
       bao(context: context, message: tinNhan);
-      setState(() => _danhSach = _tai());
+      setState(() { _danhSach = _tai(); });
     } on ApiException catch (e) {
       if (mounted) bao(context: context, message: e.message, loi: true);
     }
@@ -119,7 +119,7 @@ class _AdminNguoiDungScreenState extends State<AdminNguoiDungScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t('Quản lý người dùng')),
-        actions: [IconButton(onPressed: () => setState(() => _danhSach = _tai()), icon: const Icon(Icons.refresh))],
+        actions: [IconButton(onPressed: () => setState(() { _danhSach = _tai(); }), icon: const Icon(Icons.refresh))],
       ),
       body: Column(
         children: [
@@ -131,7 +131,7 @@ class _AdminNguoiDungScreenState extends State<AdminNguoiDungScreen> {
                   child: TextField(
                     controller: _tim,
                     textInputAction: TextInputAction.search,
-                    onSubmitted: (_) => setState(() => _danhSach = _tai()),
+                    onSubmitted: (_) => setState(() { _danhSach = _tai(); }),
                     decoration: InputDecoration(
                       hintText: context.t('Tìm theo tên hoặc email'),
                       prefixIcon: const Icon(Icons.search),
@@ -142,7 +142,7 @@ class _AdminNguoiDungScreenState extends State<AdminNguoiDungScreen> {
                           : IconButton(
                               onPressed: () {
                                 _tim.clear();
-                                setState(() => _danhSach = _tai());
+                                setState(() { _danhSach = _tai(); });
                               },
                               icon: const Icon(Icons.close),
                             ),
@@ -176,7 +176,7 @@ class _AdminNguoiDungScreenState extends State<AdminNguoiDungScreen> {
                     thongBao: snapshot.error is ApiException
                         ? (snapshot.error as ApiException).message
                         : context.t('Không tải được danh sách người dùng.'),
-                    tai: () => setState(() => _danhSach = _tai()),
+                    tai: () => setState(() { _danhSach = _tai(); }),
                   );
                 }
                 if (!snapshot.hasData) return const NangLuongView();

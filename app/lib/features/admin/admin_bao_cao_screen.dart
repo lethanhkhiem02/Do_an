@@ -31,7 +31,7 @@ class _AdminBaoCaoScreenState extends State<AdminBaoCaoScreen> {
       final json = await context.read<Session>().api.post('api/admin/bao-cao/${baoCao.id}/da-xu-ly');
       if (!mounted) return;
       bao(context: context, message: json is Map ? '${json['message']}' : context.t('Đã đánh dấu xử lý.'));
-      setState(() => _danhSach = _tai());
+      setState(() { _danhSach = _tai(); });
     } on ApiException catch (e) {
       if (mounted) bao(context: context, message: e.message, loi: true);
     }
@@ -42,7 +42,7 @@ class _AdminBaoCaoScreenState extends State<AdminBaoCaoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t('Báo cáo vi phạm')),
-        actions: [IconButton(onPressed: () => setState(() => _danhSach = _tai()), icon: const Icon(Icons.refresh))],
+        actions: [IconButton(onPressed: () => setState(() { _danhSach = _tai(); }), icon: const Icon(Icons.refresh))],
       ),
       body: Column(
         children: [
@@ -70,7 +70,7 @@ class _AdminBaoCaoScreenState extends State<AdminBaoCaoScreen> {
                     thongBao: snapshot.error is ApiException
                         ? (snapshot.error as ApiException).message
                         : context.t('Không tải được báo cáo.'),
-                    tai: () => setState(() => _danhSach = _tai()),
+                    tai: () => setState(() { _danhSach = _tai(); }),
                   );
                 }
                 if (!snapshot.hasData) return const NangLuongView();

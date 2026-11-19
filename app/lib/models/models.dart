@@ -2,6 +2,7 @@
 library;
 
 import '../core/dich.dart';
+import '../core/formatting.dart';
 
 Map<String, dynamic> _map(dynamic json) => Map<String, dynamic>.from(json as Map);
 
@@ -121,6 +122,7 @@ class Room {
     this.chuTroId,
     this.tenChuTro,
     this.trangThai = 'ConTrong',
+    this.loaiHinh = 'PhongRieng',
   });
 
   factory Room.fromJson(dynamic json) {
@@ -147,6 +149,7 @@ class Room {
       chuTroId: m['chuTroId'],
       tenChuTro: m['tenChuTro'],
       trangThai: m['trangThai'] ?? 'ConTrong',
+      loaiHinh: m['loaiHinh'] ?? 'PhongRieng',
     );
   }
 
@@ -171,6 +174,13 @@ class Room {
   final String? chuTroId;
   final String? tenChuTro;
   final String trangThai;
+
+  /// "PhongRieng" hoặc "KyTucXa", đúng như enum LoaiHinhPhong của backend.
+  final String loaiHinh;
+
+  bool get laKyTucXa => loaiHinh == 'KyTucXa';
+
+  String get tenLoaiHinh => x(laKyTucXa ? 'Ký túc xá' : 'Phòng riêng');
 
   double? get dienTich =>
       (chieuDai != null && chieuRong != null && chieuDai! > 0 && chieuRong! > 0)
@@ -234,6 +244,7 @@ class RoomDetail extends Room {
     super.chuTroId,
     super.tenChuTro,
     super.trangThai,
+    super.loaiHinh,
     this.avatarChuTro,
     this.chuTroDienThoai,
     this.chuTroDiaChi,
@@ -272,6 +283,7 @@ class RoomDetail extends Room {
       chuTroId: base.chuTroId,
       tenChuTro: base.tenChuTro,
       trangThai: base.trangThai,
+      loaiHinh: base.loaiHinh,
       avatarChuTro: m['avatarChuTro'],
       chuTroDienThoai: m['chuTroDienThoai'],
       chuTroDiaChi: m['chuTroDiaChi'],
@@ -612,3 +624,75 @@ class PaymentStatus {
   final DateTime? hanDatCoc;
   final double soDu;
 }
+
+/// Một tiện ích backend tìm được quanh phòng qua OpenStreetMap (Overpass).
+/// `loai` là khóa tiếng Anh ổn định (bus_stop/supermarket/cafe/fuel/convenience)
+/// dùng để chọn icon và nhóm; `ten` là tên do OSM lưu nên thường là tiếng Việt
+/// và không qua máy dịch.
+class Amenity {
+  Amenity({
+    required this.loai,
+    required this.viDo,
+    required this.kinhDo,
+    required this.khoangCachMet,
+    this.ten,
+  });
+
+  factory Amenity.fromJson(dynamic json) {
+    final m = _map(json);
+    return Amenity(
+      loai: m['loai'] ?? '',
+      ten: m['ten'],
+      viDo: _d0(m['viDo']),
+      kinhDo: _d0(m['kinhDo']),
+      khoangCachMet: _i0(m['khoangCachMet']),
+    );
+  }
+
+  final String loai;
+  final String? ten;
+  final double viDo;
+  final double kinhDo;
+  final int khoangCachMet;
+
+  String get tenLoai => tenNhomTienIch(loai);
+
+  String get khoangCach => Fmt.km(khoangCachMet / 1000);
+}
+
+/// Đáp ứng của GET /api/phong-tro/{id}/tien-ich.
+/// `daQuet` phân biệt "chưa quét lần nào" với "quét rồi mà quanh đây không có gì".
+class AmenityPage {
+  AmenityPage({required this.daQuet, this.quetNgay, this.banKinhMet = 1000, this.tienIch = const []});
+
+  factory AmenityPage.fromJson(dynamic json) {
+    final m = _map(json);
+    return AmenityPage(
+      daQuet: _b(m['daQuet']),
+      quetNgay: _dt(m['quetNgay']),
+      banKinhMet: _i0(m['banKinhMet']) == 0 ? 1000 : _i0(m['banKinhMet']),
+      tienIch: (m['tienIch'] as List?)?.map(Amenity.fromJson).toList() ?? const [],
+    );
+  }
+
+  final bool daQuet;
+  final DateTime? quetNgay;
+
+  /// Bán kính server đã thực sự quét, cũng là vòng tròn app vẽ trên bản đồ.
+  final int banKinhMet;
+  final List<Amenity> tienIch;
+}
+
+/// Tên tiếng Việt của từng nhóm tiện ích, đã tra sang ngôn ngữ đang bật.
+String tenNhomTienIch(String loai) => switch (loai) {
+  'bus_stop' => x('Trạm xe buýt'),
+  'supermarket' => x('Siêu thị'),
+  'cafe' => x('Quán cà phê'),
+  'fuel' => x('Cây xăng'),
+  'convenience' => x('Cửa hàng tiện lợi'),
+  _ => x('Tiện ích'),
+};
+
+/// Thứ tự các nhóm hiển thị trong tab "Tiện ích xung quanh", kể cả nhóm chưa
+/// tìm thấy gì để sinh viên biết app đã quét loại đó rồi.
+const List<String> cacNhomTienIch = ['bus_stop', 'supermarket', 'cafe', 'fuel', 'convenience'];

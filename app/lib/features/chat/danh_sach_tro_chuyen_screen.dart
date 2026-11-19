@@ -50,7 +50,7 @@ class _DanhSachTroChuyenScreenState extends State<DanhSachTroChuyenScreen> {
             ),
             icon: const Icon(Icons.groups_outlined),
           ),
-          IconButton(onPressed: () => setState(() => _danhSach = _tai()), icon: const Icon(Icons.refresh)),
+          IconButton(onPressed: () => setState(() { _danhSach = _tai(); }), icon: const Icon(Icons.refresh)),
         ],
       ),
       body: Column(
@@ -85,7 +85,7 @@ class _DanhSachTroChuyenScreenState extends State<DanhSachTroChuyenScreen> {
                     thongBao: snapshot.error is ApiException
                         ? (snapshot.error as ApiException).message
                         : context.t('Không tải được tin nhắn.'),
-                    tai: () => setState(() => _danhSach = _tai()),
+                    tai: () => setState(() { _danhSach = _tai(); }),
                   );
                 }
                 if (!snapshot.hasData) return const NangLuongView();
@@ -123,7 +123,7 @@ class _DanhSachTroChuyenScreenState extends State<DanhSachTroChuyenScreen> {
                             ),
                           ),
                         );
-                        if (mounted) setState(() => _danhSach = _tai());
+                        if (mounted) setState(() { _danhSach = _tai(); });
                       },
                     );
                   },

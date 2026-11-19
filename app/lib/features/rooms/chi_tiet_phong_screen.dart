@@ -10,6 +10,7 @@ import '../../models/models.dart';
 import '../../widgets/ban_do.dart';
 import '../../widgets/common.dart';
 import '../../widgets/room_card.dart';
+import '../../widgets/tien_ich_xung_quanh.dart';
 import '../chat/tro_chuyen_screen.dart';
 
 class ChiTietPhongScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class ChiTietPhongScreen extends StatefulWidget {
   State<ChiTietPhongScreen> createState() => _ChiTietPhongScreenState();
 }
 
-class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
+class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTickerProviderStateMixin {
   static const List<String> _lyDoBaoCao = [
     'Lừa đảo tiền cọc',
     'Phòng trọ không giống ảnh',
@@ -33,11 +34,19 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
 
   RoomDetail? _phong;
   String? _loi;
+  late final TabController _tab;
 
   @override
   void initState() {
     super.initState();
+    _tab = TabController(length: 2, vsync: this);
     _tai();
+  }
+
+  @override
+  void dispose() {
+    _tab.dispose();
+    super.dispose();
   }
 
   Future<void> _tai() async {
@@ -267,7 +276,6 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
     if (phong == null) return const Scaffold(body: NangLuongView());
 
     final session = context.watch<Session>();
-    final hinh = phong.anh.isEmpty ? const [ '', ] : phong.anh;
 
     return Scaffold(
       appBar: AppBar(
@@ -279,12 +287,29 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
             icon: const Icon(Icons.flag_outlined),
           ),
         ],
+        bottom: TabBar(
+          controller: _tab,
+          tabs: [
+            Tab(text: context.t('Thông tin')),
+            Tab(text: context.t('Tiện ích xung quanh')),
+          ],
+        ),
       ),
       persistentFooterButtons: _nutHanhdDong(session, phong),
-      body: ListView(
+      body: TabBarView(
+        controller: _tab,
+        children: [
+          _tabThongTin(session, phong),
+          TienIchXungQuanh(phong: phong, duocQuet: _duocQuetTienIch(session, phong)),
+        ],
+      ),
+    );
+  }
+
+  Widget _tabThongTin(Session session, RoomDetail phong) => ListView(
         padding: const EdgeInsets.only(bottom: 16),
         children: [
-          _ThuAnh(anh: hinh),
+          _ThuAnh(anh: phong.anh.isEmpty ? const ['', ] : phong.anh),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -308,6 +333,11 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
+                    _TeuMau(
+                      icon: phong.laKyTucXa ? Icons.apartment_outlined : Icons.home_outlined,
+                      chu: phong.tenLoaiHinh,
+                      mau: phong.laKyTucXa ? Colors.indigo : Colors.blueGrey,
+                    ),
                     if (phong.isVip)
                       _TeuMau(icon: Icons.workspace_premium, chu: context.t('Tin VIP'), mau: Colors.amber),
                     if (phong.dienTich != null)
@@ -371,9 +401,11 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
+
+  bool _duocQuetTienIch(Session session, RoomDetail phong) =>
+      session.daDangNhap &&
+      (session.laAdmin || (session.laChuTro && session.user?.id == phong.chuTroId));
 
   List<Widget> _nutHanhdDong(Session session, RoomDetail phong) {
     if (!session.daDangNhap) {
@@ -644,7 +676,7 @@ class _DanhSachPhongChuTroScreenState extends State<_DanhSachPhongChuTroScreen> 
           if (snapshot.hasError) {
             return LoiView(
               thongBao: context.t('Không tải được danh sách phòng.'),
-              tai: () => setState(() => _danhSach = _tai()),
+              tai: () => setState(() { _danhSach = _tai(); }),
             );
           }
           if (!snapshot.hasData) return const NangLuongView();

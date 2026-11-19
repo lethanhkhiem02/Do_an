@@ -351,6 +351,9 @@ namespace Do_an_co_so.Migrations
                     b.Property<double?>("Latitude")
                         .HasColumnType("float");
 
+                    b.Property<int>("LoaiHinh")
+                        .HasColumnType("int");
+
                     b.Property<double?>("Longitude")
                         .HasColumnType("float");
 
@@ -375,6 +378,45 @@ namespace Do_an_co_so.Migrations
                     b.HasIndex("ChuTroId");
 
                     b.ToTable("PhongTro");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.TienIchXungQuanh", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("KhoangCachMet")
+                        .HasColumnType("int");
+
+                    b.Property<double>("KinhDo")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Loai")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<int>("PhongTroId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("QuetNgay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Ten")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<double>("ViDo")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhongTroId", "Loai");
+
+                    b.ToTable("TienIchXungQuanh");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -592,6 +634,17 @@ namespace Do_an_co_so.Migrations
                         .HasForeignKey("ChuTroId");
 
                     b.Navigation("ChuTro");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.TienIchXungQuanh", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
+                        .WithMany()
+                        .HasForeignKey("PhongTroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PhongTro");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

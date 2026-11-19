@@ -49,6 +49,10 @@ namespace Do_an_co_so.Models
         [Display(Name = "Trạng thái thuê")]
         public bool DaChoThue { get; set; } = false; // false = Còn trống, true = Đã có người thuê
 
+        // --- THUỘC TÍNH MỚI: PHÂN BIỆT PHÒNG RIÊNG VÀ KÝ TÚC XÁ ---
+        [Display(Name = "Loại hình")]
+        public LoaiHinhPhong LoaiHinh { get; set; } = LoaiHinhPhong.PhongRieng;
+
         // ==============================================================================
         // --- THÊM 4 THUỘC TÍNH MỚI CHO CHI TIẾT PHÒNG TRỌ (BƯỚC 1) ---
         // ==============================================================================

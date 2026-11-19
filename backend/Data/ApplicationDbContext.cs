@@ -23,6 +23,9 @@ namespace Do_an_co_so.Data
         // --- CACHE BẢN DỊCH MÁY CHO MÔ TẢ / ĐỊA CHỈ PHÒNG ---
         public DbSet<DichNoiDung> DichNoiDungs { get; set; }
 
+        // --- TIỆN ÍCH XUNG QUANH PHÒNG (KẾT QUẢ QUÉT OPENSTREETMAP LÚC ĐĂNG BÀI) ---
+        public DbSet<TienIchXungQuanh> TienIchXungQuanh { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -65,6 +68,11 @@ namespace Do_an_co_so.Data
             modelBuilder.Entity<DichNoiDung>()
                 .HasIndex(d => new { d.NgonNgu, d.MaHash })
                 .IsUnique();
+
+            // Màn chi tiết luôn tra tiện ích theo phòng, và xóa phòng phải dọn kèm
+            // snapshot của nó nên khóa ngoài là required (cascade mặc định).
+            modelBuilder.Entity<TienIchXungQuanh>()
+                .HasIndex(t => new { t.PhongTroId, t.Loai });
         }
     }
 }

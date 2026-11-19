@@ -175,7 +175,10 @@ class CaNhanScreen extends StatelessWidget {
           const SizedBox(height: 16),
           OutlinedButton.icon(
             onPressed: () async {
-              final chac = await xacNhan(context, hoi: context.t('Đăng xuất khỏi thiết bị này?'));
+              final chac = await xacNhan(
+                context,
+                hoi: context.read<NgonNgu>().d('Đăng xuất khỏi thiết bị này?'),
+              );
               if (chac) await session.dangXuat();
             },
             icon: const Icon(Icons.logout),

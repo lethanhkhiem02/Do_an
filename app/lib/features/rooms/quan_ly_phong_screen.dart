@@ -31,7 +31,7 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
       await context.read<Session>().api.post(endpoint);
       if (!mounted) return;
       bao(context: context, message: thanhCong);
-      setState(() => _danhSach = _tai());
+      setState(() { _danhSach = _tai(); });
     } on ApiException catch (e) {
       if (mounted) bao(context: context, message: e.message, loi: true);
     }
@@ -49,7 +49,7 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
       await context.read<Session>().api.delete('api/phong-tro/${phong.id}');
       if (!mounted) return;
       bao(context: context, message: context.t('Đã xóa phòng.'));
-      setState(() => _danhSach = _tai());
+      setState(() { _danhSach = _tai(); });
     } on ApiException catch (e) {
       if (mounted) bao(context: context, message: e.message, loi: true);
     }
@@ -60,7 +60,7 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t('Phòng của tôi')),
-        actions: [IconButton(onPressed: () => setState(() => _danhSach = _tai()), icon: const Icon(Icons.refresh))],
+        actions: [IconButton(onPressed: () => setState(() { _danhSach = _tai(); }), icon: const Icon(Icons.refresh))],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.pushNamed(context, '/dang-phong'),
@@ -75,7 +75,7 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
               thongBao: snapshot.error is ApiException
                   ? (snapshot.error as ApiException).message
                   : context.t('Không tải được danh sách phòng.'),
-              tai: () => setState(() => _danhSach = _tai()),
+              tai: () => setState(() { _danhSach = _tai(); }),
             );
           }
           if (!snapshot.hasData) return const NangLuongView();

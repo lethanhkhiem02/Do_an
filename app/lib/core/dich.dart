@@ -27,6 +27,7 @@ const Map<String, String> soNhieuTiengAnh = {
   'day ago': 'days ago',
   'review': 'reviews',
   'room': 'rooms',
+  'amenity': 'amenities',
   'time.': 'times.',
 };
 
