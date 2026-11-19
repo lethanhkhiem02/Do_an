@@ -116,6 +116,16 @@ builder.Services.AddScoped<RoomQueryService>();
 builder.Services.AddScoped<NoiDungDichService>();
 builder.Services.AddHttpClient("translate", client => client.Timeout = TimeSpan.FromSeconds(8));
 
+// Quét tiện ích xung quanh (trạm xe buýt, siêu thị, quán cà phê...) qua Overpass API.
+// Overpass trả lời chậm (đo thực tế ~40 giây) nên client này cần timeout dài hơn hẳn
+// các client khác, kèm User-Agent để các mirror không từ chối request.
+builder.Services.AddScoped<TienIchQuetService>();
+builder.Services.AddHttpClient("overpass", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(90);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("RoomFinder-SV/1.0 (do-an-chuyen-nganh)");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
