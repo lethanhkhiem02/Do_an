@@ -81,16 +81,22 @@ builder.Services.AddAuthentication()
         };
     });
 
-// App Flutter chạy trên máy ảo Android (10.0.2.2) và bản debug trên trình duyệt
-// cần được phép gọi sang backend.
+// Cấu hình CORS cho phép App Flutter (chạy trên Chrome, máy ảo Android, hoặc localhost)
+// gọi vào toàn bộ API và SignalR.
 const string MobileCorsPolicy = "AllowRoomFinderApp";
 builder.Services.AddCors(options =>
 {
+    options.AddDefaultPolicy(policy =>
+        policy.SetIsOriginAllowed(_ => true)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+
     options.AddPolicy(MobileCorsPolicy, policy =>
         policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials()); // SignalR dùng credentials khi nối qua websockets
+              .AllowCredentials()); // SignalR dùng credentials khi kết nối qua WebSockets/LongPolling
 });
 
 // =======================================================
@@ -143,6 +149,7 @@ app.UseWhen(
     branch => branch.UseHttpsRedirection());
 app.UseRouting();
 app.UseCors(MobileCorsPolicy);
+app.UseStaticFiles();
 
 // =======================================================
 // BƯỚC 1: KÍCH HOẠT ĐƯỜNG ỐNG ĐA NGÔN NGỮ KHI WEB CHẠY
@@ -191,6 +198,7 @@ app.MapControllerRoute(
 
 // THÊM DÒNG NÀY ĐỂ ĐỊNH TUYẾN ĐƯỜNG DẪN CHO CÁC TRANG IDENTITY
 app.MapRazorPages();
+app.MapControllers();
 
 // ==========================================
 // 2. TẠO TÀI KHOẢN ADMIN VÀ CÁC QUYỀN (ROLES) MẶC ĐỊNH
@@ -232,5 +240,5 @@ using (var scope = app.Services.CreateScope())
     }
 }
 // ==========================================
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ChatHub>("/chatHub").RequireCors(MobileCorsPolicy);
 app.Run();

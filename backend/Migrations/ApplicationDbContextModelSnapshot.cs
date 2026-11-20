@@ -232,6 +232,62 @@ namespace Do_an_co_so.Migrations
                     b.ToTable("DichNoiDungs");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.HoSoOGhep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CoNauAn")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CoNuoiPet")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DangTimBan")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("GioGiacSinhHoat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GioiTinhUuTien")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("KhongHutThuoc")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("KhuVucMongMuon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MoTaThem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NganSachToiDa")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("NgayCapNhat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("UaSachSe")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("HoSoOGheps");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.HoaDon", b =>
                 {
                     b.Property<int>("Id")
@@ -589,6 +645,17 @@ namespace Do_an_co_so.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("PhongTro");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.HoSoOGhep", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

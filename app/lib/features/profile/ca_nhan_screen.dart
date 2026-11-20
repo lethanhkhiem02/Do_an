@@ -9,6 +9,7 @@ import '../../core/pick_anh.dart';
 import '../../core/session.dart';
 import '../../widgets/common.dart';
 import '../rooms/phong_da_thue_screen.dart';
+import '../roommate/tim_ban_o_ghep_screen.dart';
 import 'cccd_screen.dart';
 import 'doi_mat_khau_screen.dart';
 import 'sua_ho_so_screen.dart';
@@ -117,6 +118,17 @@ class CaNhanScreen extends StatelessWidget {
                     ),
                   ),
                 if (session.laSinhVien) const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.group_outlined),
+                  title: Text(context.t('Tìm bạn ở ghép')),
+                  subtitle: Text(context.t('Gợi ý bạn cùng phòng phù hợp')),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const TimBanOGhepScreen()),
+                  ),
+                ),
+                const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.badge_outlined),
                   title: Text(context.t('CCCD / xác thực danh tính')),

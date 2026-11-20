@@ -26,6 +26,9 @@ namespace Do_an_co_so.Data
         // --- TIỆN ÍCH XUNG QUANH PHÒNG (KẾT QUẢ QUÉT OPENSTREETMAP LÚC ĐĂNG BÀI) ---
         public DbSet<TienIchXungQuanh> TienIchXungQuanh { get; set; }
 
+        // --- HỒ SƠ TÌM BẠN Ở GHÉP ---
+        public DbSet<HoSoOGhep> HoSoOGheps { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -73,6 +76,15 @@ namespace Do_an_co_so.Data
             // snapshot của nó nên khóa ngoài là required (cascade mặc định).
             modelBuilder.Entity<TienIchXungQuanh>()
                 .HasIndex(t => new { t.PhongTroId, t.Loai });
+
+            // Hồ sơ ở ghép liên kết 1-1 với AppUser
+            modelBuilder.Entity<HoSoOGhep>()
+                .HasIndex(h => h.UserId)
+                .IsUnique();
+
+            modelBuilder.Entity<HoSoOGhep>()
+                .Property(h => h.NganSachToiDa)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

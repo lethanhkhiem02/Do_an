@@ -39,6 +39,9 @@ class UploadFile {
 class ApiClient {
   ApiClient({this.onUnauthorized});
 
+  /// Base URL của Backend API (mặc định lấy từ AppConfig.baseUrl: http://localhost:5295)
+  static String get baseUrl => AppConfig.baseUrl;
+
   String? token;
   final void Function()? onUnauthorized;
 
