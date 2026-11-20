@@ -9,11 +9,13 @@ Repo monorepo của đồ án chuyên ngành: quản lý phòng trọ cho sinh v
 
 ## Cài đặt từ đầu
 
-1. **Yêu cầu**: .NET SDK 8+, SQL Server Express (LocalDB cũng được), Visual Studio 2022 (workload ASP.NET), Flutter SDK + Android Studio.
-2. **Sửa chuỗi kết nối** trong `backend/appsettings.json` — giá trị trong repo trỏ tới máy người viết:
+1. **Yêu cầu**: .NET SDK **10** (`Do_an_co_so.csproj` đặt `TargetFramework = net10.0`; SDK 8 build không được), SQL Server Express (LocalDB cũng được), Visual Studio 2022 (workload ASP.NET), Flutter SDK + Android Studio.
+2. **Sửa chuỗi kết nối** trong `backend/appsettings.json` — `Server=<TÊN_MAY>\<INSTANCE>` là máy và instance SQL **của người chạy**, không phải cổng. Giá trị trong repo trỏ tới máy người viết:
    ```
    Server=<TEN_MAY_BAN>\<INSTANCE>;Database=QuanLyPhongTro;Trusted_Connection=True;TrustServerCertificate=True
    ```
+   Không commit lại dòng này kèm tên máy của mình — mỗi máy một chuỗi. Nếu muốn giữ nguyên file trong repo, đặt biến môi trường khi chạy thay vì sửa file:
+   `$env:ConnectionStrings__DefaultConnection="Server=<MAY>\<INSTANCE>;Database=QuanLyPhongTro;Trusted_Connection=True;TrustServerCertificate=True"`
 3. **Tạo CSDL** (app không tự migrate lúc khởi động):
    ```
    dotnet tool install --global dotnet-ef
