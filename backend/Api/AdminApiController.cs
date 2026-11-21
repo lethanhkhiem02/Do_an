@@ -1,6 +1,7 @@
 using Do_an_co_so.Api.Dtos;
 using Do_an_co_so.Data;
 using Do_an_co_so.Models;
+using Do_an_co_so.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,15 @@ namespace Do_an_co_so.Api
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly ApplicationDbContext _db;
+        private readonly GiaiNganPhatCocService _phatCoc;
 
         public AdminApiController(UserManager<AppUser> userManager, ApplicationDbContext db,
+            GiaiNganPhatCocService phatCoc,
             IStringLocalizer<SharedResource> localizer) : base(localizer)
         {
             _userManager = userManager;
             _db = db;
+            _phatCoc = phatCoc;
         }
 
         [HttpGet("nguoi-dung")]
@@ -155,6 +159,8 @@ namespace Do_an_co_so.Api
         [HttpGet("bao-cao")]
         public async Task<ActionResult<List<AdminReportDto>>> BaoCao(bool? chiChuaXuLy)
         {
+            await _phatCoc.QuetDenHanAsync();
+
             var query = _db.BaoCaos
                 .Include(b => b.NguoiBaoCao)
                 .Include(b => b.NguoiBiBaoCao)
@@ -165,19 +171,73 @@ namespace Do_an_co_so.Api
 
             var danhSach = await query.OrderByDescending(b => b.NgayBaoCao).ToListAsync();
 
-            return Ok(danhSach.Select(b => new AdminReportDto
+            // Nạp một lần các phiếu phạt hủy cọc để nối vào báo cáo theo (phòng, người báo cáo).
+            var phatCoc = await _db.HoaDons
+                .AsNoTracking()
+                .Where(h => h.LoaiHoaDon == "PhatCoc")
+                .ToListAsync();
+
+            var traCuu = phatCoc
+                .GroupBy(h => (h.PhongTroId, h.NguoiThueId))
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.OrderByDescending(h => h.NgayGiaoDich).First());
+
+            return Ok(danhSach.Select(b =>
             {
-                Id = b.Id,
-                LyDo = b.LyDo,
-                ChiTiet = b.ChiTiet,
-                NgayBaoCao = b.NgayBaoCao,
-                DaXuLy = b.DaXuLy,
-                NguoiBaoCao = b.NguoiBaoCao?.HoTen ?? b.NguoiBaoCao?.UserName,
-                NguoiBiBaoCao = b.NguoiBiBaoCao?.HoTen ?? b.NguoiBiBaoCao?.UserName,
-                PhongTroId = b.PhongTroId,
-                DiaChiPhong = b.PhongTro?.DiaChi,
-                ChuTroCuaPhong = b.PhongTro?.ChuTro?.HoTen ?? b.PhongTro?.ChuTro?.UserName
+                traCuu.TryGetValue((b.PhongTroId ?? -1, b.NguoiBaoCaoId), out var phat);
+                var chuaTatToan = phat != null && phat.TrangThai != "HoanChoNguoiBaoCao";
+
+                return new AdminReportDto
+                {
+                    Id = b.Id,
+                    LyDo = b.LyDo,
+                    ChiTiet = b.ChiTiet,
+                    NgayBaoCao = b.NgayBaoCao,
+                    DaXuLy = b.DaXuLy,
+                    NguoiBaoCao = b.NguoiBaoCao?.HoTen ?? b.NguoiBaoCao?.UserName,
+                    NguoiBiBaoCao = b.NguoiBiBaoCao?.HoTen ?? b.NguoiBiBaoCao?.UserName,
+                    PhongTroId = b.PhongTroId,
+                    DiaChiPhong = b.PhongTro?.DiaChi,
+                    ChuTroCuaPhong = b.PhongTro?.ChuTro?.HoTen ?? b.PhongTro?.ChuTro?.UserName,
+                    HoaDonPhatCocId = phat?.Id,
+                    TienPhatCoc = phat?.TienChuTroNhan,
+                    TrangThaiPhatCoc = phat?.TrangThai,
+                    CoTheHoanCoc = chuaTatToan
+                };
             }).ToList());
+        }
+
+        // Tố cáo "phòng không giống tin đăng" là đúng: lấy phần phạt hủy cọc trả lại người báo cáo.
+        [HttpPost("bao-cao/{id:int}/hoan-coc")]
+        public async Task<ActionResult<MessageResponse>> HoanCocNguoiBaoCao(int id)
+        {
+            var report = await _db.BaoCaos.FirstOrDefaultAsync(b => b.Id == id);
+            if (report == null) return NotFound(new ApiError(Localizer["Api_ReportNotFound"]));
+            if (report.PhongTroId == null)
+            {
+                return BadRequest(new ApiError(Localizer["Api_ReportHasNoRoom"]));
+            }
+
+            var phatCoc = await _db.HoaDons
+                .Where(h => h.LoaiHoaDon == "PhatCoc"
+                    && h.PhongTroId == report.PhongTroId
+                    && h.NguoiThueId == report.NguoiBaoCaoId)
+                .OrderByDescending(h => h.NgayGiaoDich)
+                .FirstOrDefaultAsync();
+
+            if (phatCoc == null) return NotFound(new ApiError(Localizer["Api_NoDepositPenalty"]));
+
+            var (thanhCong, trangThai) = await _phatCoc.HoanVeNguoiBaoCaoAsync(phatCoc.Id, report.NguoiBaoCaoId);
+            if (!thanhCong)
+            {
+                return BadRequest(new ApiError(Localizer["Api_PenaltyAlreadySettled", trangThai ?? ""]));
+            }
+
+            report.DaXuLy = true;
+            await _db.SaveChangesAsync();
+
+            return Ok(new MessageResponse(Localizer["Api_PenaltyRefunded", phatCoc.TienChuTroNhan.ToString("N0")]));
         }
 
         [HttpPost("bao-cao/{id:int}/da-xu-ly")]

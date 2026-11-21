@@ -118,6 +118,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<RoomQueryService>();
 
+// Tất toán phần tiền phạt hủy cọc khi hết hạn khiếu nại.
+builder.Services.AddScoped<GiaiNganPhatCocService>();
+
 // Máy dịch mô tả/địa chỉ phòng sang tiếng Anh, kết quả lưu lại trong bảng DichNoiDung.
 builder.Services.AddScoped<NoiDungDichService>();
 builder.Services.AddHttpClient("translate", client => client.Timeout = TimeSpan.FromSeconds(8));

@@ -62,6 +62,26 @@ namespace Do_an_co_so.Services
             return checkSum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        /// <summary>
+        /// Ký một bộ tham số hồi đáp theo đúng thuật toán ValidateSignature dùng để kiểm,
+        /// rồi trả về cả query string lẫn chữ ký. Cần khi phải tự đóng vai cổng thanh toán
+        /// (xem PaymentApiController.CongDemo) thay vì chờ VNPay gọi về.
+        /// </summary>
+        public string CreateCallbackQuery(string vnp_HashSecret)
+        {
+            StringBuilder data = new StringBuilder();
+            foreach (KeyValuePair<string, string> kv in _responseData)
+            {
+                if (!string.IsNullOrEmpty(kv.Value) && kv.Key != "vnp_SecureHash")
+                {
+                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
+                }
+            }
+            string queryString = data.ToString();
+            string vnp_SecureHash = HmacSHA512(vnp_HashSecret, queryString.Remove(queryString.Length - 1));
+            return queryString + "vnp_SecureHash=" + vnp_SecureHash;
+        }
+
         private string HmacSHA512(string key, string inputData)
         {
             var hash = new StringBuilder();

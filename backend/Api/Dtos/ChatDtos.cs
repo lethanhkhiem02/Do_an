@@ -82,6 +82,12 @@ namespace Do_an_co_so.Api.Dtos
         public int? PhongTroId { get; init; }
         public string? DiaChiPhong { get; init; }
         public string? ChuTroCuaPhong { get; init; }
+
+        // Phiếu phạt hủy cọc gắn với (phòng, người báo cáo) để admin quyết định hoàn lại hay không.
+        public int? HoaDonPhatCocId { get; init; }
+        public decimal? TienPhatCoc { get; init; }
+        public string? TrangThaiPhatCoc { get; init; }
+        public bool CoTheHoanCoc { get; init; }
     }
 
     public class DuyenCCCDRequest

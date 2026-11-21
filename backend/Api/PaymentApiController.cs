@@ -18,12 +18,15 @@ namespace Do_an_co_so.Api
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<AppUser> _userManager;
+        private readonly GiaiNganPhatCocService _phatCoc;
 
         public PaymentApiController(ApplicationDbContext db, UserManager<AppUser> userManager,
+            GiaiNganPhatCocService phatCoc,
             IStringLocalizer<SharedResource> localizer) : base(localizer)
         {
             _db = db;
             _userManager = userManager;
+            _phatCoc = phatCoc;
         }
 
         // ============================ THUÊ PHÒNG ============================
@@ -258,21 +261,48 @@ namespace Do_an_co_so.Api
                 return BadRequest(new ApiError(Localizer["Api_NoCancelDepositRight"]));
             }
 
-            decimal tienCoc = phong.TienCoc ?? VnPayOptions.TienDatCocGiuCho;
-            if (admin != null) admin.SoDu -= tienCoc;
-            user.SoDu += tienCoc;
+            // Cọc đã giải ngân (phòng chốt cho thuê / đã ký hợp đồng) thì không còn gì để hủy.
+            if (phong.DaChoThue)
+            {
+                return BadRequest(new ApiError(Localizer["Api_DepositAlreadySettled"]));
+            }
 
-            phong.NguoiDatCocId = null;
-            phong.TienCoc = null;
-            phong.HanDatCoc = null;
+            decimal tienCoc = phong.TienCoc ?? VnPayOptions.TienDatCocGiuCho;
+            decimal tienHoan = Math.Round(tienCoc * (1 - VnPayOptions.TyLePhatHuyCoc), 0, MidpointRounding.AwayFromZero);
+            decimal tienPhat = tienCoc - tienHoan;
+
+            // Chỉ phần hoàn rời khỏi ví nền tảng; phần phạt vẫn nằm ở admin, treo chờ phân xử.
+            if (admin != null) admin.SoDu -= tienHoan;
+            user.SoDu += tienHoan;
 
             var hoaDonCoc = await _db.HoaDons.FirstOrDefaultAsync(h =>
                 h.PhongTroId == phong.Id && h.NguoiThueId == user.Id && h.TrangThai == "TamGiu");
             if (hoaDonCoc != null) hoaDonCoc.TrangThai = "HoanTien";
 
+            _db.HoaDons.Add(new HoaDon
+            {
+                PhongTroId = phong.Id,
+                NguoiThueId = user.Id,
+                TongTien = tienPhat,
+                TienHoaHong = 0,
+                TienChuTroNhan = tienPhat,
+                NgayGiaoDich = DateTime.Now,
+                LoaiHoaDon = "PhatCoc",
+                TrangThai = "ChoGiaiNgan"
+            });
+
+            int soNgayCho = VnPayOptions.SoNgayChoXuLyPhatCoc;
+            var hanCho = DateTime.Now.AddDays(soNgayCho);
+
+            phong.NguoiDatCocId = null;
+            phong.TienCoc = null;
+            phong.HanDatCoc = null;
+
             await _db.SaveChangesAsync();
 
-            return Ok(new MessageResponse(Localizer["Api_DepositRefunded", tienCoc.ToString("N0")]));
+            return Ok(new MessageResponse(Localizer["Api_DepositCancelled",
+                tienHoan.ToString("N0"), tienPhat.ToString("N0"),
+                soNgayCho.ToString(), hanCho.ToString("dd/MM/yyyy")]));
         }
 
         // ============================ NẠP TIỀN VÀO VÍ ============================
@@ -325,6 +355,8 @@ namespace Do_an_co_so.Api
             var user = await CurrentUserAsync();
             if (user == null) return Unauthorized();
 
+            await _phatCoc.QuetDenHanAsync();
+
             var hoaDon = await _db.HoaDons
                 .Include(h => h.PhongTro).ThenInclude(p => p.ChuTro)
                 .Where(h => h.NguoiThueId == user.Id)
@@ -366,26 +398,130 @@ namespace Do_an_co_so.Api
             });
         }
 
+        // ============================ CỔNG THANH TOÁN DEMO ============================
+
+        // TmnCode sandbox của đồ án đã bị VNPay thu hồi (lỗi 71), nên trang này đóng vai
+        // cổng thanh toán: hiển thị đúng số tiền rồi ký sẵn một callback thành công gửi về
+        // vnp_ReturnUrl. Không có đường tắt nào — mọi luồng tiền vẫn đi qua callback thật,
+        // kể cả bước kiểm chữ ký. Tắt bằng VnPayOptions.CongThanhToanDemo.
+        [AllowAnonymous]
+        [HttpGet("demo")]
+        public IActionResult CongDemo()
+        {
+            if (!VnPayOptions.CongThanhToanDemo) return NotFound();
+
+            var boDem = new Dictionary<string, string>();
+            foreach (string key in Request.Query.Keys)
+            {
+                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_")) boDem[key] = Request.Query[key];
+            }
+
+            var kiemTra = new VnPayLibrary();
+            foreach (var kv in boDem) kiemTra.AddResponseData(kv.Key, kv.Value);
+            if (boDem.Count == 0
+                || !kiemTra.ValidateSignature(
+                    boDem.GetValueOrDefault("vnp_SecureHash", ""), VnPayOptions.HashSecret))
+            {
+                return KetQuaHtml(false, Localizer["Api_BadSignature"]);
+            }
+
+            // Trang này mở bằng trình duyệt nên Accept-Language của Chrome không phản ánh
+            // ngôn ngữ chọn trong app; vnp_Locale do backend ghi lúc phát hành URL mới đúng.
+            var tenVanHoa = boDem.GetValueOrDefault("vnp_Locale") == "en" ? "en-US" : "vi-VN";
+            var vanHoaGoc = System.Globalization.CultureInfo.CurrentCulture;
+            var ngonNhuGoc = System.Globalization.CultureInfo.CurrentUICulture;
+            System.Globalization.CultureInfo.CurrentCulture =
+                System.Globalization.CultureInfo.CurrentUICulture =
+                    new System.Globalization.CultureInfo(tenVanHoa);
+            try
+            {
+                decimal soTien = decimal.Parse(boDem.GetValueOrDefault("vnp_Amount", "0")) / 100;
+
+                // Dấu & trong href phải thành &amp; để HTML hợp lệ; TxnRef thì hiển thẳng ra
+                // trang, nên cả hai đều mã hóa trước khi render.
+                string duongDanTraVe = System.Net.WebUtility.HtmlEncode(
+                    $"{boDem.GetValueOrDefault("vnp_ReturnUrl", "")}?{KyCallbackThanhCong(boDem)}");
+                string maGiaoDich = System.Net.WebUtility.HtmlEncode(boDem.GetValueOrDefault("vnp_TxnRef", ""));
+
+                string noiDung = $"""
+                    <h2 style="margin:0 0 4px;color:#0d6efd">{Localizer["Api_DemoTitle"]}</h2>
+                    <p style="color:#495057;margin:0 0 18px;font-size:15px">{Localizer["Api_DemoNote"]}</p>
+                    <div style="background:#f1f3f9;border-radius:10px;padding:14px 16px;margin:0 0 18px;
+                                text-align:left;font-size:14px;color:#495057">
+                      <div>{Localizer["Api_DemoAmount", soTien.ToString("N0")]}</div>
+                      <div style="margin-top:6px">{Localizer["Api_DemoRef", maGiaoDich]}</div>
+                    </div>
+                    <a href="{duongDanTraVe}"
+                       style="display:block;background:#0d6efd;color:#fff;text-decoration:none;
+                              padding:14px;border-radius:10px;font-weight:600;margin:0 0 10px">
+                      {Localizer["Api_DemoConfirm"]}
+                    </a>
+                    <a href="javascript:history.back()"
+                       style="display:block;color:#6c757d;text-decoration:none;padding:10px">
+                      {Localizer["Api_DemoCancel"]}
+                    </a>
+                    """;
+
+                return Content(TrangKhung(noiDung, tenVanHoa.Split('-')[0]), "text/html; charset=utf-8");
+            }
+            finally
+            {
+                System.Globalization.CultureInfo.CurrentCulture = vanHoaGoc;
+                System.Globalization.CultureInfo.CurrentUICulture = ngonNhuGoc;
+            }
+        }
+
+        // Bổ sung các trường VNPay sẽ gửi khi thanh toán thành công rồi ký lại, để callback
+        // đi qua đúng TraKetQua như một giao dịch thật.
+        private string KyCallbackThanhCong(Dictionary<string, string> thamSo)
+        {
+            thamSo.Remove("vnp_SecureHash");
+            thamSo["vnp_ResponseCode"] = "00";
+            thamSo["vnp_TransactionStatus"] = "00";
+            thamSo["vnp_TransactionNo"] = DateTime.Now.ToString("HHmmss");
+            thamSo["vnp_PayDate"] = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            var vnpay = new VnPayLibrary();
+            foreach (var kv in thamSo) vnpay.AddResponseData(kv.Key, kv.Value);
+            return vnpay.CreateCallbackQuery(VnPayOptions.HashSecret);
+        }
+
         // ================================ TIỆN ÍCH NỘI BỘ ================================
 
         private string TaoUrlThanhToan(string tenCallback, long soTienBotThap, string noiDung, string txnRef, string loai = "other")
         {
             var returnUrl = $"{Request.Scheme}://{Request.Host}/api/thanhtoan/{tenCallback}";
 
-            var vnpay = new VnPayLibrary();
-            vnpay.AddRequestData("vnp_Version", "2.1.0");
-            vnpay.AddRequestData("vnp_Command", "pay");
-            vnpay.AddRequestData("vnp_TmnCode", VnPayOptions.TmnCode);
-            vnpay.AddRequestData("vnp_Amount", soTienBotThap.ToString());
-            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
-            vnpay.AddRequestData("vnp_CurrCode", "VND");
-            vnpay.AddRequestData("vnp_IpAddr", HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1");
-            vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", noiDung);
-            vnpay.AddRequestData("vnp_OrderType", loai);
-            vnpay.AddRequestData("vnp_ReturnUrl", returnUrl);
-            vnpay.AddRequestData("vnp_TxnRef", txnRef);
+            var thamSo = new SortedDictionary<string, string>
+            {
+                ["vnp_Version"] = "2.1.0",
+                ["vnp_Command"] = "pay",
+                ["vnp_TmnCode"] = VnPayOptions.TmnCode,
+                ["vnp_Amount"] = soTienBotThap.ToString(),
+                ["vnp_CreateDate"] = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                ["vnp_CurrCode"] = "VND",
+                ["vnp_IpAddr"] = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1",
+                // App gửi "Accept-Language: en" thì trang thanh toán cũng phải tiếng Anh.
+                ["vnp_Locale"] = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en"
+                    ? "en" : "vn",
+                ["vnp_OrderInfo"] = noiDung,
+                ["vnp_OrderType"] = loai,
+                ["vnp_ReturnUrl"] = returnUrl,
+                ["vnp_TxnRef"] = txnRef,
+            };
 
+            if (VnPayOptions.CongThanhToanDemo)
+            {
+                // Trang demo nhận đúng bộ tham số VNPay sẽ nhận, kèm chữ ký thật, nên nó
+                // chỉ hoạt động khi URL này do chính backend phát hành.
+                var vnpayKy = new VnPayLibrary();
+                foreach (var kv in thamSo) vnpayKy.AddResponseData(kv.Key, kv.Value);
+                return $"{Request.Scheme}://{Request.Host}/api/thanhtoan/demo?"
+                     + vnpayKy.CreateCallbackQuery(VnPayOptions.HashSecret);
+            }
+
+            var vnpay = new VnPayLibrary();
+            foreach (var kv in thamSo) vnpay.AddRequestData(kv.Key, kv.Value);
             return vnpay.CreateRequestUrl(VnPayOptions.Url, VnPayOptions.HashSecret);
         }
 
@@ -437,24 +573,26 @@ namespace Do_an_co_so.Api
             string tieuDe = thanhCong ? "Giao dịch thành công" : "Giao dịch chưa hoàn tất";
             string thongDiep = noiDung ?? (thanhCong ? "Giao dịch thành công." : "Giao dịch không thành công.");
 
-            return Content($"""
-                <!doctype html>
-                <html lang="vi"><head><meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>RoomFinder - Kết quả thanh toán</title></head>
-                <body style="font-family:system-ui,sans-serif;background:#f5f6fa;display:flex;align-items:center;
-                             justify-content:center;min-height:100vh;margin:0">
-                  <div style="background:#fff;padding:32px 24px;border-radius:16px;max-width:420px;width:90%;
-                              box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center;border-top:5px solid {mau}">
-                    <div style="font-size:42px">{bieuTuong}</div>
-                    <h2 style="margin:12px 0 8px;color:{mau}">
-                      {tieuDe}
-                    </h2>
-                    <p style="color:#495057;margin:0 0 20px">{thongDiep}</p>
-                    <p style="color:#6c757d;font-size:14px;margin:0">Quay lại ứng dụng RoomFinder để tiếp tục.</p>
-                  </div>
-                </body></html>
-                """, "text/html; charset=utf-8");
+            return Content(TrangKhung($"""
+                <div style="font-size:42px">{bieuTuong}</div>
+                <h2 style="margin:12px 0 8px;color:{mau}">{tieuDe}</h2>
+                <p style="color:#495057;margin:0 0 20px">{thongDiep}</p>
+                <p style="color:#6c757d;font-size:14px;margin:0">Quay lại ứng dụng RoomFinder để tiếp tục.</p>
+                """, "vi"), "text/html; charset=utf-8");
         }
+
+        private static string TrangKhung(string noiDung, string maNgonNgu) => $"""
+            <!doctype html>
+            <html lang="{maNgonNgu}"><head><meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>RoomFinder</title></head>
+            <body style="font-family:system-ui,sans-serif;background:#f5f6fa;display:flex;align-items:center;
+                         justify-content:center;min-height:100vh;margin:0">
+              <div style="background:#fff;padding:32px 24px;border-radius:16px;max-width:420px;width:90%;
+                          box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center">
+                {noiDung}
+              </div>
+            </body></html>
+            """;
     }
 }

@@ -127,7 +127,11 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
     if (phong == null) return;
     final chac = await xacNhan(
       context,
-      hoi: context.t('Hủy cọc phòng này? 500.000đ sẽ được hoàn về ví của bạn.'),
+      hoi: context.t(
+        'Hủy cọc phòng này? Bạn chỉ được hoàn 50% (250.000đ) về ví. '
+        '50% còn lại nền tảng giữ và trả cho chủ trọ sau 7 ngày, '
+        'trừ khi bạn báo cáo phòng không giống tin đăng và admin xác nhận.',
+      ),
       yes: context.t('Hủy cọc'),
     );
     if (!chac) return;

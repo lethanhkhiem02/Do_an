@@ -4,6 +4,8 @@ backend/obj/
 backend/.vs/
 backend/*.user
 backend/appsettings.*.local.json
+# Chuỗi kết nối + JWT key thật của mỗi máy, không được lên repo công khai
+backend/appsettings.Development.json
 
 # ---- app (Flutter) ----
 app/build/

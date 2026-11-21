@@ -37,6 +37,36 @@ class _AdminBaoCaoScreenState extends State<AdminBaoCaoScreen> {
     }
   }
 
+  Future<void> _hoanCoc(AdminReport baoCao) async {
+    final dich = context.read<NgonNgu>().d;
+    final api = context.read<Session>().api;
+    final chac = await xacNhan(
+      context,
+      hoi:
+          '${dich('Xác nhận tố cáo của')} ${baoCao.nguoiBaoCao ?? '?'} '
+          '${dich('là đúng và hoàn')} ${Fmt.tien(baoCao.tienPhatCoc ?? 0)} '
+          '${dich('tiền phạt hủy cọc về ví người báo cáo? Báo cáo sẽ bị đánh dấu đã xử lý.')}',
+      yes: dich('Hoàn cọc'),
+    );
+    if (!chac) return;
+
+    try {
+      final json = await api.post('api/admin/bao-cao/${baoCao.id}/hoan-coc');
+      if (!mounted) return;
+      bao(context: context, message: json is Map ? '${json['message']}' : dich('Đã hoàn cọc.'));
+      setState(() { _danhSach = _tai(); });
+    } on ApiException catch (e) {
+      if (mounted) bao(context: context, message: e.message, loi: true);
+    }
+  }
+
+  String _nhanTrangThaiPhat(BuildContext context, String? trangThai) => switch (trangThai) {
+    'ChoGiaiNgan' => context.t('Đang chờ phân xử'),
+    'PhatChoChuTro' => context.t('Đã bồi thường cho chủ trọ'),
+    'HoanChoNguoiBaoCao' => context.t('Đã hoàn lại cho bạn'),
+    _ => trangThai ?? '',
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,16 +150,36 @@ class _AdminBaoCaoScreenState extends State<AdminBaoCaoScreen> {
                               Text(
                                   '${context.t('Phòng')}: ${baoCao.diaChiPhong} (${context.t('chủ trọ')} ${baoCao.chuTroCuaPhong ?? '?'})',
                                   style: Theme.of(context).textTheme.bodySmall),
+                            if (baoCao.tienPhatCoc != null)
+                              Text(
+                                '${context.t('Tiền phạt hủy cọc:')} ${Fmt.tien(baoCao.tienPhatCoc!)}'
+                                ' · ${_nhanTrangThaiPhat(context, baoCao.trangThaiPhatCoc)}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
                             const SizedBox(height: 8),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: baoCao.daXuLy
-                                  ? Text(context.t('Đã xử lý'),
-                                      style: const TextStyle(color: Colors.green))
-                                  : FilledButton.tonal(
+                              child: Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                alignment: WrapAlignment.end,
+                                children: [
+                                  if (baoCao.coTheHoanCoc)
+                                    FilledButton.icon(
+                                      onPressed: () => _hoanCoc(baoCao),
+                                      icon: const Icon(Icons.savings_outlined),
+                                      label: Text(context.t('Hoàn cọc cho người báo cáo')),
+                                    ),
+                                  if (!baoCao.daXuLy)
+                                    FilledButton.tonal(
                                       onPressed: () => _daXuLy(baoCao),
                                       child: Text(context.t('Đánh dấu đã xử lý')),
-                                    ),
+                                    )
+                                  else
+                                    Text(context.t('Đã xử lý'),
+                                        style: const TextStyle(color: Colors.green)),
+                                ],
+                              ),
                             ),
                           ],
                         ),

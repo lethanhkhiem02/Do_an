@@ -954,11 +954,44 @@
   <data name="Api_RentPaidSuccess" xml:space="preserve">
     <value>Thuê phòng thành công! Tiền cọc và tiền thuê đã được giải ngân cho chủ trọ.</value>
   </data>
+  <data name="Api_DemoTitle" xml:space="preserve">
+    <value>Cổng thanh toán demo</value>
+  </data>
+  <data name="Api_DemoNote" xml:space="preserve">
+    <value>Sandbox VNPay đã khóa tài khoản merchant của đồ án (lỗi 71), nên đây là trang giả lập để kiểm thử luồng tiền. Không có tiền thật nào được trừ.</value>
+  </data>
+  <data name="Api_DemoAmount" xml:space="preserve">
+    <value>Số thanh toán: {0}đ</value>
+  </data>
+  <data name="Api_DemoRef" xml:space="preserve">
+    <value>Mã giao dịch: {0}</value>
+  </data>
+  <data name="Api_DemoConfirm" xml:space="preserve">
+    <value>Xác nhận đã thanh toán</value>
+  </data>
+  <data name="Api_DemoCancel" xml:space="preserve">
+    <value>Hủy thanh toán</value>
+  </data>
   <data name="Api_DepositDone" xml:space="preserve">
     <value>Đã cọc {0}đ. Hệ thống giữ phòng cho bạn trong {1} ngày.</value>
   </data>
-  <data name="Api_DepositRefunded" xml:space="preserve">
-    <value>Hủy cọc thành công! Đã hoàn lại {0}đ vào ví của bạn.</value>
+  <data name="Api_DepositCancelled" xml:space="preserve">
+    <value>Hủy cọc thành công! Đã hoàn {0}đ vào ví bạn (50%). {1}đ bị giữ lại và sẽ trả cho chủ trọ sau {2} ngày nếu không có khiếu nại (hạn: {3}).</value>
+  </data>
+  <data name="Api_DepositAlreadySettled" xml:space="preserve">
+    <value>Phòng này đã chốt cho thuê, tiền cọc đã được giải ngân nên không còn hủy được nữa.</value>
+  </data>
+  <data name="Api_ReportHasNoRoom" xml:space="preserve">
+    <value>Báo cáo này không gắn với phòng trọ nào nên không có cọc để hoàn.</value>
+  </data>
+  <data name="Api_NoDepositPenalty" xml:space="preserve">
+    <value>Người báo cáo không có phiếu phạt hủy cọc nào cho phòng này.</value>
+  </data>
+  <data name="Api_PenaltyAlreadySettled" xml:space="preserve">
+    <value>Phiếu phạt này đã tất toán (trạng thái: {0}) nên không hoàn được nữa.</value>
+  </data>
+  <data name="Api_PenaltyRefunded" xml:space="preserve">
+    <value>Đã hoàn {0}đ tiền phạt cọc về ví người báo cáo và đánh dấu báo cáo đã xử lý.</value>
   </data>
   <data name="Api_TopUpDone" xml:space="preserve">
     <value>Đã nạp {0}đ vào ví.</value>
@@ -1004,5 +1037,23 @@
   </data>
   <data name="Api_CccdRejected" xml:space="preserve">
     <value>Đã từ chối, yêu cầu chủ trọ tải CCCD lên lại.</value>
+  </data>
+  <data name="Api_ContractNotFound" xml:space="preserve">
+    <value>Không tìm thấy hợp đồng.</value>
+  </data>
+  <data name="Api_ContractNoTenant" xml:space="preserve">
+    <value>Phòng này chưa ghi nhận người thuê nên chưa lập hợp đồng được. Hãy xác nhận cọc hoặc thanh toán trước.</value>
+  </data>
+  <data name="Api_ContractSelfRent" xml:space="preserve">
+    <value>Bên A và bên B phải là hai tài khoản khác nhau.</value>
+  </data>
+  <data name="Api_ContractExists" xml:space="preserve">
+    <value>Phòng này và người thuê này đã có hợp đồng rồi.</value>
+  </data>
+  <data name="Api_ContractNotPending" xml:space="preserve">
+    <value>Hợp đồng này không còn ở trạng thái chờ ký.</value>
+  </data>
+  <data name="Api_ContractCancelled" xml:space="preserve">
+    <value>Đã hủy hợp đồng.</value>
   </data>
 </root>

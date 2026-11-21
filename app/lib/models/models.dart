@@ -409,6 +409,7 @@ class Invoice {
   String get loaiHienThi => switch (loaiHoaDon) {
     'ThuePhong' => x('Thuê phòng'),
     'DatCoc' => x('Đặt cọc giữ chỗ'),
+    'PhatCoc' => x('Tiền phạt hủy cọc'),
     _ => loaiHoaDon,
   };
 
@@ -417,6 +418,9 @@ class Invoice {
     'TamGiu' => x('Đang tạm giữ'),
     'GiaiNgan' => x('Đã giải ngân'),
     'HoanTien' => x('Đã hoàn tiền'),
+    'ChoGiaiNgan' => x('Đang chờ phân xử'),
+    'PhatChoChuTro' => x('Đã bồi thường cho chủ trọ'),
+    'HoanChoNguoiBaoCao' => x('Đã hoàn lại cho bạn'),
     _ => trangThai,
   };
 }
@@ -562,6 +566,10 @@ class AdminReport {
     this.phongTroId,
     this.diaChiPhong,
     this.chuTroCuaPhong,
+    this.hoaDonPhatCocId,
+    this.tienPhatCoc,
+    this.trangThaiPhatCoc,
+    this.coTheHoanCoc = false,
   });
 
   factory AdminReport.fromJson(dynamic json) {
@@ -577,6 +585,10 @@ class AdminReport {
       phongTroId: _i(m['phongTroId']),
       diaChiPhong: m['diaChiPhong'],
       chuTroCuaPhong: m['chuTroCuaPhong'],
+      hoaDonPhatCocId: _i(m['hoaDonPhatCocId']),
+      tienPhatCoc: _d(m['tienPhatCoc']),
+      trangThaiPhatCoc: m['trangThaiPhatCoc'],
+      coTheHoanCoc: _b(m['coTheHoanCoc']),
     );
   }
 
@@ -590,6 +602,10 @@ class AdminReport {
   final int? phongTroId;
   final String? diaChiPhong;
   final String? chuTroCuaPhong;
+  final int? hoaDonPhatCocId;
+  final double? tienPhatCoc;
+  final String? trangThaiPhatCoc;
+  final bool coTheHoanCoc;
 }
 
 class PaymentUrl {
@@ -696,3 +712,138 @@ String tenNhomTienIch(String loai) => switch (loai) {
 /// Thứ tự các nhóm hiển thị trong tab "Tiện ích xung quanh", kể cả nhóm chưa
 /// tìm thấy gì để sinh viên biết app đã quét loại đó rồi.
 const List<String> cacNhomTienIch = ['bus_stop', 'supermarket', 'cafe', 'fuel', 'convenience'];
+
+/// Thông tin Bên B mà chủ trọ xem trước ở màn "Tạo hợp đồng"
+/// (GET /api/hop-dong/khach-thue/{phongTroId}).
+class ContractTenant {
+  ContractTenant({
+    required this.phongTroId,
+    this.tenPhong,
+    this.diaChiPhong = '',
+    this.giaThue = 0,
+    this.benBId,
+    this.tenBenB = '',
+    this.ngaySinhBenB,
+    this.tenBenA = '',
+    this.ngaySinhBenA,
+  });
+
+  factory ContractTenant.fromJson(dynamic json) {
+    final m = _map(json);
+    return ContractTenant(
+      phongTroId: _i0(m['phongTroId']),
+      tenPhong: m['tenPhong'],
+      diaChiPhong: m['diaChiPhong'] ?? '',
+      giaThue: _d0(m['giaThue']),
+      benBId: m['benBId'],
+      tenBenB: m['tenBenB'] ?? '',
+      ngaySinhBenB: _dt(m['ngaySinhBenB']),
+      tenBenA: m['tenBenA'] ?? '',
+      ngaySinhBenA: _dt(m['ngaySinhBenA']),
+    );
+  }
+
+  final int phongTroId;
+  final String? tenPhong;
+  final String diaChiPhong;
+  final double giaThue;
+  final String? benBId;
+  final String tenBenB;
+  final DateTime? ngaySinhBenB;
+  final String tenBenA;
+  final DateTime? ngaySinhBenA;
+}
+
+/// Hợp đồng thuê phòng online (Bên A = chủ trọ, Bên B = sinh viên).
+class RentalContract {
+  RentalContract({
+    required this.id,
+    required this.phongTroId,
+    this.tenPhong,
+    required this.benAId,
+    required this.tenBenA,
+    this.ngaySinhBenA,
+    required this.benBId,
+    required this.tenBenB,
+    this.ngaySinhBenB,
+    required this.diaChiPhong,
+    required this.giaThue,
+    required this.thoiHanThang,
+    required this.ngayBatDau,
+    required this.ngayKetThuc,
+    required this.trangThai,
+    required this.vaiTro,
+    this.kyBenALuc,
+    this.kyBenBLuc,
+    required this.ngayLap,
+    required this.conChoMinhKy,
+  });
+
+  factory RentalContract.fromJson(dynamic json) {
+    final m = _map(json);
+    return RentalContract(
+      id: _i0(m['id']),
+      phongTroId: _i0(m['phongTroId']),
+      tenPhong: m['tenPhong'],
+      benAId: m['benAId'] ?? '',
+      tenBenA: m['tenBenA'] ?? '',
+      ngaySinhBenA: _dt(m['ngaySinhBenA']),
+      benBId: m['benBId'] ?? '',
+      tenBenB: m['tenBenB'] ?? '',
+      ngaySinhBenB: _dt(m['ngaySinhBenB']),
+      diaChiPhong: m['diaChiPhong'] ?? '',
+      giaThue: _d0(m['giaThue']),
+      thoiHanThang: _i0(m['thoiHanThang']),
+      ngayBatDau: _dt(m['ngayBatDau']) ?? DateTime.now(),
+      ngayKetThuc: _dt(m['ngayKetThuc']) ?? DateTime.now(),
+      trangThai: m['trangThai'] ?? '',
+      vaiTro: m['vaiTro'] ?? '',
+      kyBenALuc: _dt(m['kyBenALuc']),
+      kyBenBLuc: _dt(m['kyBenBLuc']),
+      ngayLap: _dt(m['ngayLap']) ?? DateTime.now(),
+      conChoMinhKy: _b(m['conChoMinhKy']),
+    );
+  }
+
+  final int id;
+  final int phongTroId;
+  final String? tenPhong;
+
+  final String benAId;
+  final String tenBenA;
+  final DateTime? ngaySinhBenA;
+
+  final String benBId;
+  final String tenBenB;
+  final DateTime? ngaySinhBenB;
+
+  final String diaChiPhong;
+  final double giaThue;
+  final int thoiHanThang;
+  final DateTime ngayBatDau;
+  final DateTime ngayKetThuc;
+
+  /// ChoKy | DaKy | DaHuy — nhãn hiển thị do từ điển của app quyết định.
+  final String trangThai;
+
+  /// "A" nếu người xem là chủ trọ, "B" nếu là sinh viên.
+  final String vaiTro;
+  final DateTime? kyBenALuc;
+  final DateTime? kyBenBLuc;
+  final DateTime ngayLap;
+  final bool conChoMinhKy;
+
+  bool get daKy => trangThai == 'DaKy';
+  bool get daHuy => trangThai == 'DaHuy';
+  bool get choKy => trangThai == 'ChoKy';
+
+  /// Bản là bên nào vừa ký: bên A ký trước nên chỉ bên B mới làm hợp đồng có hiệu lực.
+  DateTime? get kyCuaMinh => vaiTro == 'A' ? kyBenALuc : kyBenBLuc;
+
+  String get trangThaiHienThi => switch (trangThai) {
+    'DaKy' => x('Đã ký'),
+    'DaHuy' => x('Đã hủy'),
+    _ => x('Chờ ký'),
+  };
+}
+

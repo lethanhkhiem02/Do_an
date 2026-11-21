@@ -29,6 +29,9 @@ namespace Do_an_co_so.Data
         // --- HỒ SƠ TÌM BẠN Ở GHÉP ---
         public DbSet<HoSoOGhep> HoSoOGheps { get; set; }
 
+        // --- HỢP ĐỒNG THUÊ PHÒNG ONLINE (BÊN A CHỦ TRỌ - BÊN B SINH VIÊN) ---
+        public DbSet<HopDong> HopDongs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -85,6 +88,17 @@ namespace Do_an_co_so.Data
             modelBuilder.Entity<HoSoOGhep>()
                 .Property(h => h.NganSachToiDa)
                 .HasColumnType("decimal(18,2)");
+
+            // Một hợp đồng trỏ tới hai AppUser khác nhau nên phải nêu rõ cách xóa,
+            // nếu không SQL Server sẽ tự dựng nhiều luồng cascade và từ chối migration.
+            modelBuilder.Entity<HopDong>(h =>
+            {
+                h.Property(x => x.GiaThue).HasColumnType("decimal(18,2)");
+                h.HasOne(x => x.BenA).WithMany().HasForeignKey(x => x.BenAId).OnDelete(DeleteBehavior.Restrict);
+                h.HasOne(x => x.BenB).WithMany().HasForeignKey(x => x.BenBId).OnDelete(DeleteBehavior.Restrict);
+                h.HasOne(x => x.PhongTro).WithMany().HasForeignKey(x => x.PhongTroId).OnDelete(DeleteBehavior.Cascade);
+                h.HasIndex(x => x.PhongTroId);
+            });
         }
     }
 }

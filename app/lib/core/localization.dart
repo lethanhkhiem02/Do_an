@@ -50,7 +50,16 @@ class NgonNgu extends ChangeNotifier {
 }
 
 extension DichTrenContext on BuildContext {
-  NgonNgu get ngonNgu => watch<NgonNgu>();
+  /// `watch` chỉ hợp lệ khi framework đang build widget. Gọi nó từ callback của
+  /// nút bấm (hay sau `await`) sẽ làm provider bắn assertion ở debug mode, và
+  /// handler chết trước khi kịp gửi request. Ngoài build thì đọc bằng `read`.
+  NgonNgu get ngonNgu {
+    try {
+      return watch<NgonNgu>();
+    } on AssertionError {
+      return read<NgonNgu>();
+    }
+  }
 
   String t(String tiengViet) => ngonNgu.d(tiengViet);
 }

@@ -5,6 +5,7 @@ import '../../core/api_client.dart';
 import '../../core/formatting.dart';
 import '../../core/localization.dart';
 import '../../core/session.dart';
+import '../../features/contracts/tao_hop_dong_screen.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
 import '../../widgets/room_card.dart';
@@ -129,6 +130,17 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
                               onPressed: () => _hanhDong(
                                 'api/phong-tro/${item.id}/mo-lai',
                                 context.t('Đã mở lại phòng, mọi người có thể thuê.'),
+                              ),
+                            ),
+                          if (item.daChoThue)
+                            ActionChip(
+                              avatar: const Icon(Icons.description_outlined, size: 16),
+                              label: Text(context.t('Tạo hợp đồng')),
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => TaoHopDongScreen(phongTroId: item.id),
+                                ),
                               ),
                             ),
                           ActionChip(

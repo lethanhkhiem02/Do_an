@@ -117,8 +117,11 @@ class _TheoDoiDialogState extends State<_TheoDoiDialog> {
     bool xong = false;
     try {
       xong = await ThanhToan._daXong(widget.session, widget.phongId, widget.soDuTruoc);
-    } on ApiException {
-      // backend chưa ghi nhận hoặc mất mạng, lần poll kế tiếp sẽ thử lại
+    } catch (_) {
+      // Backend chưa ghi nhận, mất mạng, hay timeout vì Chrome chiếm máy lúc khởi
+      // động — mọi lỗi ở đây đều chỉ có nghĩa "lần poll kế tiếp sẽ thử lại".
+      // Bắt `on ApiException` thôi thì TimeoutException thoát ra ngoài, `_dangKiemTra`
+      // mắc kẹt ở true và hộp thoại vĩnh viễn không nhận ra giao dịch thành công.
     }
     if (!mounted) return;
     setState(() {

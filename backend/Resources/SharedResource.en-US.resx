@@ -954,11 +954,44 @@
   <data name="Api_RentPaidSuccess" xml:space="preserve">
     <value>Room rented! The deposit and the rent have been released to the landlord.</value>
   </data>
+  <data name="Api_DemoTitle" xml:space="preserve">
+    <value>Demo payment gateway</value>
+  </data>
+  <data name="Api_DemoNote" xml:space="preserve">
+    <value>VNPay's sandbox has locked this project's merchant account (error 71), so this is a simulated page used to test the money flow. No real money is charged.</value>
+  </data>
+  <data name="Api_DemoAmount" xml:space="preserve">
+    <value>Amount: {0}đ</value>
+  </data>
+  <data name="Api_DemoRef" xml:space="preserve">
+    <value>Transaction: {0}</value>
+  </data>
+  <data name="Api_DemoConfirm" xml:space="preserve">
+    <value>Confirm payment</value>
+  </data>
+  <data name="Api_DemoCancel" xml:space="preserve">
+    <value>Cancel payment</value>
+  </data>
   <data name="Api_DepositDone" xml:space="preserve">
     <value>Deposit of {0}đ paid. The room is held for you for {1} days.</value>
   </data>
-  <data name="Api_DepositRefunded" xml:space="preserve">
-    <value>Deposit cancelled! {0}đ was refunded to your wallet.</value>
+  <data name="Api_DepositCancelled" xml:space="preserve">
+    <value>Deposit cancelled! {0}đ (50%) was refunded to your wallet. The other {1}đ is held and will be paid to the landlord after {2} days unless a complaint is filed (deadline: {3}).</value>
+  </data>
+  <data name="Api_DepositAlreadySettled" xml:space="preserve">
+    <value>This room is already rented and the deposit has been released, so it can no longer be cancelled.</value>
+  </data>
+  <data name="Api_ReportHasNoRoom" xml:space="preserve">
+    <value>This report is not linked to a room, so there is no deposit to refund.</value>
+  </data>
+  <data name="Api_NoDepositPenalty" xml:space="preserve">
+    <value>The reporter has no deposit penalty record for this room.</value>
+  </data>
+  <data name="Api_PenaltyAlreadySettled" xml:space="preserve">
+    <value>This penalty has already been settled (status: {0}) and cannot be refunded again.</value>
+  </data>
+  <data name="Api_PenaltyRefunded" xml:space="preserve">
+    <value>Refunded {0}đ of the deposit penalty to the reporter and marked the report as resolved.</value>
   </data>
   <data name="Api_TopUpDone" xml:space="preserve">
     <value>{0}đ has been added to your wallet.</value>
@@ -1004,5 +1037,23 @@
   </data>
   <data name="Api_CccdRejected" xml:space="preserve">
     <value>Rejected; the landlord is asked to upload the ID card again.</value>
+  </data>
+  <data name="Api_ContractNotFound" xml:space="preserve">
+    <value>Contract not found.</value>
+  </data>
+  <data name="Api_ContractNoTenant" xml:space="preserve">
+    <value>This room has no recorded tenant yet, so a contract cannot be created. Confirm the deposit or the rental payment first.</value>
+  </data>
+  <data name="Api_ContractSelfRent" xml:space="preserve">
+    <value>Party A and party B must be two different accounts.</value>
+  </data>
+  <data name="Api_ContractExists" xml:space="preserve">
+    <value>A contract already exists for this room and this tenant.</value>
+  </data>
+  <data name="Api_ContractNotPending" xml:space="preserve">
+    <value>This contract is no longer waiting for signatures.</value>
+  </data>
+  <data name="Api_ContractCancelled" xml:space="preserve">
+    <value>The contract has been cancelled.</value>
   </data>
 </root>

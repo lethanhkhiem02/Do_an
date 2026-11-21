@@ -332,6 +332,76 @@ namespace Do_an_co_so.Migrations
                     b.ToTable("HoaDons");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.HopDong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BenAId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BenBId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DiaChiPhong")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("GiaThue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("KyBenALuc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("KyBenBLuc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayBatDau")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayLap")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgaySinhBenA")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgaySinhBenB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PhongTroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenBenA")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenBenB")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThoiHanThang")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrangThai")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BenAId");
+
+                    b.HasIndex("BenBId");
+
+                    b.HasIndex("PhongTroId");
+
+                    b.ToTable("HopDongs");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -675,6 +745,33 @@ namespace Do_an_co_so.Migrations
                         .IsRequired();
 
                     b.Navigation("NguoiThue");
+
+                    b.Navigation("PhongTro");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.HopDong", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.AppUser", "BenA")
+                        .WithMany()
+                        .HasForeignKey("BenAId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Do_an_co_so.Models.AppUser", "BenB")
+                        .WithMany()
+                        .HasForeignKey("BenBId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
+                        .WithMany()
+                        .HasForeignKey("PhongTroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BenA");
+
+                    b.Navigation("BenB");
 
                     b.Navigation("PhongTro");
                 });
