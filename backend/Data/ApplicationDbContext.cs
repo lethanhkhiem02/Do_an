@@ -32,6 +32,9 @@ namespace Do_an_co_so.Data
         // --- HỢP ĐỒNG THUÊ PHÒNG ONLINE (BÊN A CHỦ TRỌ - BÊN B SINH VIÊN) ---
         public DbSet<HopDong> HopDongs { get; set; }
 
+        // --- CẢNH BÁO BẤT THƯỜNG / ẢNH TRÙNG LẶP / SPAM / ẢNH MẪU AI ---
+        public DbSet<CanhBaoBatThuong> CanhBaoBatThuongs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -80,7 +83,7 @@ namespace Do_an_co_so.Data
             modelBuilder.Entity<TienIchXungQuanh>()
                 .HasIndex(t => new { t.PhongTroId, t.Loai });
 
-            // Hồ sơ ở ghép liên kết 1-1 với AppUser
+            // Hồ sơ ở ghép liên kết 1-1 với AppUser, tùy chọn liên kết với PhongTro
             modelBuilder.Entity<HoSoOGhep>()
                 .HasIndex(h => h.UserId)
                 .IsUnique();
@@ -88,6 +91,16 @@ namespace Do_an_co_so.Data
             modelBuilder.Entity<HoSoOGhep>()
                 .Property(h => h.NganSachToiDa)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<HoSoOGhep>()
+                .Property(h => h.GiaChiaMoiNguoi)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<HoSoOGhep>()
+                .HasOne(h => h.PhongTro)
+                .WithMany()
+                .HasForeignKey(h => h.PhongTroId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Một hợp đồng trỏ tới hai AppUser khác nhau nên phải nêu rõ cách xóa,
             // nếu không SQL Server sẽ tự dựng nhiều luồng cascade và từ chối migration.
@@ -98,6 +111,12 @@ namespace Do_an_co_so.Data
                 h.HasOne(x => x.BenB).WithMany().HasForeignKey(x => x.BenBId).OnDelete(DeleteBehavior.Restrict);
                 h.HasOne(x => x.PhongTro).WithMany().HasForeignKey(x => x.PhongTroId).OnDelete(DeleteBehavior.Cascade);
                 h.HasIndex(x => x.PhongTroId);
+            });
+
+            modelBuilder.Entity<CanhBaoBatThuong>(c =>
+            {
+                c.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                c.HasOne(x => x.PhongTro).WithMany().HasForeignKey(x => x.PhongTroId).OnDelete(DeleteBehavior.SetNull);
             });
         }
     }

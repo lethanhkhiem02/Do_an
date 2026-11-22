@@ -130,7 +130,70 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
       Navigator.pop(context);
       session.lamMoiHoSo(baoLoi: false); // cập nhật số dư ví sau khi trừ tiền VIP
     } on ApiException catch (e) {
-      if (mounted) bao(context: context, message: e.message, loi: true);
+      if (!mounted) return;
+      final msgLower = e.message.toLowerCase();
+      if (msgLower.contains('trùng') || msgLower.contains('duplicate') || msgLower.contains('tương đồng') || msgLower.contains('hủy đăng')) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            icon: const Icon(Icons.cancel_outlined, size: 52, color: Colors.red),
+            title: Text(
+              context.t('Hệ thống đã hủy đăng bài!'),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.t('Hệ thống kiểm duyệt hình ảnh tự động đã phát hiện ảnh vi phạm và hủy đăng bài:'),
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.shade200),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.report_problem_outlined, size: 20, color: Colors.red.shade700),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          e.message,
+                          style: TextStyle(
+                            color: Colors.red.shade900,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  context.t('Vui lòng kiểm tra lại danh sách ảnh bên dưới, xóa bỏ ảnh bị trùng lặp hoặc chụp lại ảnh thực tế mới của phòng trọ để tiếp tục đăng bài.'),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                ),
+              ],
+            ),
+            actions: [
+              FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(context.t('Đã hiểu, tôi sẽ chọn ảnh khác')),
+              ),
+            ],
+          ),
+        );
+      } else {
+        bao(context: context, message: e.message, loi: true);
+      }
     } finally {
       if (mounted) {
         setState(() {

@@ -8,6 +8,9 @@ import '../../core/localization.dart';
 import '../../core/pick_anh.dart';
 import '../../core/session.dart';
 import '../../widgets/common.dart';
+import '../admin/admin_bao_cao_screen.dart';
+import '../admin/admin_canh_bao_ai_screen.dart';
+import '../admin/admin_nguoi_dung_screen.dart';
 import '../contracts/hop_dong_screen.dart';
 import '../rooms/phong_da_thue_screen.dart';
 import '../roommate/tim_ban_o_ghep_screen.dart';
@@ -108,6 +111,39 @@ class CaNhanScreen extends StatelessWidget {
                   ),
                 ),
                 const Divider(height: 1),
+                if (session.laAdmin) ...[
+                  ListTile(
+                    leading: const Icon(Icons.people_outline, color: Colors.blue),
+                    title: Text(context.t('Quản lý người dùng')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminNguoiDungScreen()),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.flag_outlined, color: Colors.orange),
+                    title: Text(context.t('Báo cáo vi phạm')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminBaoCaoScreen()),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.auto_awesome, color: Colors.deepPurple),
+                    title: Text(context.t('Cảnh báo bất thường (AI)')),
+                    subtitle: Text(context.t('Lọc ảnh trùng lặp & AI phát hiện ảnh mẫu')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminCanhBaoAiScreen()),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                ],
                 if (session.laSinhVien)
                   ListTile(
                     leading: const Icon(Icons.meeting_room_outlined),

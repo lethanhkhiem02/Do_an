@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/localization.dart';
 import '../core/session.dart';
 import '../features/admin/admin_bao_cao_screen.dart';
+import '../features/admin/admin_canh_bao_ai_screen.dart';
 import '../features/admin/admin_nguoi_dung_screen.dart';
 import '../features/chat/danh_sach_tro_chuyen_screen.dart';
 import '../features/chat/tro_ly_ao_screen.dart';
@@ -31,6 +32,7 @@ class _AppShellState extends State<AppShell> {
         ? const [
               _Tab(Icons.people_outline, 'Người dùng'),
               _Tab(Icons.flag_outlined, 'Báo cáo'),
+              _Tab(Icons.auto_awesome, 'Cảnh báo AI'),
               _Tab(Icons.person_outline, 'Cá nhân'),
             ]
         : session.laChuTro
@@ -54,6 +56,7 @@ class _AppShellState extends State<AppShell> {
     return Scaffold(
       body: IndexedStack(index: chiSo, children: manHinh),
       floatingActionButton: FloatingActionButton.small(
+        heroTag: 'fab_tro_ly_ao_shell',
         tooltip: context.t('Trợ lý RoomFinder'),
         backgroundColor: Colors.amber.shade400,
         foregroundColor: Colors.black87,
@@ -77,6 +80,7 @@ class _AppShellState extends State<AppShell> {
   Widget _manHinhCua(String tab) => switch (tab) {
     'Người dùng' => const AdminNguoiDungScreen(),
     'Báo cáo' => const AdminBaoCaoScreen(),
+    'Cảnh báo AI' => const AdminCanhBaoAiScreen(),
     'Phòng của tôi' => const QuanLyPhongScreen(),
     'Tin nhắn' => const DanhSachTroChuyenScreen(),
     'Ví' => const ViScreen(),

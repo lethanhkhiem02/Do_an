@@ -35,6 +35,24 @@ namespace Do_an_co_so.Models
         [Required]
         public string KhuVucMongMuon { get; set; } = string.Empty;
 
+        /// <summary>
+        /// true = "Đã có phòng, tìm người ở cùng để chia tiền"
+        /// false = "Chưa có phòng, tìm chỗ ở ghép hoặc tìm bạn đi thuê chung"
+        /// </summary>
+        public bool DaCoPhong { get; set; } = false;
+
+        public int? PhongTroId { get; set; }
+
+        [ForeignKey("PhongTroId")]
+        public virtual PhongTro? PhongTro { get; set; }
+
+        public string? DiaChiPhongHienTai { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? GiaChiaMoiNguoi { get; set; }
+
+        public string? ThoiGianDonVao { get; set; }
+
         public string? MoTaThem { get; set; }
 
         public bool DangTimBan { get; set; } = true;

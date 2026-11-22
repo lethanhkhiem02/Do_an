@@ -19,16 +19,18 @@ namespace Do_an_co_so.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ImageModerationService _imageModeration;
 
         private const string VNP_TMNCODE = Services.VnPayOptions.TmnCode;
         private const string VNP_HASHSECRET = Services.VnPayOptions.HashSecret;
         private const string VNP_URL = Services.VnPayOptions.Url;
 
-        public PhongTroController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<AppUser> userManager)
+        public PhongTroController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<AppUser> userManager, ImageModerationService imageModeration)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
+            _imageModeration = imageModeration;
         }
 
         [Authorize(Roles = "ChuTro")]
@@ -59,31 +61,44 @@ namespace Do_an_co_so.Controllers
                         ModelState.AddModelError(string.Empty, "❌ Ví không đủ 50.000đ để đăng tin VIP.");
                         return View(phongTro);
                     }
+                }
+
+                ModerationCheckResult? modResult = null;
+                if (phongTro.ImageUploads != null && phongTro.ImageUploads.Count > 0)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    modResult = await _imageModeration.ProcessAndModerateImagesAsync(phongTro.ImageUploads, user.Id, null, uploadsFolder);
+                    if (!modResult.IsSuccess)
+                    {
+                        ModelState.AddModelError("", modResult.ErrorMessage ?? "Ảnh tải lên không hợp lệ hoặc bị trùng lặp.");
+                        return View(phongTro);
+                    }
+
+                    if (modResult.ProcessedFileNames.Count > 0)
+                    {
+                        phongTro.HinhAnh = string.Join(",", modResult.ProcessedFileNames);
+                        phongTro.ImageHash = string.Join(",", modResult.ProcessedHashes);
+                    }
+                }
+
+                if (phongTro.IsVip)
+                {
                     user.SoDu -= 50000;
                     await _userManager.UpdateAsync(user);
                 }
 
-                if (phongTro.ImageUploads != null && phongTro.ImageUploads.Count > 0)
-                {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-
-                    List<string> uploadedFileNames = new List<string>();
-                    foreach (var file in phongTro.ImageUploads)
-                    {
-                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-                        uploadedFileNames.Add(uniqueFileName);
-                    }
-                    phongTro.HinhAnh = string.Join(",", uploadedFileNames);
-                }
-
                 _context.Add(phongTro);
                 await _context.SaveChangesAsync();
+
+                if (modResult != null && modResult.Warnings.Count > 0)
+                {
+                    foreach (var w in modResult.Warnings)
+                    {
+                        w.PhongTroId = phongTro.Id;
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             return View(phongTro);

@@ -92,5 +92,11 @@ namespace Do_an_co_so.Models
 
         [Display(Name = "Số ngày giữ phòng tối đa")]
         public int? SoNgayGiuPhong { get; set; }
+
+        // ==============================================================================
+        // --- MÃ BĂM ẢNH (dHash 64-bit) PHỤC VỤ LỌC ẢNH TRÙNG LẶP & CHỐNG SPAM ---
+        // ==============================================================================
+        [Display(Name = "Mã băm ảnh (dHash)")]
+        public string? ImageHash { get; set; }
     }
 }

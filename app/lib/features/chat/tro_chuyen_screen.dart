@@ -20,11 +20,13 @@ class TroChuyenScreen extends StatefulWidget {
     required this.nguoiKhacId,
     required this.tenNguoiKhac,
     this.avatarNguoiKhac,
+    this.tinNhanBanDau,
   });
 
   final String nguoiKhacId;
   final String tenNguoiKhac;
   final String? avatarNguoiKhac;
+  final String? tinNhanBanDau;
 
   @override
   State<TroChuyenScreen> createState() => _TroChuyenScreenState();
@@ -53,6 +55,9 @@ class _TroChuyenScreenState extends State<TroChuyenScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.tinNhanBanDau != null && widget.tinNhanBanDau!.trim().isNotEmpty) {
+      _nhap.text = widget.tinNhanBanDau!.trim();
+    }
     _taiLichSu();
     _dangKyHub();
     _nhap.addListener(_thongBaoDangGo);

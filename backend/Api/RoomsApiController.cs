@@ -14,6 +14,7 @@ namespace Do_an_co_so.Api
     // đăng bài và quản lý bài đăng của Chủ trọ. Logic bám theo Home/Index,
     // PhongTroController.TimKiem, Details, Create, QuanLyPhong của web.
     [Route("api/phong-tro")]
+    [Route("api/rooms")]
     public class RoomsApiController : ApiControllerBase
     {
         private static readonly string[] DuocDinhDang = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
@@ -24,11 +25,12 @@ namespace Do_an_co_so.Api
         private readonly IWebHostEnvironment _env;
         private readonly NoiDungDichService _dich;
         private readonly TienIchQuetService _quetTienIch;
+        private readonly ImageModerationService _imageModeration;
 
         public RoomsApiController(ApplicationDbContext db, UserManager<AppUser> userManager,
             RoomQueryService search, IWebHostEnvironment env,
             IStringLocalizer<SharedResource> localizer, NoiDungDichService dich,
-            TienIchQuetService quetTienIch) : base(localizer)
+            TienIchQuetService quetTienIch, ImageModerationService imageModeration) : base(localizer)
         {
             _db = db;
             _userManager = userManager;
@@ -36,6 +38,7 @@ namespace Do_an_co_so.Api
             _env = env;
             _dich = dich;
             _quetTienIch = quetTienIch;
+            _imageModeration = imageModeration;
         }
 
         // ------------------------------- ĐỌC (khách chưa cần đăng nhập vẫn xem được như trên web) -------------------------------
@@ -245,37 +248,42 @@ namespace Do_an_co_so.Api
                 {
                     return BadRequest(new ApiError(Localizer["Api_NotEnoughForVip", VnPayOptions.PhiDangTinVip.ToString("N0")]));
                 }
+            }
+
+            ModerationCheckResult? modResult = null;
+            if (images != null && images.Count > 0)
+            {
+                var thuMuc = Path.Combine(_env.WebRootPath, "images");
+                modResult = await _imageModeration.ProcessAndModerateImagesAsync(images, user.Id, null, thuMuc);
+                if (!modResult.IsSuccess)
+                {
+                    return BadRequest(new ApiError(modResult.ErrorMessage ?? "Ảnh tải lên không hợp lệ hoặc bị trùng lặp."));
+                }
+
+                if (modResult.ProcessedFileNames.Count > 0)
+                {
+                    room.HinhAnh = string.Join(",", modResult.ProcessedFileNames);
+                    room.ImageHash = string.Join(",", modResult.ProcessedHashes);
+                }
+            }
+
+            if (room.IsVip)
+            {
                 user.SoDu -= VnPayOptions.PhiDangTinVip;
                 await _userManager.UpdateAsync(user);
             }
 
-            if (images != null && images.Count > 0)
-            {
-                var thuMuc = Path.Combine(_env.WebRootPath, "images");
-                Directory.CreateDirectory(thuMuc);
-
-                var tenFiles = new List<string>();
-                foreach (var file in images)
-                {
-                    if (file.Length == 0) continue;
-                    var noiDung = Path.GetExtension(file.FileName).ToLowerInvariant();
-                    if (!DuocDinhDang.Contains(noiDung))
-                    {
-                        return BadRequest(new ApiError(Localizer["Api_UnsupportedImageFormat", noiDung]));
-                    }
-
-                    var tenFile = Guid.NewGuid() + "_" + Path.GetFileName(file.FileName);
-                    await using (var stream = new FileStream(Path.Combine(thuMuc, tenFile), FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    tenFiles.Add(tenFile);
-                }
-                room.HinhAnh = string.Join(",", tenFiles);
-            }
-
             _db.Add(room);
             await _db.SaveChangesAsync();
+
+            if (modResult != null && modResult.Warnings.Count > 0)
+            {
+                foreach (var w in modResult.Warnings)
+                {
+                    w.PhongTroId = room.Id;
+                }
+                await _db.SaveChangesAsync();
+            }
 
             return CreatedAtAction(nameof(ChiTiet), new { id = room.Id }, ToListItem(new RoomMatch(room, 0, 0, 0)));
         }

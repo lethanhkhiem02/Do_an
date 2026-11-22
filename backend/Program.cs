@@ -135,6 +135,10 @@ builder.Services.AddHttpClient("overpass", client =>
     client.DefaultRequestHeaders.UserAgent.ParseAdd("RoomFinder-SV/1.0 (do-an-chuyen-nganh)");
 });
 
+// Dịch vụ lọc ảnh trùng lặp & AI Vision phát hiện ảnh bất thường
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ImageModerationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

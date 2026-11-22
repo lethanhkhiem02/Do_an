@@ -162,6 +162,48 @@ namespace Do_an_co_so.Migrations
                     b.ToTable("BaoCaos");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.CanhBaoBatThuong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnhBangChungUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DaXuLy")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LoaiViPham")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MoTaChiTiet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PhongTroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhongTroId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CanhBaoBatThuongs");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.DanhGia", b =>
                 {
                     b.Property<int>("Id")
@@ -246,8 +288,17 @@ namespace Do_an_co_so.Migrations
                     b.Property<bool>("CoNuoiPet")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("DaCoPhong")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("DangTimBan")
                         .HasColumnType("bit");
+
+                    b.Property<string>("DiaChiPhongHienTai")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("GiaChiaMoiNguoi")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("GioGiacSinhHoat")
                         .IsRequired()
@@ -273,6 +324,12 @@ namespace Do_an_co_so.Migrations
                     b.Property<DateTime>("NgayCapNhat")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PhongTroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThoiGianDonVao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("UaSachSe")
                         .HasColumnType("bit");
 
@@ -281,6 +338,8 @@ namespace Do_an_co_so.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PhongTroId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -469,6 +528,9 @@ namespace Do_an_co_so.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HinhAnh")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVip")
@@ -702,6 +764,24 @@ namespace Do_an_co_so.Migrations
                     b.Navigation("PhongTro");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.CanhBaoBatThuong", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
+                        .WithMany()
+                        .HasForeignKey("PhongTroId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Do_an_co_so.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PhongTro");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.DanhGia", b =>
                 {
                     b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
@@ -721,11 +801,18 @@ namespace Do_an_co_so.Migrations
 
             modelBuilder.Entity("Do_an_co_so.Models.HoSoOGhep", b =>
                 {
+                    b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
+                        .WithMany()
+                        .HasForeignKey("PhongTroId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Do_an_co_so.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("PhongTro");
 
                     b.Navigation("User");
                 });
