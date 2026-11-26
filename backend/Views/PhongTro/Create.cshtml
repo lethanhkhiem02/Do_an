@@ -64,6 +64,19 @@
                 <span asp-validation-for="Gia" class="text-danger"></span>
             </div>
 
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="GiaDien" class="form-label fw-bold">⚡ @Localizer["ElectricityPrice"]</label>
+                    <input asp-for="GiaDien" type="number" min="1" class="form-control" placeholder="@Localizer["ElectricityPlaceholder"]" />
+                    <span asp-validation-for="GiaDien" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="GiaNuoc" class="form-label fw-bold">💧 @Localizer["WaterPrice"]</label>
+                    <input asp-for="GiaNuoc" type="number" min="1" class="form-control" placeholder="@Localizer["WaterPlaceholder"]" />
+                    <span asp-validation-for="GiaNuoc" class="text-danger"></span>
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label fw-bold">@Localizer["DetailedAddress"]</label>
                 <div class="row g-2 mb-2">

@@ -9,6 +9,8 @@ namespace Do_an_co_so.Api.Dtos
         public int Id { get; init; }
         public string MoTa { get; init; } = "";
         public decimal Gia { get; init; }
+        public decimal? GiaDien { get; init; }
+        public decimal? GiaNuoc { get; init; }
         public string DiaChi { get; init; } = "";
         public List<string> Anh { get; init; } = new();
         public double? Latitude { get; init; }
@@ -82,6 +84,12 @@ namespace Do_an_co_so.Api.Dtos
         [Required(ErrorMessage = "Vui lòng nhập giá phòng")]
         [Range(0, 1_000_000_000, ErrorMessage = "Giá phòng không hợp lệ")]
         public decimal Gia { get; init; }
+
+        [Range(1, 100_000, ErrorMessage = "Giá điện phải từ 1 đến 100.000 VNĐ/kWh")]
+        public decimal GiaDien { get; init; }
+
+        [Range(1, 1_000_000, ErrorMessage = "Giá nước phải từ 1 đến 1.000.000 VNĐ/m³")]
+        public decimal GiaNuoc { get; init; }
 
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ")]
         public string DiaChi { get; init; } = "";

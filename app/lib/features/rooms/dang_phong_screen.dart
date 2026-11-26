@@ -25,6 +25,8 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
   final _form = GlobalKey<FormState>();
   final _moTa = TextEditingController();
   final _gia = TextEditingController();
+  final _giaDien = TextEditingController();
+  final _giaNuoc = TextEditingController();
   final _diaChi = TextEditingController();
   final _chieuDai = TextEditingController();
   final _chieuRong = TextEditingController();
@@ -48,6 +50,8 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
   void dispose() {
     _moTa.dispose();
     _gia.dispose();
+    _giaDien.dispose();
+    _giaNuoc.dispose();
     _diaChi.dispose();
     _chieuDai.dispose();
     _chieuRong.dispose();
@@ -80,6 +84,8 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
         fields: {
           'moTa': _moTa.text.trim(),
           'gia': _soHoa(_gia.text)!.toString(),
+          'giaDien': _soHoa(_giaDien.text)!.toString(),
+          'giaNuoc': _soHoa(_giaNuoc.text)!.toString(),
           'diaChi': _diaChi.text.trim(),
           'loaiHinh': _loaiHinh,
           'isVip': _vip.toString(),
@@ -206,6 +212,15 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
 
   static double? _soHoa(String text) => double.tryParse(text.replaceAll('.', '').replaceAll(',', ''));
 
+  /// Đơn giá điện/nước bắt buộc nhập và phải nằm trong khoảng server cho phép
+  /// (Range của CreateRoomRequest), để chủ trọ biết lỗi ngay thay vì bị API từ chối.
+  String? _validateDonGia(String? value, double max, String maLoiTrong, String maLoiVuot) {
+    final so = _soHoa(value ?? '');
+    if (so == null || so <= 0) return context.t(maLoiTrong);
+    if (so > max) return context.t(maLoiVuot);
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final soDu = context.watch<Session>().user?.soDu ?? 0;
@@ -272,6 +287,47 @@ class _DangPhongScreenState extends State<DangPhongScreen> {
               validator: (value) => _soHoa(value ?? '') == null || _soHoa(value!) == 0
                   ? context.t('Nhập giá phòng hợp lệ')
                   : null,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _giaDien,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: context.t('Giá điện (VNĐ/kWh)'),
+                      border: const OutlineInputBorder(),
+                      helperText: context.t('Ví dụ: 3500'),
+                    ),
+                    validator: (value) => _validateDonGia(
+                      value,
+                      100000,
+                      'Nhập giá điện lớn hơn 0',
+                      'Giá điện không được vượt quá 100.000 VNĐ/kWh',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextFormField(
+                    controller: _giaNuoc,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: context.t('Giá nước (VNĐ/m³)'),
+                      border: const OutlineInputBorder(),
+                      helperText: context.t('Ví dụ: 20000'),
+                    ),
+                    validator: (value) => _validateDonGia(
+                      value,
+                      1000000,
+                      'Nhập giá nước lớn hơn 0',
+                      'Giá nước không được vượt quá 1.000.000 VNĐ/m³',
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             TextFormField(

@@ -34,6 +34,9 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
 
   RoomDetail? _phong;
   String? _loi;
+
+  /// Lịch hẹn xem phòng trực tiếp của chính người đang xem (chỉ có sau khi đặt cọc).
+  ViewingAppointment? _lichHen;
   late final TabController _tab;
 
   @override
@@ -53,10 +56,45 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
     setState(() => _loi = null);
     try {
       final json = await context.read<Session>().api.get('api/phong-tro/${widget.phongId}');
-      setState(() => _phong = RoomDetail.fromJson(json));
+      final phong = RoomDetail.fromJson(json);
+      setState(() => _phong = phong);
+      // Chỉ khi đã cọc xong mới có lịch hẹn để tải, tránh thêm một request vô ích.
+      if (phong.daDatCoc) await _taiLichHen();
     } on ApiException catch (e) {
       if (mounted) setState(() => _loi = e.message);
     }
+  }
+
+  Future<void> _taiLichHen() async {
+    ViewingAppointment? lich;
+    try {
+      final json = await context.read<Session>().api.get('api/lich-xem-phong/cua-toi');
+      final cuaMinh = (json as List)
+          .map(ViewingAppointment.fromJson)
+          .where((l) => l.phongTroId == widget.phongId)
+          .toList();
+      final choDuyet = cuaMinh.where((l) => l.choXacNhan).toList();
+      lich = choDuyet.isNotEmpty ? choDuyet.first : (cuaMinh.isNotEmpty ? cuaMinh.first : null);
+    } on ApiException {
+      lich = null;
+    }
+    if (mounted) setState(() => _lichHen = lich);
+  }
+
+  /// Mở màn chọn ngày giờ; trả về true nếu vừa gửi yêu cầu thành công.
+  Future<bool> _datLichXemPhong() async {
+    final phong = _phong;
+    if (phong == null) return false;
+    final lich = await showModalBottomSheet<ViewingAppointment>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _DatLichXemPhongSheet(phong: phong),
+    );
+    if (lich == null) return false;
+    if (!mounted) return false;
+    setState(() => _lichHen = lich);
+    bao(context: context, message: context.t('Đã gửi lịch hẹn xem phòng tới chủ trọ.'));
+    return true;
   }
 
   Future<void> _thuePhong() async {
@@ -299,7 +337,21 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
           ],
         ),
       ),
-      persistentFooterButtons: _nutHanhdDong(session, phong),
+      // persistentFooterButtons sát mép dưới nên hàng nút thứ hai (đặt lịch xem
+      // phòng) bị thanh điều hướng của Android che mất; bottomNavigationBar +
+      // SafeArea mới nằm trong vùng an toàn.
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _nutHanhdDong(session, phong)
+                .map((nut) => Padding(padding: const EdgeInsets.only(top: 6), child: nut))
+                .toList(),
+          ),
+        ),
+      ),
       body: TabBarView(
         controller: _tab,
         children: [
@@ -330,6 +382,25 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
                     NhanTrangThai(trangThai: phong.trangThai),
                   ],
                 ),
+                if (phong.coGiaDien || phong.coGiaNuoc) ...[
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 2,
+                    children: [
+                      if (phong.coGiaDien)
+                        Text(
+                          '⚡ ${context.t('Điện')}: ${Fmt.tien(phong.giaDien)}/${context.t('kWh')}',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      if (phong.coGiaNuoc)
+                        Text(
+                          '💧 ${context.t('Nước')}: ${Fmt.tien(phong.giaNuoc)}/${context.t('m³')}',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 6),
                 Text(phong.diaChi, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
@@ -456,6 +527,7 @@ class _ChiTietPhongScreenState extends State<ChiTietPhongScreen> with SingleTick
             ),
           ],
         ),
+        _NutDatLichHen(lich: _lichHen, onDat: _datLichXemPhong),
       ];
     }
 
@@ -762,4 +834,175 @@ class _TeuMau extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// Nút đặt lịch xem phòng trực tiếp, chỉ hiện sau khi sinh viên đặt cọc thành công.
+/// Đã gửi rồi thì thay bằng dòng trạng thái để biết chủ trọ xác nhận hay từ chối.
+class _NutDatLichHen extends StatelessWidget {
+  const _NutDatLichHen({required this.lich, required this.onDat});
+
+  final ViewingAppointment? lich;
+  final Future<void> Function() onDat;
+
+  @override
+  Widget build(BuildContext context) {
+    if (lich == null || lich!.daTuChoi) {
+      return SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: onDat,
+          icon: const Icon(Icons.calendar_month_outlined),
+          label: Text(
+            lich == null
+                ? context.t('Đặt lịch xem phòng trực tiếp')
+                : context.t('Đặt lại lịch xem phòng trực tiếp'),
+          ),
+        ),
+      );
+    }
+
+    final mau = lich!.daXacNhan ? Colors.green.shade700 : Colors.orange.shade800;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: mau.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(lich!.daXacNhan ? Icons.event_available : Icons.hourglass_bottom, color: mau, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '${context.t('Lịch xem phòng')}: ${Fmt.ngay(lich!.ngayHen)} · ${lich!.trangThaiHienThi}',
+              style: TextStyle(color: mau, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Màn chọn ngày giờ hẹn xem phòng và ghi chú gửi kèm cho chủ trọ.
+class _DatLichXemPhongSheet extends StatefulWidget {
+  const _DatLichXemPhongSheet({required this.phong});
+
+  final RoomDetail phong;
+
+  @override
+  State<_DatLichXemPhongSheet> createState() => _DatLichXemPhongSheetState();
+}
+
+class _DatLichXemPhongSheetState extends State<_DatLichXemPhongSheet> {
+  DateTime _ngay = DateTime.now().add(const Duration(days: 1));
+  TimeOfDay _gio = const TimeOfDay(hour: 9, minute: 0);
+  final _ghiChu = TextEditingController();
+  bool _dangGui = false;
+
+  @override
+  void dispose() {
+    _ghiChu.dispose();
+    super.dispose();
+  }
+
+  DateTime get _ngayHen => DateTime(_ngay.year, _ngay.month, _ngay.day, _gio.hour, _gio.minute);
+
+  Future<void> _chonNgay() async {
+    final ngay = await showDatePicker(
+      context: context,
+      initialDate: _ngay,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+    );
+    if (ngay != null) setState(() => _ngay = ngay);
+  }
+
+  Future<void> _chonGio() async {
+    final gio = await showTimePicker(context: context, initialTime: _gio);
+    if (gio != null) setState(() => _gio = gio);
+  }
+
+  Future<void> _gui() async {
+    if (_dangGui) return;
+    final session = context.read<Session>();
+    setState(() => _dangGui = true);
+    try {
+      final json = await session.api.post(
+        'api/lich-xem-phong',
+        body: {
+          'phongTroId': widget.phong.id,
+          'ngayHen': _ngayHen.toIso8601String(),
+          if (_ghiChu.text.trim().isNotEmpty) 'ghiChu': _ghiChu.text.trim(),
+        },
+      );
+      if (mounted) Navigator.pop(context, ViewingAppointment.fromJson(json));
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() => _dangGui = false);
+      bao(context: context, message: e.message, loi: true);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.viewInsetsOf(context).bottom + 16,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(context.t('Đặt lịch xem phòng trực tiếp'), style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 4),
+          Text(
+            '${context.t('Địa chỉ')}: ${widget.phong.diaChi}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _chonNgay,
+                  icon: const Icon(Icons.event_outlined),
+                  label: Text(Fmt.ngay(_ngayHen, gio: false)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _chonGio,
+                  icon: const Icon(Icons.schedule_outlined),
+                  label: Text(_gio.format(context)),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _ghiChu,
+            maxLines: 3,
+            decoration: InputDecoration(
+              labelText: context.t('Ghi chú cho chủ trọ (không bắt buộc)'),
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: _dangGui ? null : _gui,
+              child: Text(_dangGui ? context.t('Đang gửi...') : context.t('Gửi lịch hẹn cho chủ trọ')),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

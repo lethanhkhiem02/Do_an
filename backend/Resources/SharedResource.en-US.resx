@@ -1011,6 +1011,21 @@
   <data name="Api_TransactionNoRoom" xml:space="preserve">
     <value>The room id could not be read from the transaction.</value>
   </data>
+  <data name="Api_TransactionSuccess" xml:space="preserve">
+    <value>Payment successful</value>
+  </data>
+  <data name="Api_TransactionIncomplete" xml:space="preserve">
+    <value>Payment not completed</value>
+  </data>
+  <data name="Api_TransactionDone" xml:space="preserve">
+    <value>The transaction was completed.</value>
+  </data>
+  <data name="Api_TransactionNotDone" xml:space="preserve">
+    <value>The transaction failed.</value>
+  </data>
+  <data name="Api_ReturnToApp" xml:space="preserve">
+    <value>Return to the RoomFinder app to continue.</value>
+  </data>
   <data name="Verb_ThanhToan" xml:space="preserve">
     <value>Payment</value>
   </data>
@@ -1055,5 +1070,77 @@
   </data>
   <data name="Api_ContractCancelled" xml:space="preserve">
     <value>The contract has been cancelled.</value>
+  </data>
+  <data name="ElectricityPrice" xml:space="preserve">
+    <value>Electricity price (VND/kWh)</value>
+  </data>
+  <data name="WaterPrice" xml:space="preserve">
+    <value>Water price (VND/m3)</value>
+  </data>
+  <data name="VNDPerKWh" xml:space="preserve">
+    <value>VND/kWh</value>
+  </data>
+  <data name="ElectricityPlaceholder" xml:space="preserve">
+    <value>Ex: 3500</value>
+  </data>
+  <data name="WaterPlaceholder" xml:space="preserve">
+    <value>Ex: 20000</value>
+  </data>
+  <data name="VNDPerM3" xml:space="preserve">
+    <value>VND/m3</value>
+  </data>
+  <data name="Api_RoomHasNoLandlord" xml:space="preserve">
+    <value>This listing has no landlord to contact.</value>
+  </data>
+  <data name="Api_ViewingNeedsDeposit" xml:space="preserve">
+    <value>You must pay the reservation deposit before booking an in-person viewing.</value>
+  </data>
+  <data name="Api_ViewingTimeMustBeFuture" xml:space="preserve">
+    <value>The viewing time must be in the future.</value>
+  </data>
+  <data name="Api_ViewingAlreadyPending" xml:space="preserve">
+    <value>You already have a viewing request waiting for the landlord on this room.</value>
+  </data>
+  <data name="Api_AppointmentNotFound" xml:space="preserve">
+    <value>Viewing appointment not found.</value>
+  </data>
+  <data name="Api_AppointmentNotPending" xml:space="preserve">
+    <value>This appointment is no longer waiting for confirmation.</value>
+  </data>
+  <data name="Api_AppointmentConfirmed" xml:space="preserve">
+    <value>Viewing confirmed, the student has been notified.</value>
+  </data>
+  <data name="Api_AppointmentDeclined" xml:space="preserve">
+    <value>Viewing declined, the student has been notified.</value>
+  </data>
+  <data name="Api_NotificationNotFound" xml:space="preserve">
+    <value>Notification not found.</value>
+  </data>
+  <data name="Api_MarkReadDone" xml:space="preserve">
+    <value>Notification marked as read.</value>
+  </data>
+  <data name="Api_MarkAllReadDone" xml:space="preserve">
+    <value>All notifications marked as read.</value>
+  </data>
+  <data name="Noti_Generic" xml:space="preserve">
+    <value>New notification</value>
+  </data>
+  <data name="Noti_ViewingRequested" xml:space="preserve">
+    <value>A student asked for an in-person viewing</value>
+  </data>
+  <data name="Noti_ViewingRequestedBody" xml:space="preserve">
+    <value>{0} asked to see the room at {1} on {2}.</value>
+  </data>
+  <data name="Noti_ViewingConfirmed" xml:space="preserve">
+    <value>Landlord confirmed your viewing</value>
+  </data>
+  <data name="Noti_ViewingConfirmedBody" xml:space="preserve">
+    <value>{0} confirmed your viewing of the room at {1} on {2}.</value>
+  </data>
+  <data name="Noti_ViewingDeclined" xml:space="preserve">
+    <value>Landlord declined your viewing</value>
+  </data>
+  <data name="Noti_ViewingDeclinedBody" xml:space="preserve">
+    <value>{0} declined the viewing of the room at {1} on {2}.</value>
   </data>
 </root>

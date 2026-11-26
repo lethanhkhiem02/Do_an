@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../models/models.dart';
 import 'api_client.dart';
 import 'localization.dart';
 import 'session.dart';
 
-/// VNPay chỉ chạy trên trình duyệt nên app mở link thanh toán rồi quay lại
-/// poll backend (đã port nguyên logic callback của web) để biết giao dịch thành công chưa.
+/// VNPay chỉ chạy trên trình duyệt nên app nhúng thẳng trang thanh toán vào một
+/// màn hình của chính nó. Mở Chrome ra ngoài thì không kéo app quay lại được
+/// (Android 10+ chặn app đang chạy nền tự hiện ra trước màn hình), còn nhúng
+/// WebView thì app tự pop về trang phòng trọ ngay khi backend ghi nhận tiền.
 class ThanhToan {
   /// Trả về true nếu backend ghi nhận giao dịch, false nếu người dùng bỏ giữa chừng.
   static Future<bool> chi(
@@ -25,35 +27,25 @@ class ThanhToan {
     try {
       thanhToan = PaymentUrl.fromJson(await session.api.post(endpoint, body: body));
     } on ApiException catch (e) {
-      _bao(context, e.message, loi: true);
+      if (context.mounted) _bao(context, e.message, loi: true);
       return false;
     }
 
-    if (!await _moTrinhDuyet(thanhToan.url)) {
-      _bao(context, context.t('Không mở được trình duyệt để thanh toán.'), loi: true);
-      return false;
-    }
-
-    final ketQua = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => _TheoDoiDialog(
-        session: session,
-        tenGiaoDich: tenGiaoDich,
-        phongId: phongId,
-        soDuTruoc: soDuTruoc,
+    if (!context.mounted) return false;
+    final duoc = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => _TrangThanhToan(
+          session: session,
+          url: thanhToan.url,
+          tenGiaoDich: tenGiaoDich,
+          phongId: phongId,
+          soDuTruoc: soDuTruoc,
+        ),
       ),
     );
 
-    return ketQua ?? false;
-  }
-
-  static Future<bool> _moTrinhDuyet(String url) async {
-    try {
-      return await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } on Exception {
-      return false;
-    }
+    return duoc ?? false;
   }
 
   static Future<bool> _daXong(Session session, int? phongId, double? soDuTruoc) async {
@@ -77,32 +69,54 @@ class ThanhToan {
   }
 }
 
-class _TheoDoiDialog extends StatefulWidget {
-  const _TheoDoiDialog({
+class _TrangThanhToan extends StatefulWidget {
+  const _TrangThanhToan({
     required this.session,
+    required this.url,
     required this.tenGiaoDich,
     this.phongId,
     this.soDuTruoc,
   });
 
   final Session session;
+  final String url;
   final String tenGiaoDich;
   final int? phongId;
   final double? soDuTruoc;
 
   @override
-  State<_TheoDoiDialog> createState() => _TheoDoiDialogState();
+  State<_TrangThanhToan> createState() => _TrangThanhToanState();
 }
 
-class _TheoDoiDialogState extends State<_TheoDoiDialog> {
+class _TrangThanhToanState extends State<_TrangThanhToan> {
+  late final WebViewController _controller;
   Timer? _poll;
   bool _dangKiemTra = false;
-  int _daTho = 0;
+  bool _daVe = false;
+  int? _tienDo;
 
   @override
   void initState() {
     super.initState();
-    _poll = Timer.periodic(const Duration(seconds: 3), (_) => _kiemTra());
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (g) {
+            if (mounted) setState(() => _tienDo = g);
+          },
+          // Trang callback ghi tiền vào DB trước khi trình bày trang, nên vừa tải
+          // xong là hỏi kết quả được ngay, không phải chờ tới nhịp poll kế tiếp.
+          onPageFinished: (_) {
+            if (!mounted) return;
+            setState(() => _tienDo = null);
+            _kiemTra();
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+
+    _poll = Timer.periodic(const Duration(seconds: 2), (_) => _kiemTra());
   }
 
   @override
@@ -112,65 +126,40 @@ class _TheoDoiDialogState extends State<_TheoDoiDialog> {
   }
 
   Future<void> _kiemTra() async {
-    if (_dangKiemTra) return;
-    setState(() => _dangKiemTra = true);
+    if (_dangKiemTra || _daVe) return;
+    _dangKiemTra = true;
+
     bool xong = false;
     try {
       xong = await ThanhToan._daXong(widget.session, widget.phongId, widget.soDuTruoc);
     } catch (_) {
-      // Backend chưa ghi nhận, mất mạng, hay timeout vì Chrome chiếm máy lúc khởi
-      // động — mọi lỗi ở đây đều chỉ có nghĩa "lần poll kế tiếp sẽ thử lại".
-      // Bắt `on ApiException` thôi thì TimeoutException thoát ra ngoài, `_dangKiemTra`
-      // mắc kẹt ở true và hộp thoại vĩnh viễn không nhận ra giao dịch thành công.
+      // Mất mạng hay backend chưa ghi nhận thì lần kiểm tra sau sẽ thử lại.
+      // Không bắt riêng ApiException: TimeoutException lọt ra ngoài sẽ làm
+      // _dangKiemTra kẹt ở true và màn hình không bao giờ nhận ra đã trả xong.
     }
-    if (!mounted) return;
-    setState(() {
-      _dangKiemTra = false;
-      _daTho++;
-    });
+    _dangKiemTra = false;
+    if (!mounted || _daVe) return;
+
     if (xong) {
+      _daVe = true;
       _poll?.cancel();
       Navigator.pop(context, true);
-    } else if (_daTho >= 40) {
-      _poll?.cancel();
-      Navigator.pop(context, false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('${context.t('Thanh toán')} ${widget.tenGiaoDich}'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Text(
-            context.t(
-              'Trình duyệt đã mở trang VNPay.\nKhi thanh toán xong, quay lại app để hệ thống ghi nhận giao dịch.',
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _daTho == 0
-                ? context.t('Đang chờ phản hồi từ máy chủ...')
-                : '${context.t('Đã kiểm tra')} ${dem(_daTho, 'lần.')}',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${context.t('Thanh toán')} ${widget.tenGiaoDich}'),
+        bottom: _tienDo == null
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(3),
+                child: LinearProgressIndicator(value: (_tienDo! / 100).clamp(0.0, 1.0)),
+              ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(context.t('Hủy thanh toán')),
-        ),
-        FilledButton(
-          onPressed: _dangKiemTra ? null : _kiemTra,
-          child: Text(context.t('Tôi đã trả xong')),
-        ),
-      ],
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

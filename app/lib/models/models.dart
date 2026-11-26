@@ -105,6 +105,8 @@ class Room {
     required this.moTa,
     required this.gia,
     required this.diaChi,
+    this.giaDien,
+    this.giaNuoc,
     this.anh = const [],
     this.latitude,
     this.longitude,
@@ -132,6 +134,8 @@ class Room {
       moTa: m['moTa'] ?? '',
       gia: _d0(m['gia']),
       diaChi: m['diaChi'] ?? '',
+      giaDien: _d(m['giaDien']),
+      giaNuoc: _d(m['giaNuoc']),
       anh: (m['anh'] as List?)?.cast<String>() ?? const [],
       latitude: _d(m['latitude']),
       longitude: _d(m['longitude']),
@@ -157,6 +161,11 @@ class Room {
   final String moTa;
   final double gia;
   final String diaChi;
+
+  /// Đơn giá điện (VNĐ/kWh) và nước (VNĐ/m³) chủ trọ khai lúc đăng bài.
+  /// Phòng cũ chưa có hai cột này nên backend trả về 0.
+  final double? giaDien;
+  final double? giaNuoc;
   final List<String> anh;
   final double? latitude;
   final double? longitude;
@@ -189,6 +198,9 @@ class Room {
 
   bool get dangDuocGiU => trangThai == 'DangGiuCho';
   bool get conTrong => trangThai == 'ConTrong';
+
+  bool get coGiaDien => (giaDien ?? 0) > 0;
+  bool get coGiaNuoc => (giaNuoc ?? 0) > 0;
 }
 
 class Review {
@@ -226,6 +238,8 @@ class RoomDetail extends Room {
     required super.id,
     required super.moTa,
     required super.gia,
+    super.giaDien,
+    super.giaNuoc,
     required super.diaChi,
     super.anh,
     super.latitude,
@@ -265,6 +279,8 @@ class RoomDetail extends Room {
       id: base.id,
       moTa: base.moTa,
       gia: base.gia,
+      giaDien: base.giaDien,
+      giaNuoc: base.giaNuoc,
       diaChi: base.diaChi,
       anh: base.anh,
       latitude: base.latitude,
@@ -847,3 +863,108 @@ class RentalContract {
   };
 }
 
+
+/// Lịch hẹn xem phòng trực tiếp mà sinh viên tạo sau khi đặt cọc xong.
+class ViewingAppointment {
+  ViewingAppointment({
+    required this.id,
+    required this.phongTroId,
+    this.diaChiPhong,
+    this.tenPhong,
+    required this.nguoiDatId,
+    this.tenNguoiDat,
+    required this.chuTroId,
+    required this.ngayHen,
+    this.ghiChu,
+    required this.trangThai,
+    this.ngayPhanHoi,
+  });
+
+  factory ViewingAppointment.fromJson(dynamic json) {
+    final m = _map(json);
+    return ViewingAppointment(
+      id: _i0(m['id']),
+      phongTroId: _i0(m['phongTroId']),
+      diaChiPhong: m['diaChiPhong'],
+      tenPhong: m['tenPhong'],
+      nguoiDatId: m['nguoiDatId'] ?? '',
+      tenNguoiDat: m['tenNguoiDat'],
+      chuTroId: m['chuTroId'] ?? '',
+      ngayHen: _dt(m['ngayHen']) ?? DateTime.now(),
+      ghiChu: m['ghiChu'],
+      trangThai: m['trangThai'] ?? 'ChoXacNhan',
+      ngayPhanHoi: _dt(m['ngayPhanHoi']),
+    );
+  }
+
+  final int id;
+  final int phongTroId;
+  final String? diaChiPhong;
+  final String? tenPhong;
+  final String nguoiDatId;
+  final String? tenNguoiDat;
+  final String chuTroId;
+  final DateTime ngayHen;
+  final String? ghiChu;
+
+  /// ChoXacNhan | DaXacNhan | DaTuChoi.
+  final String trangThai;
+  final DateTime? ngayPhanHoi;
+
+  bool get choXacNhan => trangThai == 'ChoXacNhan';
+  bool get daXacNhan => trangThai == 'DaXacNhan';
+  bool get daTuChoi => trangThai == 'DaTuChoi';
+
+  String get trangThaiHienThi => switch (trangThai) {
+    'DaXacNhan' => x('Đã xác nhận'),
+    'DaTuChoi' => x('Đã từ chối'),
+    _ => x('Chờ chủ trọ xác nhận'),
+  };
+}
+
+/// Một mục trong hộp thư thông báo. Server chỉ gửi mã sự kiện nên tiêu đề và
+/// nội dung đã được dịch theo ngôn ngữ mà app đang dùng.
+class AppNotification {
+  AppNotification({
+    required this.id,
+    required this.loai,
+    required this.tieuDe,
+    this.noiDung,
+    this.maLichXemPhong,
+    this.phongTroId,
+    this.ngayHen,
+    this.trangThaiLich,
+    required this.daDoc,
+    required this.ngayTao,
+  });
+
+  factory AppNotification.fromJson(dynamic json) {
+    final m = _map(json);
+    return AppNotification(
+      id: _i0(m['id']),
+      loai: m['loai'] ?? '',
+      tieuDe: m['tieuDe'] ?? '',
+      noiDung: m['noiDung'],
+      maLichXemPhong: _i(m['maLichXemPhong']),
+      phongTroId: _i(m['phongTroId']),
+      ngayHen: _dt(m['ngayHen']),
+      trangThaiLich: m['trangThaiLich'],
+      daDoc: _b(m['daDoc']),
+      ngayTao: _dt(m['ngayTao']) ?? DateTime.now(),
+    );
+  }
+
+  final int id;
+  final String loai;
+  final String tieuDe;
+  final String? noiDung;
+  final int? maLichXemPhong;
+  final int? phongTroId;
+  final DateTime? ngayHen;
+  final String? trangThaiLich;
+  final bool daDoc;
+  final DateTime ngayTao;
+
+  bool get laYeuCauXemPhong => loai == 'DatLichXemPhong';
+  bool get conChoDuyet => laYeuCauXemPhong && trangThaiLich == 'ChoXacNhan';
+}

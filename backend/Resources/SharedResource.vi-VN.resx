@@ -1011,6 +1011,21 @@
   <data name="Api_TransactionNoRoom" xml:space="preserve">
     <value>Không đọc được mã phòng từ giao dịch.</value>
   </data>
+  <data name="Api_TransactionSuccess" xml:space="preserve">
+    <value>Giao dịch thành công</value>
+  </data>
+  <data name="Api_TransactionIncomplete" xml:space="preserve">
+    <value>Giao dịch chưa hoàn tất</value>
+  </data>
+  <data name="Api_TransactionDone" xml:space="preserve">
+    <value>Giao dịch thành công.</value>
+  </data>
+  <data name="Api_TransactionNotDone" xml:space="preserve">
+    <value>Giao dịch không thành công.</value>
+  </data>
+  <data name="Api_ReturnToApp" xml:space="preserve">
+    <value>Quay lại ứng dụng RoomFinder để tiếp tục.</value>
+  </data>
   <data name="Verb_ThanhToan" xml:space="preserve">
     <value>Thanh toán</value>
   </data>
@@ -1055,5 +1070,77 @@
   </data>
   <data name="Api_ContractCancelled" xml:space="preserve">
     <value>Đã hủy hợp đồng.</value>
+  </data>
+  <data name="ElectricityPrice" xml:space="preserve">
+    <value>Giá điện (VNĐ/kWh)</value>
+  </data>
+  <data name="WaterPrice" xml:space="preserve">
+    <value>Giá nước (VNĐ/m³)</value>
+  </data>
+  <data name="VNDPerKWh" xml:space="preserve">
+    <value>VNĐ/kWh</value>
+  </data>
+  <data name="ElectricityPlaceholder" xml:space="preserve">
+    <value>Ví dụ: 3500</value>
+  </data>
+  <data name="WaterPlaceholder" xml:space="preserve">
+    <value>Ví dụ: 20000</value>
+  </data>
+  <data name="VNDPerM3" xml:space="preserve">
+    <value>VNĐ/m³</value>
+  </data>
+  <data name="Api_RoomHasNoLandlord" xml:space="preserve">
+    <value>Bài đăng này không có chủ trọ để liên hệ.</value>
+  </data>
+  <data name="Api_ViewingNeedsDeposit" xml:space="preserve">
+    <value>Bạn cần đặt cọc giữ phòng thành công trước khi đặt lịch xem phòng trực tiếp.</value>
+  </data>
+  <data name="Api_ViewingTimeMustBeFuture" xml:space="preserve">
+    <value>Thời gian xem phòng phải là thời điểm trong tương lai.</value>
+  </data>
+  <data name="Api_ViewingAlreadyPending" xml:space="preserve">
+    <value>Bạn đã có lịch hẹn đang chờ chủ trọ xác nhận cho phòng này.</value>
+  </data>
+  <data name="Api_AppointmentNotFound" xml:space="preserve">
+    <value>Không tìm thấy lịch hẹn xem phòng.</value>
+  </data>
+  <data name="Api_AppointmentNotPending" xml:space="preserve">
+    <value>Lịch hẹn này không còn ở trạng thái chờ xác nhận.</value>
+  </data>
+  <data name="Api_AppointmentConfirmed" xml:space="preserve">
+    <value>Đã xác nhận lịch xem phòng và báo cho sinh viên.</value>
+  </data>
+  <data name="Api_AppointmentDeclined" xml:space="preserve">
+    <value>Đã từ chối lịch xem phòng và báo cho sinh viên.</value>
+  </data>
+  <data name="Api_NotificationNotFound" xml:space="preserve">
+    <value>Không tìm thấy thông báo.</value>
+  </data>
+  <data name="Api_MarkReadDone" xml:space="preserve">
+    <value>Đã đánh dấu thông báo là đã đọc.</value>
+  </data>
+  <data name="Api_MarkAllReadDone" xml:space="preserve">
+    <value>Đã đánh dấu tất cả thông báo là đã đọc.</value>
+  </data>
+  <data name="Noti_Generic" xml:space="preserve">
+    <value>Thông báo mới</value>
+  </data>
+  <data name="Noti_ViewingRequested" xml:space="preserve">
+    <value>Có sinh viên xin xem phòng trực tiếp</value>
+  </data>
+  <data name="Noti_ViewingRequestedBody" xml:space="preserve">
+    <value>{0} xin xem phòng tại {1} vào lúc {2}.</value>
+  </data>
+  <data name="Noti_ViewingConfirmed" xml:space="preserve">
+    <value>Chủ trọ đã xác nhận lịch xem phòng</value>
+  </data>
+  <data name="Noti_ViewingConfirmedBody" xml:space="preserve">
+    <value>{0} đã xác nhận cho bạn xem phòng tại {1} vào lúc {2}.</value>
+  </data>
+  <data name="Noti_ViewingDeclined" xml:space="preserve">
+    <value>Chủ trọ đã từ chối lịch xem phòng</value>
+  </data>
+  <data name="Noti_ViewingDeclinedBody" xml:space="preserve">
+    <value>{0} đã từ chối lịch xem phòng tại {1} vào lúc {2}.</value>
   </data>
 </root>

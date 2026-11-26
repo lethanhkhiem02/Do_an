@@ -139,6 +139,9 @@ builder.Services.AddHttpClient("overpass", client =>
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ImageModerationService>();
 
+// Ghi hộp thư thông báo và đẩy sự kiện cho người nhận qua hub /chatHub.
+builder.Services.AddScoped<ThongBaoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -186,6 +189,23 @@ app.Use(async (context, next) =>
     if (context.Request.Path.StartsWithSegments("/api"))
     {
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
+        // Trang thanh toán mở bằng Chrome nên Accept-Language gửi lên là của Chrome,
+        // không phải ngôn ngữ người dùng chọn trong app. vnp_Locale do backend ghi
+        // lúc phát hành URL và VNPay trả về nguyên vẹn, nên trang demo lẫn trang kết
+        // quả phải nghe theo nó thì chữ trên trang mới khớp với app.
+        // Trang thanh toán mở bằng Chrome nên Accept-Language gửi lên là của Chrome,
+        // không phải ngôn ngữ người dùng chọn trong app. vnp_Locale do backend ghi
+        // lúc phát hành URL và VNPay trả về nguyên vẹn, nên trang demo lẫn trang kết
+        // quả phải nghe theo nó thì chữ và số tiền trên trang mới khớp với app.
+        // An toàn vì các endpoint này chỉ đọc query string, không bind số từ body.
+        string locale = context.Request.Query["vnp_Locale"];
+        if (!string.IsNullOrEmpty(locale))
+        {
+            var vanHoaCuaGiaoDich = new CultureInfo(locale == "en" ? "en-US" : "vi-VN");
+            CultureInfo.CurrentCulture = vanHoaCuaGiaoDich;
+            CultureInfo.CurrentUICulture = vanHoaCuaGiaoDich;
+        }
     }
 
     await next();

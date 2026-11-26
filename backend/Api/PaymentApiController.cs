@@ -570,15 +570,19 @@ namespace Do_an_co_so.Api
         {
             string bieuTuong = thanhCong ? "&#9989;" : "&#10060;";
             string mau = thanhCong ? "#198754" : "#dc3545";
-            string tieuDe = thanhCong ? "Giao dịch thành công" : "Giao dịch chưa hoàn tất";
-            string thongDiep = noiDung ?? (thanhCong ? "Giao dịch thành công." : "Giao dịch không thành công.");
+            // Tiêu đề và câu chốt cũng phải qua Localizer, nếu không trang tiếng Anh
+            // lẫn hai thứ tiếng trong cùng một khung: mô tả đã dịch mà đầu trang còn
+            // nguyên tiếng Việt.
+            string tieuDe = Localizer[thanhCong ? "Api_TransactionSuccess" : "Api_TransactionIncomplete"].Value;
+            string thongDiep = noiDung
+                ?? Localizer[thanhCong ? "Api_TransactionDone" : "Api_TransactionNotDone"].Value;
 
             return Content(TrangKhung($"""
                 <div style="font-size:42px">{bieuTuong}</div>
                 <h2 style="margin:12px 0 8px;color:{mau}">{tieuDe}</h2>
                 <p style="color:#495057;margin:0 0 20px">{thongDiep}</p>
-                <p style="color:#6c757d;font-size:14px;margin:0">Quay lại ứng dụng RoomFinder để tiếp tục.</p>
-                """, "vi"), "text/html; charset=utf-8");
+                <p style="color:#6c757d;font-size:14px;margin:0">{Localizer["Api_ReturnToApp"].Value}</p>
+                """, System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName), "text/html; charset=utf-8");
         }
 
         private static string TrangKhung(string noiDung, string maNgonNgu) => $"""

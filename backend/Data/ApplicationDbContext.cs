@@ -35,6 +35,12 @@ namespace Do_an_co_so.Data
         // --- CẢNH BÁO BẤT THƯỜNG / ẢNH TRÙNG LẶP / SPAM / ẢNH MẪU AI ---
         public DbSet<CanhBaoBatThuong> CanhBaoBatThuongs { get; set; }
 
+        // --- LỊCH HẸN XEM PHÒNG TRỰC TIẾP (SINH VIÊN ĐẶT SAU KHI CỌC XONG) ---
+        public DbSet<LichXemPhong> LichXemPhongs { get; set; }
+
+        // --- HỘP THƯ THÔNG BÁO CỦA TỪNG TÀI KHOẢN ---
+        public DbSet<ThongBao> ThongBaos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -45,6 +51,14 @@ namespace Do_an_co_so.Data
 
             modelBuilder.Entity<PhongTro>()
                 .Property(p => p.Gia)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<PhongTro>()
+                .Property(p => p.GiaDien)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<PhongTro>()
+                .Property(p => p.GiaNuoc)
                 .HasColumnType("decimal(18,2)");
 
             // --- CẤU HÌNH KIỂU TIỀN TỆ CHO BẢNG HÓA ĐƠN TRÁNH CẢNH BÁO ---
@@ -117,6 +131,26 @@ namespace Do_an_co_so.Data
             {
                 c.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
                 c.HasOne(x => x.PhongTro).WithMany().HasForeignKey(x => x.PhongTroId).OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Lịch xem phòng cũng nối hai AppUser nên phải nêu rõ cách xóa như HopDong,
+            // nếu không SQL Server dựng nhiều luồng cascade và từ chối migration.
+            modelBuilder.Entity<LichXemPhong>(l =>
+            {
+                l.HasOne(x => x.NguoiDat).WithMany().HasForeignKey(x => x.NguoiDatId).OnDelete(DeleteBehavior.Restrict);
+                l.HasOne(x => x.ChuTro).WithMany().HasForeignKey(x => x.ChuTroId).OnDelete(DeleteBehavior.Restrict);
+                l.HasOne(x => x.PhongTro).WithMany().HasForeignKey(x => x.PhongTroId).OnDelete(DeleteBehavior.Cascade);
+                l.HasIndex(x => new { x.PhongTroId, x.NguoiDatId });
+                l.HasIndex(x => x.ChuTroId);
+            });
+
+            // Chuỗi thông báo luôn được đọc theo người nhận nên lọc theo (người nhận, đã đọc).
+            modelBuilder.Entity<ThongBao>(t =>
+            {
+                t.HasOne(x => x.NguoiNhan).WithMany().HasForeignKey(x => x.NguoiNhanId).OnDelete(DeleteBehavior.Cascade);
+                t.HasOne(x => x.TacNhan).WithMany().HasForeignKey(x => x.TacNhanId).OnDelete(DeleteBehavior.Restrict);
+                t.HasIndex(x => new { x.NguoiNhanId, x.DaDoc });
+                t.Property(x => x.Loai).HasMaxLength(50);
             });
         }
     }

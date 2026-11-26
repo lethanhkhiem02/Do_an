@@ -53,6 +53,20 @@
         <div class="col-md-5">
             <div class="card card-custom p-4 h-100 shadow-sm border-0">
                 <h3 class="text-danger fw-bold">@Model.Gia.ToString("N0") @Localizer["VNDPerMonth"]</h3>
+                @* Bài đăng cũ trước khi có hai cột này lưu về 0 nên phải chặn cả 0. *@
+                @if (Model.GiaDien > 0 || Model.GiaNuoc > 0)
+                {
+                    <div class="d-flex flex-column gap-1 mt-1">
+                        @if (Model.GiaDien > 0)
+                        {
+                            <span class="fw-bold">⚡ @Localizer["ElectricityPrice"]: @Model.GiaDien.Value.ToString("N0") @Localizer["VNDPerKWh"]</span>
+                        }
+                        @if (Model.GiaNuoc > 0)
+                        {
+                            <span class="fw-bold">💧 @Localizer["WaterPrice"]: @Model.GiaNuoc.Value.ToString("N0") @Localizer["VNDPerM3"]</span>
+                        }
+                    </div>
+                }
                 <hr />
 
                 <div class="d-flex flex-wrap gap-2 mb-3 mt-2">

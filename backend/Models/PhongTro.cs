@@ -19,6 +19,18 @@ namespace Do_an_co_so.Models
         [Display(Name = "Giá thuê (VNĐ/Tháng)")]
         public decimal Gia { get; set; }
 
+        // Chủ trọ bắt buộc nhập hai đơn giá này lúc đăng bài để sinh viên xem được
+        // chi phí thật của phòng. Cột để nullable vì bài đăng cũ chưa từng có nó.
+        [Required(ErrorMessage = "Vui lòng nhập giá điện")]
+        [Display(Name = "Giá điện (VNĐ/kWh)")]
+        [Range(1, 100000, ErrorMessage = "Giá điện phải từ 1 đến 100.000 VNĐ/kWh")]
+        public decimal? GiaDien { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập giá nước")]
+        [Display(Name = "Giá nước (VNĐ/m³)")]
+        [Range(1, 1000000, ErrorMessage = "Giá nước phải từ 1 đến 1.000.000 VNĐ/m³")]
+        public decimal? GiaNuoc { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ")]
         [Display(Name = "Địa chỉ chi tiết")]
         public string DiaChi { get; set; }

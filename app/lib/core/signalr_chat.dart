@@ -58,6 +58,23 @@ class TypingState {
   final bool isTyping;
 }
 
+/// Sự kiện thông báo hub đẩy xuống ("ReceiveThongBao").
+/// Server chỉ gửi mã sự kiện, không gửi câu chữ, vì bản dịch phải theo
+/// Accept-Language của chính người nhận nên app phải gọi lại api/thong-bao.
+class ThongBaoMoi {
+  const ThongBaoMoi({required this.id, required this.loai, this.maLichXemPhong});
+
+  factory ThongBaoMoi.fromJson(Map json) => ThongBaoMoi(
+    id: (json['id'] as num?)?.toInt() ?? 0,
+    loai: '${json['loai'] ?? ''}',
+    maLichXemPhong: (json['maLichXemPhong'] as num?)?.toInt(),
+  );
+
+  final int id;
+  final String loai;
+  final int? maLichXemPhong;
+}
+
 enum KetNoi { ngat, dangKetNoi, san, chayThoi }
 
 /// Client SignalR tối giản chạy trên WebSocket.
@@ -81,10 +98,12 @@ class SignalRChat extends ChangeNotifier {
   final _tinNhanRieng = StreamController<PrivateMessage>.broadcast();
   final _tinNhanTong = StreamController<GlobalMessage>.broadcast();
   final _dangGo = StreamController<TypingState>.broadcast();
+  final _thongBao = StreamController<ThongBaoMoi>.broadcast();
 
   Stream<PrivateMessage> get onPrivateMessage => _tinNhanRieng.stream;
   Stream<GlobalMessage> get onGlobalMessage => _tinNhanTong.stream;
   Stream<TypingState> get onTyping => _dangGo.stream;
+  Stream<ThongBaoMoi> get onThongBao => _thongBao.stream;
 
   KetNoi get trangThai => _trangThai;
   bool get san => _trangThai == KetNoi.san;
@@ -215,6 +234,10 @@ class SignalRChat extends ChangeNotifier {
         }
       case 'ReceiveTypingState':
         _dangGo.add(TypingState.fromArgs(args));
+      case 'ReceiveThongBao':
+        if (args.isNotEmpty && args.first is Map) {
+          _thongBao.add(ThongBaoMoi.fromJson(args.first as Map));
+        }
     }
   }
 
@@ -253,6 +276,7 @@ class SignalRChat extends ChangeNotifier {
     _tinNhanRieng.close();
     _tinNhanTong.close();
     _dangGo.close();
+    _thongBao.close();
     super.dispose();
   }
 }

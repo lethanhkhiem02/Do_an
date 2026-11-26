@@ -461,6 +461,53 @@ namespace Do_an_co_so.Migrations
                     b.ToTable("HopDongs");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.LichXemPhong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChuTroId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GhiChu")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("NgayHen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayPhanHoi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiDatId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PhongTroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrangThai")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChuTroId");
+
+                    b.HasIndex("NguoiDatId");
+
+                    b.HasIndex("PhongTroId", "NguoiDatId");
+
+                    b.ToTable("LichXemPhongs");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -524,6 +571,12 @@ namespace Do_an_co_so.Migrations
                     b.Property<decimal>("Gia")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("GiaDien")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GiaNuoc")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("HanDatCoc")
                         .HasColumnType("datetime2");
 
@@ -566,6 +619,44 @@ namespace Do_an_co_so.Migrations
                     b.HasIndex("ChuTroId");
 
                     b.ToTable("PhongTro");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.ThongBao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("DaDoc")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Loai")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("MaLichXemPhong")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiNhanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TacNhanId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TacNhanId");
+
+                    b.HasIndex("NguoiNhanId", "DaDoc");
+
+                    b.ToTable("ThongBaos");
                 });
 
             modelBuilder.Entity("Do_an_co_so.Models.TienIchXungQuanh", b =>
@@ -863,6 +954,33 @@ namespace Do_an_co_so.Migrations
                     b.Navigation("PhongTro");
                 });
 
+            modelBuilder.Entity("Do_an_co_so.Models.LichXemPhong", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.AppUser", "ChuTro")
+                        .WithMany()
+                        .HasForeignKey("ChuTroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Do_an_co_so.Models.AppUser", "NguoiDat")
+                        .WithMany()
+                        .HasForeignKey("NguoiDatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Do_an_co_so.Models.PhongTro", "PhongTro")
+                        .WithMany()
+                        .HasForeignKey("PhongTroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChuTro");
+
+                    b.Navigation("NguoiDat");
+
+                    b.Navigation("PhongTro");
+                });
+
             modelBuilder.Entity("Do_an_co_so.Models.Message", b =>
                 {
                     b.HasOne("Do_an_co_so.Models.AppUser", "Receiver")
@@ -885,6 +1003,24 @@ namespace Do_an_co_so.Migrations
                         .HasForeignKey("ChuTroId");
 
                     b.Navigation("ChuTro");
+                });
+
+            modelBuilder.Entity("Do_an_co_so.Models.ThongBao", b =>
+                {
+                    b.HasOne("Do_an_co_so.Models.AppUser", "NguoiNhan")
+                        .WithMany()
+                        .HasForeignKey("NguoiNhanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Do_an_co_so.Models.AppUser", "TacNhan")
+                        .WithMany()
+                        .HasForeignKey("TacNhanId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("NguoiNhan");
+
+                    b.Navigation("TacNhan");
                 });
 
             modelBuilder.Entity("Do_an_co_so.Models.TienIchXungQuanh", b =>
