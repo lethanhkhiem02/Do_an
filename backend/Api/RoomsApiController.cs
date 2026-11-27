@@ -26,11 +26,13 @@ namespace Do_an_co_so.Api
         private readonly NoiDungDichService _dich;
         private readonly TienIchQuetService _quetTienIch;
         private readonly ImageModerationService _imageModeration;
+        private readonly AiRoomSearchService _aiSearch;
 
         public RoomsApiController(ApplicationDbContext db, UserManager<AppUser> userManager,
             RoomQueryService search, IWebHostEnvironment env,
             IStringLocalizer<SharedResource> localizer, NoiDungDichService dich,
-            TienIchQuetService quetTienIch, ImageModerationService imageModeration) : base(localizer)
+            TienIchQuetService quetTienIch, ImageModerationService imageModeration,
+            AiRoomSearchService aiSearch) : base(localizer)
         {
             _db = db;
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace Do_an_co_so.Api
             _dich = dich;
             _quetTienIch = quetTienIch;
             _imageModeration = imageModeration;
+            _aiSearch = aiSearch;
         }
 
         // ------------------------------- ĐỌC (khách chưa cần đăng nhập vẫn xem được như trên web) -------------------------------
@@ -76,10 +79,43 @@ namespace Do_an_co_so.Api
             });
         }
 
+        [AllowAnonymous]
+        [HttpPost("ai-search")]
+        public async Task<ActionResult<AiRoomSearchResponse>> AiSearch([FromBody] AiRoomSearchRequest? request)
+        {
+            var moTa = request?.MoTa?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(moTa))
+            {
+                return BadRequest(new ApiError("Vui lòng nhập mô tả nhu cầu tìm phòng."));
+            }
+
+            try
+            {
+                var ketQuaAi = await _aiSearch.SearchAsync(moTa);
+                var dich = await _dich.TaoHamDichAsync(LayNoiDungPhong(ketQuaAi.Matches));
+
+                return Ok(new AiRoomSearchResponse
+                {
+                    CacTieuChi = ketQuaAi.CacTieuChi,
+                    ThongBao = ketQuaAi.ThongBao,
+                    DanhSachPhong = ketQuaAi.Matches.Select(k => ToListItem(k, dich)).ToList()
+                });
+            }
+            catch (Exception)
+            {
+                return Ok(new AiRoomSearchResponse
+                {
+                    CacTieuChi = new List<string>(),
+                    ThongBao = "Không thể hoàn tất tìm kiếm AI lúc này, vui lòng thử lại sau.",
+                    DanhSachPhong = new List<RoomListItemDto>()
+                });
+            }
+        }
+
         // Mô tả + địa chỉ là văn bản Chủ trọ viết bằng tiếng Việt, chỉ hai trường này
         // cần đưa qua máy dịch; tên riêng (tên chủ trọ) giữ nguyên ở mọi ngôn ngữ.
         private static IEnumerable<string> LayNoiDungPhong(IEnumerable<RoomMatch> ketQua)
-            => ketQua.SelectMany(k => new[] { k.PhongTro.MoTa, k.PhongTro.DiaChi });
+            => ketQua.SelectMany(k => new[] { k.PhongTro.MoTa ?? "", k.PhongTro.DiaChi ?? "" });
 
         [AllowAnonymous]
         [HttpGet("truong")]

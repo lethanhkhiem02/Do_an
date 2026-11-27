@@ -76,6 +76,18 @@ namespace Do_an_co_so.Api.Dtos
         public string SapXep { get; init; } = "distance_asc";
     }
 
+    public class AiRoomSearchRequest
+    {
+        public string MoTa { get; init; } = "";
+    }
+
+    public class AiRoomSearchResponse
+    {
+        public List<string> CacTieuChi { get; init; } = new();
+        public string ThongBao { get; init; } = "";
+        public List<RoomListItemDto> DanhSachPhong { get; init; } = new();
+    }
+
     public class CreateRoomRequest
     {
         [Required(ErrorMessage = "Vui lòng nhập mô tả")]

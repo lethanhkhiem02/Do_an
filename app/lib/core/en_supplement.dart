@@ -439,4 +439,17 @@ const Map<String, String> tuDienBoSung = {
   'Chờ chủ trọ xác nhận': 'Waiting for the landlord to confirm',
   'Đã xác nhận': 'Confirmed',
   'Đã từ chối': 'Declined',
+
+  // --- AI SMART SEARCH ---
+  'Tìm nhanh bằng mô tả AI': 'Quick search with AI description',
+  'VD: Phòng Thủ Đức dưới 3tr, có vệ sinh riêng, ban công...':
+      'Ex: Room in Thu Duc under 3M, private bathroom, balcony...',
+  'AI Tìm': 'AI Search',
+  'Xóa lọc AI': 'Clear AI filter',
+  'Vui lòng nhập mô tả nhu cầu tìm phòng.': 'Please enter a description of the room you want.',
+  'Phòng Thủ Đức dưới 3tr': 'Thu Duc room under 3M',
+  'Phòng riêng có ban công, vệ sinh riêng': 'Private room with balcony, private bathroom',
+  'Ký túc xá giá rẻ': 'Affordable dormitory',
+  'Phòng Bình Thạnh có máy lạnh, gác lửng': 'Binh Thanh room with AC, mezzanine',
+  'Không tìm thấy phòng phù hợp với mô tả AI.': 'No rooms matched your AI description.',
 };

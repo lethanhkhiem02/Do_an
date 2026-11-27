@@ -139,6 +139,10 @@ builder.Services.AddHttpClient("overpass", client =>
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ImageModerationService>();
 
+// Tìm phòng trọ bằng mô tả tự nhiên (Gemini 2.5 Flash + fallback regex/từ khóa)
+builder.Services.AddHttpClient("gemini", client => client.Timeout = TimeSpan.FromSeconds(15));
+builder.Services.AddScoped<AiRoomSearchService>();
+
 // Ghi hộp thư thông báo và đẩy sự kiện cho người nhận qua hub /chatHub.
 builder.Services.AddScoped<ThongBaoService>();
 

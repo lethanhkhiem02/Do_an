@@ -378,6 +378,27 @@ class SearchResult {
   final String? sapXep;
 }
 
+class AiSearchResult {
+  AiSearchResult({
+    this.cacTieuChi = const [],
+    this.thongBao = '',
+    this.danhSachPhong = const [],
+  });
+
+  factory AiSearchResult.fromJson(dynamic json) {
+    final m = _map(json);
+    return AiSearchResult(
+      cacTieuChi: (m['cacTieuChi'] as List?)?.map((e) => '$e').toList() ?? const [],
+      thongBao: m['thongBao'] ?? '',
+      danhSachPhong: (m['danhSachPhong'] as List?)?.map(Room.fromJson).toList() ?? const [],
+    );
+  }
+
+  final List<String> cacTieuChi;
+  final String thongBao;
+  final List<Room> danhSachPhong;
+}
+
 class Invoice {
   Invoice({
     required this.id,

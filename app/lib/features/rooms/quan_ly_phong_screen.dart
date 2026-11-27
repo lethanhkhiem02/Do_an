@@ -64,6 +64,7 @@ class _QuanLyPhongScreenState extends State<QuanLyPhongScreen> {
         actions: [IconButton(onPressed: () => setState(() { _danhSach = _tai(); }), icon: const Icon(Icons.refresh))],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'fab_dang_phong_quan_ly',
         onPressed: () => Navigator.pushNamed(context, '/dang-phong'),
         icon: const Icon(Icons.add_a_photo_outlined),
         label: Text(context.t('Đăng phòng')),

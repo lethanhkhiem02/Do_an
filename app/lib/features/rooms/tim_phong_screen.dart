@@ -79,12 +79,25 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
     ('newest', 'Mới đăng nhất'),
   ];
 
+  static const List<String> _goiYAi = [
+    'Phòng Thủ Đức dưới 3tr',
+    'Phòng riêng có ban công, vệ sinh riêng',
+    'Ký túc xá giá rẻ',
+    'Phòng Bình Thạnh có máy lạnh, gác lửng',
+  ];
+
+  final TextEditingController _aiCtrl = TextEditingController();
+
   List<School> _truongs = const [];
   _BoLoc _loc = _BoLoc(truongId: null, banKinh: 3, min: '', max: '', sapXep: 'newest');
 
   List<Room> _ketQua = const [];
   String? _tenTruongTim;
   bool _dangTai = true;
+  bool _dangTimAi = false;
+  bool _daTimAi = false;
+  List<String> _tieuChiAi = const [];
+  String? _thongBaoAi;
   String? _loi;
   bool _xemBanDo = false;
 
@@ -92,6 +105,12 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
   void initState() {
     super.initState();
     _khoiDong();
+  }
+
+  @override
+  void dispose() {
+    _aiCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _khoiDong() async {
@@ -129,7 +148,76 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
     }
   }
 
+  Future<void> _timBangAi([String? mau]) async {
+    if (mau != null) {
+      _aiCtrl
+        ..text = mau
+        ..selection = TextSelection.collapsed(offset: mau.length);
+    }
+
+    final moTa = _aiCtrl.text.trim();
+    if (moTa.isEmpty) {
+      bao(context: context, message: context.t('Vui lòng nhập mô tả nhu cầu tìm phòng.'), loi: true);
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _dangTimAi = true;
+    });
+
+    final session = context.read<Session>();
+    try {
+      final json = await session.api.post(
+        'api/rooms/ai-search',
+        body: {'moTa': moTa},
+        timeout: const Duration(seconds: 30),
+      );
+      final ketQua = AiSearchResult.fromJson(json);
+      if (!mounted) return;
+      setState(() {
+        _ketQua = ketQua.danhSachPhong;
+        _tieuChiAi = ketQua.cacTieuChi;
+        _thongBaoAi = ketQua.thongBao;
+        _tenTruongTim = null;
+        _loi = null;
+        _daTimAi = true;
+        _dangTimAi = false;
+      });
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() => _dangTimAi = false);
+      bao(context: context, message: e.message, loi: true);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _dangTimAi = false);
+      bao(context: context, message: context.t('Máy chủ gặp lỗi, vui lòng thử lại sau.'), loi: true);
+    }
+  }
+
+  Future<void> _xoaLocAi() async {
+    _aiCtrl.clear();
+    setState(() {
+      _daTimAi = false;
+      _tieuChiAi = const [];
+      _thongBaoAi = null;
+    });
+    await _tai();
+  }
+
+  Future<void> _lamMoiHienTai() {
+    if (_daTimAi && _aiCtrl.text.trim().isNotEmpty) {
+      return _timBangAi();
+    }
+    return _tai();
+  }
+
   String get _moTaKetQua {
+    if (_daTimAi) {
+      return _thongBaoAi?.isNotEmpty == true
+          ? _thongBaoAi!
+          : dem(_ketQua.length, 'phòng');
+    }
     if (_tenTruongTim == null) return x('Phòng mới đăng, tin VIP ưu tiên trước.');
     return '${x('Gần')} $_tenTruongTim (${_loc.banKinh.toStringAsFixed(1)} km) · ${dem(_ketQua.length, 'phòng')}';
   }
@@ -147,7 +235,12 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
     if (ketQua == null || !mounted) return;
     // Bảng bottom sheet không có mục loại hình (chip đã nằm ngay ngoài danh
     // sách) nên giữ lại lựa chọn hiện tại khi áp dụng các bộ lọc khác.
-    setState(() => _loc = ketQua.copyWith(loaiHinh: _loc.loaiHinh));
+    setState(() {
+      _loc = ketQua.copyWith(loaiHinh: _loc.loaiHinh);
+      _daTimAi = false;
+      _tieuChiAi = const [];
+      _thongBaoAi = null;
+    });
     await _tai();
   }
 
@@ -171,11 +264,12 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
             onPressed: () => setState(() => _xemBanDo = !_xemBanDo),
             icon: Icon(_xemBanDo ? Icons.view_list_outlined : Icons.map_outlined),
           ),
-          IconButton(onPressed: _tai, icon: const Icon(Icons.refresh)),
+          IconButton(onPressed: _lamMoiHienTai, icon: const Icon(Icons.refresh)),
         ],
       ),
       floatingActionButton: session.laChuTro
           ? FloatingActionButton.extended(
+              heroTag: 'fab_dang_phong_tim_phong',
               onPressed: () => Navigator.pushNamed(context, '/dang-phong'),
               icon: const Icon(Icons.add_a_photo_outlined),
               label: Text(context.t('Đăng phòng')),
@@ -196,21 +290,46 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
           _HangLoaiHinh(
             dangChon: _loc.loaiHinh,
             onChon: (loaiHinh) {
-              setState(() => _loc = _loc.copyWith(loaiHinh: loaiHinh));
+              setState(() {
+                _loc = _loc.copyWith(loaiHinh: loaiHinh);
+                _daTimAi = false;
+                _tieuChiAi = const [];
+                _thongBaoAi = null;
+              });
               _tai();
             },
           ),
+          _KhuVucTimAi(
+            controller: _aiCtrl,
+            dangTim: _dangTimAi,
+            daTimAi: _daTimAi,
+            tieuChi: _tieuChiAi,
+            thongBao: _thongBaoAi,
+            goiY: _goiYAi,
+            onTim: _timBangAi,
+            onXoaLocAi: _xoaLocAi,
+          ),
+          if (_dangTimAi) const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: _dangTai
                 ? const NangLuongView()
                 : _loi != null
-                ? LoiView(thongBao: _loi!, tai: _tai)
+                ? LoiView(thongBao: _loi!, tai: _lamMoiHienTai)
                 : _ketQua.isEmpty
                 ? TrongView(
                     icon: Icons.search_off,
-                    chuThich: context.t(
-                      'Không tìm thấy phòng nào phù hợp.\nThử tăng bán kính hoặc đổi bộ lọc.',
-                    ),
+                    chuThich: _daTimAi
+                        ? context.t('Không tìm thấy phòng phù hợp với mô tả AI.')
+                        : context.t(
+                            'Không tìm thấy phòng nào phù hợp.\nThử tăng bán kính hoặc đổi bộ lọc.',
+                          ),
+                    hanhDong: _daTimAi
+                        ? FilledButton.tonalIcon(
+                            onPressed: _xoaLocAi,
+                            icon: const Icon(Icons.close),
+                            label: Text(context.t('Xóa lọc AI')),
+                          )
+                        : null,
                   )
                 : _xemBanDo
                 ? _BanDoKetQua(
@@ -219,7 +338,7 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
                     onChon: _moChiTiet,
                   )
                 : RefreshIndicator(
-                    onRefresh: _tai,
+                    onRefresh: _lamMoiHienTai,
                     child: ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       itemCount: _ketQua.length,
@@ -228,6 +347,190 @@ class _TimPhongScreenState extends State<TimPhongScreen> {
                     ),
                   ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _KhuVucTimAi extends StatelessWidget {
+  const _KhuVucTimAi({
+    required this.controller,
+    required this.dangTim,
+    required this.daTimAi,
+    required this.tieuChi,
+    this.thongBao,
+    required this.goiY,
+    required this.onTim,
+    required this.onXoaLocAi,
+  });
+
+  final TextEditingController controller;
+  final bool dangTim;
+  final bool daTimAi;
+  final List<String> tieuChi;
+  final String? thongBao;
+  final List<String> goiY;
+  final Future<void> Function([String? mau]) onTim;
+  final Future<void> Function() onXoaLocAi;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.blue.shade100),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.auto_awesome, size: 17, color: NhaCai.mauChuDao),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  context.t('Tìm nhanh bằng mô tả AI'),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13.5,
+                    color: NhaCai.mauChuDao,
+                  ),
+                ),
+              ),
+              if (daTimAi)
+                TextButton.icon(
+                  onPressed: dangTim ? null : onXoaLocAi,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  icon: const Icon(Icons.close, size: 15),
+                  label: Text(context.t('Xóa lọc AI'), style: const TextStyle(fontSize: 12.5)),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  enabled: !dangTim,
+                  minLines: 1,
+                  maxLines: 2,
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (_) => onTim(),
+                  style: const TextStyle(fontSize: 13.5),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: context.t('VD: Phòng Thủ Đức dưới 3tr, có vệ sinh riêng, ban công...'),
+                    hintStyle: TextStyle(fontSize: 12.5, color: Colors.blueGrey.shade400),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue.shade200),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue.shade200),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              FilledButton.icon(
+                onPressed: dangTim ? null : () => onTim(),
+                style: FilledButton.styleFrom(
+                  backgroundColor: NhaCai.mauChuDao,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                icon: dangTim
+                    ? const SizedBox(
+                        width: 15,
+                        height: 15,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Icon(Icons.auto_awesome, size: 16),
+                label: Text(context.t('AI Tìm'), style: const TextStyle(fontSize: 13)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final mau in goiY)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: ActionChip(
+                      visualDensity: VisualDensity.compact,
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.blue.shade100),
+                      label: Text(context.t(mau), style: const TextStyle(fontSize: 12)),
+                      onPressed: dangTim ? null : () => onTim(mau),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (daTimAi && tieuChi.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final tc in tieuChi)
+                    Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: NhaCai.mauChuDao.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        tc,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: NhaCai.mauChuDao,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+          if (daTimAi && (thongBao?.trim().isNotEmpty ?? false)) ...[
+            const SizedBox(height: 6),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline, size: 14, color: Colors.blueGrey.shade600),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    thongBao!.trim(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.blueGrey.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
